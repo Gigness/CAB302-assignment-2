@@ -6,7 +6,6 @@
  */
 package asgn2Aircraft;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,10 +64,26 @@ public abstract class Aircraft {
 	 * @throws AircraftException if isNull(flightCode) OR (departureTime <=0) OR ({first,business,premium,economy} <0)
 	 */
 	public Aircraft(String flightCode,int departureTime, int first, int business, int premium, int economy) throws AircraftException {
-		//Lots here 
+        if (flightCode == null) {
+            throw new AircraftException("flightCode is null");
+        }
+        else if (departureTime <= 0) {
+            throw new AircraftException("departureTime must be positive");
+        }
+        else if (first < 0 || business < 0 || premium < 0 || economy < 0) {
+            throw new AircraftException("Cannot have a negative flight class capacity");
+        }
 		this.status = "";
+		this.flightCode = flightCode;
+        this.departureTime = departureTime;
+        this.firstCapacity = first;
+        this.businessCapacity = business;
+        this.premiumCapacity = premium;
+        this.economyCapacity = economy;
+        this.capacity = first + business + premium + economy;
 	}
-	
+
+    // TODO
 	/**
 	 * Method to remove passenger from the aircraft - passenger must have a confirmed 
 	 * seat prior to entry to this method.   
@@ -85,6 +100,7 @@ public abstract class Aircraft {
 		//Stuff here
 	}
 
+    // TODO
 	/**
 	 * Method to add a Passenger to the aircraft seating. 
 	 * Precondition is a test that a seat is available in the required fare class
@@ -100,7 +116,8 @@ public abstract class Aircraft {
 		this.status += Log.setPassengerMsg(p,"N/Q","C");
 		//Stuff here
 	}
-	
+
+
 	/**
 	 * State dump intended for use in logging the final state of the aircraft. (Supplied) 
 	 * 
@@ -120,7 +137,7 @@ public abstract class Aircraft {
 	 * @return <code>boolean</code> true if aircraft empty; false otherwise 
 	 */
 	public boolean flightEmpty() {
-		
+		return seats.isEmpty();
 	}
 	
 	/**
@@ -129,9 +146,10 @@ public abstract class Aircraft {
 	 * @return <code>boolean</code> true if aircraft full; false otherwise 
 	 */
 	public boolean flightFull() {
-		
+		return this.capacity == seats.size();
 	}
-	
+
+    // TODO needs a testing
 	/**
 	 * Method to finalise the aircraft seating on departure. 
 	 * Effect is to change the state of each passenger to Flown. 
@@ -141,10 +159,13 @@ public abstract class Aircraft {
 	 * @throws PassengerException if <code>Passenger</code> is in incorrect state 
 	 * See {@link asgn2Passengers.Passenger#flyPassenger(int)}. 
 	 */
-	public void flyPassengers(int departureTime) throws PassengerException { 
-		
-	}
-	
+	public void flyPassengers(int departureTime) throws PassengerException {
+        for (Passenger p: this.seats) {
+            p.flyPassenger(departureTime);
+        }
+    }
+
+    // TODO needs testing
 	/**
 	 * Method to return an {@link asgn2Aircraft.Bookings} object containing the Confirmed 
 	 * booking status for this aircraft. 
@@ -152,7 +173,10 @@ public abstract class Aircraft {
 	 * @return <code>Bookings</code> object containing the status.  
 	 */
 	public Bookings getBookings() {
-		
+        int remainingCapacity = this.capacity - seats.size();
+		Bookings status = new Bookings(this.numFirst, this.numBusiness, this.numPremium, this.numEconomy,
+                this.capacity, remainingCapacity);
+        return status;
 	}
 	
 	/**
@@ -161,7 +185,7 @@ public abstract class Aircraft {
 	 * @return <code>int</code> number of Business Class passengers 
 	 */
 	public int getNumBusiness() {
-		
+		return this.numBusiness;
 	}
 	
 	
@@ -171,7 +195,7 @@ public abstract class Aircraft {
 	 * @return <code>int</code> number of Economy Class passengers 
 	 */
 	public int getNumEonomy() {
-		
+		return this.numEconomy;
 	}
 
 	/**
@@ -180,7 +204,7 @@ public abstract class Aircraft {
 	 * @return <code>int</code> number of First Class passengers 
 	 */
 	public int getNumFirst() {
-		
+		return this.numFirst;
 	}
 
 	/**
@@ -189,7 +213,7 @@ public abstract class Aircraft {
 	 * @return <code>int</code> number of Confirmed passengers 
 	 */
 	public int getNumPassengers() {
-		
+		return seats.size();
 	}
 	
 	/**
@@ -208,7 +232,7 @@ public abstract class Aircraft {
 	 * @return <code>List<Passenger></code> object containing the passengers.  
 	 */
 	public List<Passenger> getPassengers() {
-		
+		return seats;
 	}
 	
 	/**
@@ -226,7 +250,8 @@ public abstract class Aircraft {
 		this.status="";
 		return str+"\n";
 	}
-	
+
+    // TODO testing
 	/**
 	 * Simple boolean to check whether a passenger is included on the aircraft 
 	 * 
@@ -234,9 +259,8 @@ public abstract class Aircraft {
 	 * @return <code>boolean</code> true if isConfirmed(p); false otherwise 
 	 */
 	public boolean hasPassenger(Passenger p) {
-		
+		return seats.contains(p);
 	}
-	
 
 	/**
 	 * State dump intended for logging the aircraft parameters (Supplied) 
@@ -259,7 +283,19 @@ public abstract class Aircraft {
 	 * @return <code>boolean</code> true if seats in Class(p); false otherwise
 	 */
 	public boolean seatsAvailable(Passenger p) {		
-		
+		char passType = passengerType(p);
+        if (passType == 'Y') {
+            return numEconomy < economyCapacity;
+        }
+        else if (passType == 'J') {
+            return numBusiness < businessCapacity;
+        }
+        else if (passType == 'P') {
+            return numPremium < premiumCapacity;
+        }
+        else {
+            return numFirst < firstCapacity;
+        }
 	}
 
 	/* 
@@ -290,7 +326,7 @@ public abstract class Aircraft {
 	 * See {@link asgn2Passengers.Passenger#upgrade()}
 	 */
 	public void upgradeBookings() throws PassengerException { 
-		
+		// use java streams??
 	}
 
 	/**
@@ -318,4 +354,16 @@ public abstract class Aircraft {
 		String msg = "";
 		return msg + p.noSeatsMsg(); 
 	}
+
+    // TODO test
+    /**
+     * Gets the class of the passenger
+     * @param p
+     * @return class String Y F J P etc
+     */
+    private char passengerType(Passenger p) {
+        String passId = p.getPassID();
+        char passType = passId.charAt(0);
+        return passType;
+    }
 }

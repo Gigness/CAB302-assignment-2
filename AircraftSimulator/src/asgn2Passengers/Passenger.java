@@ -125,7 +125,9 @@ public abstract class Passenger {
 		//TODO does this need to be reset her? VV
 		this.confirmationTime = -1;
 		this.confirmed = false;
-		this.newState = true;
+		if(cancellationTime<departureTime){ //TODO is this what the 3rd line of the pre function comment means ^
+			this.newState = true;
+		}
 	}
 
 	/**
@@ -145,7 +147,13 @@ public abstract class Passenger {
 		if(this.isConfirmed()||this.isRefused()||this.isFlown()||confirmationTime<0||departureTime<confirmationTime){
 			throw new PassengerException("confirmSeat error occured");
 		}
-		
+		this.newState = false;
+		this.inQueue = false;
+		if(confirmationTime<departureTime){
+		this.exitQueueTime = confirmationTime;
+		this.departureTime = departureTime; //TODO ??? this line or naw
+		this.confirmed = true;
+		}
 	}
 
 	/**
@@ -160,7 +168,13 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (departureTime <= 0)
 	 */
 	public void flyPassenger(int departureTime) throws PassengerException {
-		
+		if(this.isNew()||this.isQueued()||this.isRefused()||this.isFlown()||departureTime<=0){
+			throw new PassengerException("flyPassenger error occured");
+		}
+		this.confirmed = false;
+		if(departureTime==this.departureTime){//TODO do i need any of these if statements lel
+			this.flown = true;
+		}
 	}
 
 	/**
@@ -286,7 +300,13 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (queueTime < 0) OR (departureTime < queueTime)
 	 */
 	public void queuePassenger(int queueTime, int departureTime) throws PassengerException {
-		
+		if(this.isQueued()||this.isConfirmed()||this.isRefused()||this.isFlown()||queueTime<0||departureTime<queueTime){
+			throw new PassengerException("queuePassenger error occured");
+		}
+		this.newState = false;
+		this.inQueue = true;
+		this.enterQueueTime = queueTime;
+		this.departureTime = departureTime;
 	}
 	
 	/**
@@ -302,7 +322,13 @@ public abstract class Passenger {
 	 * 			OR (refusalTime < 0) OR (refusalTime < bookingTime)
 	 */
 	public void refusePassenger(int refusalTime) throws PassengerException {
-		
+		if(this.isConfirmed()||this.isRefused()||this.isFlown()||refusalTime<0||refusalTime<this.bookingTime){//TODO this allows refusalTime to be 0 cause default bookingTime is -1? is this ok?
+			throw new PassengerException("queuePassenger error occured");
+		}
+		this.newState = false;
+		this.inQueue = false;
+		//TODO one of the two cases needs a "finalised on departureTime" check? line 4 of pre function doc ^^?
+		this.refused = true;
 	}
 	
 	/* (non-Javadoc) (Supplied) 
@@ -344,7 +370,11 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if was Confirmed state; false otherwise
 	 */
 	public boolean wasConfirmed() {
-		return this.confirmed;
+		//TODO unsure if correct implementation 
+		if(this.confirmationTime!=0){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -353,6 +383,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if was Queued state; false otherwise
 	 */
 	public boolean wasQueued() {
+		//TODO unsure if correct implementation 
 		if(this.enterQueueTime!=0){
 			return true;
 		}
@@ -365,7 +396,8 @@ public abstract class Passenger {
 	 * @param <code>Passenger</code> state to transfer
 	 */
 	protected void copyPassengerState(Passenger p) {
-		
+		//TODO .toString() makes a copy right yea pretty sure
+		p.passID = this.passID.toString();
 	}
 	
 	//Various private helper methods to check arguments and throw exceptions

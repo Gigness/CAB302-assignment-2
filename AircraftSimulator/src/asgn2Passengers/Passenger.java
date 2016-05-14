@@ -72,7 +72,23 @@ public abstract class Passenger {
 	 * OR (departureTime < bookingTime) 
 	 */
 	public Passenger(int bookingTime, int departureTime) throws PassengerException  {
-		//Stuff here 
+		if(bookingTime<0 || departureTime<=0 || departureTime<bookingTime){
+			//TODO maybe make these have unique error msgs?
+			throw new PassengerException("Invalid paramaters");
+		}
+		
+		//idk if i need to init these vars 
+		//TODO false and -1 (may need to init at 0) for states that do not apply to this passenger
+		this.newState = true;
+		this.confirmed = false;
+		this.inQueue = false;
+		this.refused = false;
+		this.enterQueueTime = -1;
+		this.exitQueueTime = -1;
+		this.confirmationTime = -1;
+		this.departureTime = -1;
+		this.bookingTime = bookingTime;
+		this.departureTime = departureTime;
 		this.passID = "" + Passenger.index; 
 		Passenger.index++; 
 		//Stuff here 
@@ -102,7 +118,14 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (cancellationTime < 0) OR (departureTime < cancellationTime)
 	 */
 	public void cancelSeat(int cancellationTime) throws PassengerException {
-
+		if(this.isNew()||this.isQueued()||this.isRefused()||this.isFlown()||cancellationTime<0||this.departureTime<cancellationTime){ 
+			//TODO maybe this needs to have unique errors idk
+			throw new PassengerException("cancelSeat error occured");
+		}
+		//TODO does this need to be reset her? VV
+		this.confirmationTime = -1;
+		this.confirmed = false;
+		this.newState = true;
 	}
 
 	/**
@@ -119,7 +142,10 @@ public abstract class Passenger {
 	 * 		   OR (confirmationTime < 0) OR (departureTime < confirmationTime)
 	 */
 	public void confirmSeat(int confirmationTime, int departureTime) throws PassengerException {
-	
+		if(this.isConfirmed()||this.isRefused()||this.isFlown()||confirmationTime<0||departureTime<confirmationTime){
+			throw new PassengerException("confirmSeat error occured");
+		}
+		
 	}
 
 	/**
@@ -143,7 +169,7 @@ public abstract class Passenger {
 	 * @return the bookingTime
 	 */
 	public int getBookingTime() {
-		
+		return this.bookingTime;
 	}
 
 	/**
@@ -153,7 +179,7 @@ public abstract class Passenger {
 	 * @return the confirmationTime
 	 */
 	public int getConfirmationTime() {
-		
+		return this.confirmationTime;
 	}
 
 	/**
@@ -162,7 +188,7 @@ public abstract class Passenger {
 	 * @return the departureTime
 	 */
 	public int getDepartureTime() {
-		
+		return this.departureTime;
 	}
 	
 	/**
@@ -171,7 +197,7 @@ public abstract class Passenger {
 	 * @return the enterQueueTime
 	 */
 	public int getEnterQueueTime() {
-		
+		return this.enterQueueTime;
 	}
 
 	/**
@@ -180,7 +206,7 @@ public abstract class Passenger {
 	 * @return the exitQueueTime
 	 */
 	public int getExitQueueTime() {
-		
+		return this.exitQueueTime;
 	}
 
 	/**
@@ -189,7 +215,7 @@ public abstract class Passenger {
 	 * @return the passID
 	 */
 	public String getPassID() {
-		
+		return this.passID;
 	}
 
 	/**
@@ -198,7 +224,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if Confirmed state; false otherwise 
 	 */
 	public boolean isConfirmed() {
-		
+		return this.confirmed;
 	}
 		
 	/**
@@ -207,7 +233,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if Flown state; false otherwise 
 	 */
 	public boolean isFlown() {
-		
+		return this.flown;
 	}
 	
 	/**
@@ -216,7 +242,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if New state; false otherwise 
 	 */
 	public boolean isNew() {
-		
+		return this.newState;
 	}
 
 	/**
@@ -225,7 +251,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if Queued state; false otherwise 
 	 */
 	public boolean isQueued() {
-		
+		return this.inQueue;
 	}
 	
 	/**
@@ -234,7 +260,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if Refused state; false otherwise 
 	 */
 	public boolean isRefused() {
-		
+		return this.refused;
 	}
 	
 	/**
@@ -318,7 +344,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if was Confirmed state; false otherwise
 	 */
 	public boolean wasConfirmed() {
-		
+		return this.confirmed;
 	}
 
 	/**
@@ -327,7 +353,10 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if was Queued state; false otherwise
 	 */
 	public boolean wasQueued() {
-		
+		if(this.enterQueueTime!=0){
+			return true;
+		}
+		return false;
 	}
 	
 	/**

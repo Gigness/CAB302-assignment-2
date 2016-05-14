@@ -20,7 +20,8 @@ public class Economy extends Passenger {
 	 * @see asgnPassengers.Passenger#Passenger(int,int)
 	 */
 	public Economy(int bookingTime,int departureTime) throws PassengerException {
-		//Stuff here
+		//TODO was it just this below?
+		super();
 		this.passID = "Y:" + this.passID;
 	}
 	
@@ -31,6 +32,7 @@ public class Economy extends Passenger {
 
 	@Override
 	public Passenger upgrade() {
-
+		this.passID = "P:" + this.passID.substring(2);//this line maybe not needed depending on below
+		return null;//wait does this want me to construct a new passenger? wont that create a new index though, does that matter
 	}
 }

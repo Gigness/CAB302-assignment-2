@@ -84,6 +84,8 @@ public abstract class Aircraft {
         this.capacity = first + business + premium + economy;
 	}
 
+
+
     // TODO testing
 	/**
 	 * Method to remove passenger from the aircraft - passenger must have a confirmed 

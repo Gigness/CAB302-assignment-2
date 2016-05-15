@@ -94,10 +94,28 @@ public abstract class Aircraft {
 	 * is invalid. See {@link asgn2Passengers.Passenger#cancelSeat(int)}
 	 * @throws AircraftException if <code>Passenger</code> is not recorded in aircraft seating 
 	 */
-	public void cancelBooking(Passenger p,int cancellationTime) throws PassengerException, AircraftException {
-		//Stuff here
+	public void cancelBooking(Passenger p, int cancellationTime) throws PassengerException, AircraftException {
+        if (!seats.contains(p)) {
+            throw new AircraftException("passenger not recorded in seating");
+        }
+		p.cancelSeat(cancellationTime); // this throws passenger exception
+
+        // Given code
 		this.status += Log.setPassengerMsg(p,"C","N");
-		//Stuff here
+        // remove passenger from seats,  decrement corresponding passenger counter
+        seats.remove(p);
+        char pType = passengerType(p);
+        switch(pType) {
+            case 'Y':   this.numEconomy--;
+                        break;
+            case 'F':   this.numPremium--;
+                        break;
+            case 'J':   this.numBusiness--;
+                        break;
+            case 'P':   this.numFirst--;
+                        break;
+        }
+
 	}
 
     // TODO
@@ -222,7 +240,7 @@ public abstract class Aircraft {
 	 * @return <code>int</code> number of Premium Economy Class passengers
 	 */
 	public int getNumPremium() {
-		
+		return this.numPremium;
 	}
 	
 	/**
@@ -366,4 +384,5 @@ public abstract class Aircraft {
         char passType = passId.charAt(0);
         return passType;
     }
+
 }

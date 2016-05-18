@@ -47,6 +47,9 @@ package asgn2Passengers;
  */
 public abstract class Passenger {
 
+	
+	private static final int NOT_APPLICABLE = -1;
+	
 	private static int index = 0;
 	protected String passID;
 	protected boolean newState; 
@@ -72,25 +75,31 @@ public abstract class Passenger {
 	 * OR (departureTime < bookingTime) 
 	 */
 	public Passenger(int bookingTime, int departureTime) throws PassengerException  {
-		if(bookingTime < 0 || departureTime <= 0 || departureTime < bookingTime){
-			//TODO split these up :(
-			throw new PassengerException("Invalid paramaters");
+
+		/*Exception checking*/
+		if(bookingTime < 0){
+			throw new PassengerException("bookingTime cannot be less than 0");
+		}
+		if(departureTime <= 0){
+			throw new PassengerException("departureTime cannot be less or equal to 0");
+		}
+		if(departureTime < bookingTime){
+			throw new PassengerException("bookingTime cannot be greater than departureTime");
 		}
 
-		//TODO false and -1 (may need to init at 0) for states that do not apply to this passenger
+		/*Passenger state initialization*/
 		this.newState = true;
 		this.confirmed = false;
 		this.inQueue = false;
 		this.refused = false;
-		this.enterQueueTime = -1;
-		this.exitQueueTime = -1;
-		this.confirmationTime = -1;
-		this.departureTime = -1;
+		this.enterQueueTime = NOT_APPLICABLE;
+		this.exitQueueTime = NOT_APPLICABLE;
+		this.confirmationTime = NOT_APPLICABLE;
+		this.departureTime = NOT_APPLICABLE;
 		this.bookingTime = bookingTime;
 		this.departureTime = departureTime;
 		this.passID = "" + Passenger.index; 
 		Passenger.index++; 
-		//Stuff here 
 	}
 	
 	/**
@@ -117,16 +126,21 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (cancellationTime < 0) OR (departureTime < cancellationTime)
 	 */
 	public void cancelSeat(int cancellationTime) throws PassengerException {
-		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown() || cancellationTime < 0 || this.departureTime < cancellationTime){ 
-			//TODO this alot for 1 line
-			//TODO maybe this needs to have unique errors idk
-			throw new PassengerException("cancelSeat error occured");
+		
+		/*Exception checking*/
+		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()){ 
+			throw new PassengerException("Cannot be cancled from this Passenger state");
 		}
-		//TODO does this need to be reset her? VV
-		this.confirmationTime = -1;
+		if(cancellationTime < 0){ 
+			throw new PassengerException("cancellationTime cannot be less than 0");
+		}
+		if(this.departureTime < cancellationTime){ 
+			throw new PassengerException("cancellationTime cannot be less than departureTime");
+		}
+		
 		this.confirmed = false;
+		
 		if(cancellationTime < departureTime){ //TODO is this what the 3rd line of the pre function comment means ^
-			//is this bad practice
 			this.newState = true;
 		}
 	}
@@ -144,16 +158,29 @@ public abstract class Passenger {
 	 * @throws PassengerException if isConfirmed(this) OR isRefused(this) OR isFlown(this)
 	 * 		   OR (confirmationTime < 0) OR (departureTime < confirmationTime)
 	 */
+	//<li>confirmSeat: Queued -> Confirmed; up until departureTime</li>---- what does this mean
 	public void confirmSeat(int confirmationTime, int departureTime) throws PassengerException {
-		if(this.isConfirmed() || this.isRefused() || this.isFlown() || confirmationTime < 0 || departureTime < confirmationTime){
-			throw new PassengerException("confirmSeat error occured");
+
+		/*Exception checking*/
+		if(this.isConfirmed() || this.isRefused() || this.isFlown()){
+			throw new PassengerException("Cannot be confirmed from this Passenger state");
 		}
-		this.newState = false;
-		this.inQueue = false;
-		if(confirmationTime < departureTime){
+		if(confirmationTime < 0){
+			throw new PassengerException("confirmationTime cannot be less than 0");
+		}
+		if(departureTime < confirmationTime){
+			throw new PassengerException("confirmationTime cannot be less than departureTime");
+		}
+		
+		if(inQueue){
+			this.inQueue = false;
 			this.exitQueueTime = confirmationTime;
-			this.confirmed = true;
 		}
+		
+		this.newState = false;
+		this.confirmationTime = confirmationTime;
+		this.confirmed = true;
+		
 	}
 
 	/**
@@ -168,11 +195,18 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (departureTime <= 0)
 	 */
 	public void flyPassenger(int departureTime) throws PassengerException {
-		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown() || departureTime <= 0){
-			throw new PassengerException("flyPassenger error occured");
+		
+		/*Exception checking*/
+		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()){
+			throw new PassengerException("Cannot be flown from this Passenger state");
 		}
+		if(departureTime <= 0){
+			throw new PassengerException("departureTime cannot be less than 0");
+		} 
+		
 		this.confirmed = false;
-		if(departureTime == this.departureTime){//TODO do i need any of these if statements lel
+		
+		if(departureTime == this.departureTime){
 			this.flown = true;
 		}
 	}
@@ -300,9 +334,18 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (queueTime < 0) OR (departureTime < queueTime)
 	 */
 	public void queuePassenger(int queueTime, int departureTime) throws PassengerException {
-		if(this.isQueued() || this.isConfirmed() || this.isRefused() || this.isFlown() || queueTime < 0 || departureTime < queueTime){
-			throw new PassengerException("queuePassenger error occured");
+		
+		/*Exception check*/
+		if(this.isQueued() || this.isConfirmed() || this.isRefused() || this.isFlown()){
+			throw new PassengerException("Cannot be queued from this Passenger state");
 		}
+		if(queueTime < 0){
+			throw new PassengerException("queueTime cannot be less than 0");
+		}
+		if(departureTime < queueTime){
+			throw new PassengerException("queueTime cannot be greater than departureTime");
+		}
+		
 		this.newState = false;
 		this.inQueue = true;
 		this.enterQueueTime = queueTime;
@@ -322,8 +365,16 @@ public abstract class Passenger {
 	 * 			OR (refusalTime < 0) OR (refusalTime < bookingTime)
 	 */
 	public void refusePassenger(int refusalTime) throws PassengerException {
-		if(this.isConfirmed() || this.isRefused() || this.isFlown() || refusalTime < 0 || refusalTime < this.bookingTime){//TODO this allows refusalTime to be 0 cause default bookingTime is -1? is this ok?
-			throw new PassengerException("queuePassenger error occured");
+
+		/*Exception check*/
+		if(this.isConfirmed() || this.isRefused() || this.isFlown()){
+			throw new PassengerException("Cannot be refused from this Passenger state");
+		}
+		if(refusalTime < 0){
+			throw new PassengerException("refusalTime cannot be less than 0");
+		}
+		if(refusalTime < this.bookingTime){
+			throw new PassengerException("refusalTime cannot be less than this.bookingTime");
 		}
 		
 		if(this.inQueue && (refusalTime == this.departureTime)){
@@ -379,7 +430,7 @@ public abstract class Passenger {
 	 */
 	public boolean wasConfirmed() {
 		//TODO unsure if correct implementation 
-		if(this.confirmationTime != -1 && !this.isConfirmed()){
+		if(this.confirmationTime != NOT_APPLICABLE){
 			return true;
 		}
 		return false;
@@ -392,7 +443,7 @@ public abstract class Passenger {
 	 */
 	public boolean wasQueued() {
 		//TODO unsure if correct implementation 
-		if(this.enterQueueTime != -1){
+		if(this.enterQueueTime != NOT_APPLICABLE){
 			return true;
 		}
 		return false;
@@ -404,7 +455,7 @@ public abstract class Passenger {
 	 * @param <code>Passenger</code> state to transfer
 	 */
 	protected void copyPassengerState(Passenger p) {
-		//TODO .toString() makes a copy right yea pretty sure
+		//TODO what is this method idek
 		p.passID = this.passID.toString();
 	}
 	

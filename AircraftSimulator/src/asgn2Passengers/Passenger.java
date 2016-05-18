@@ -72,12 +72,11 @@ public abstract class Passenger {
 	 * OR (departureTime < bookingTime) 
 	 */
 	public Passenger(int bookingTime, int departureTime) throws PassengerException  {
-		if(bookingTime<0 || departureTime<=0 || departureTime<bookingTime){
-			//TODO maybe make these have unique error msgs?
+		if(bookingTime < 0 || departureTime <= 0 || departureTime < bookingTime){
+			//TODO split these up :(
 			throw new PassengerException("Invalid paramaters");
 		}
-		
-		//idk if i need to init these vars 
+
 		//TODO false and -1 (may need to init at 0) for states that do not apply to this passenger
 		this.newState = true;
 		this.confirmed = false;
@@ -118,14 +117,16 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (cancellationTime < 0) OR (departureTime < cancellationTime)
 	 */
 	public void cancelSeat(int cancellationTime) throws PassengerException {
-		if(this.isNew()||this.isQueued()||this.isRefused()||this.isFlown()||cancellationTime<0||this.departureTime<cancellationTime){ 
+		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown() || cancellationTime < 0 || this.departureTime < cancellationTime){ 
+			//TODO this alot for 1 line
 			//TODO maybe this needs to have unique errors idk
 			throw new PassengerException("cancelSeat error occured");
 		}
 		//TODO does this need to be reset her? VV
 		this.confirmationTime = -1;
 		this.confirmed = false;
-		if(cancellationTime<departureTime){ //TODO is this what the 3rd line of the pre function comment means ^
+		if(cancellationTime < departureTime){ //TODO is this what the 3rd line of the pre function comment means ^
+			//is this bad practice
 			this.newState = true;
 		}
 	}
@@ -144,15 +145,14 @@ public abstract class Passenger {
 	 * 		   OR (confirmationTime < 0) OR (departureTime < confirmationTime)
 	 */
 	public void confirmSeat(int confirmationTime, int departureTime) throws PassengerException {
-		if(this.isConfirmed()||this.isRefused()||this.isFlown()||confirmationTime<0||departureTime<confirmationTime){
+		if(this.isConfirmed() || this.isRefused() || this.isFlown() || confirmationTime < 0 || departureTime < confirmationTime){
 			throw new PassengerException("confirmSeat error occured");
 		}
 		this.newState = false;
 		this.inQueue = false;
-		if(confirmationTime<departureTime){
-		this.exitQueueTime = confirmationTime;
-		this.departureTime = departureTime; //TODO ??? this line or naw
-		this.confirmed = true;
+		if(confirmationTime < departureTime){
+			this.exitQueueTime = confirmationTime;
+			this.confirmed = true;
 		}
 	}
 
@@ -168,11 +168,11 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (departureTime <= 0)
 	 */
 	public void flyPassenger(int departureTime) throws PassengerException {
-		if(this.isNew()||this.isQueued()||this.isRefused()||this.isFlown()||departureTime<=0){
+		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown() || departureTime <= 0){
 			throw new PassengerException("flyPassenger error occured");
 		}
 		this.confirmed = false;
-		if(departureTime==this.departureTime){//TODO do i need any of these if statements lel
+		if(departureTime == this.departureTime){//TODO do i need any of these if statements lel
 			this.flown = true;
 		}
 	}
@@ -300,7 +300,7 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (queueTime < 0) OR (departureTime < queueTime)
 	 */
 	public void queuePassenger(int queueTime, int departureTime) throws PassengerException {
-		if(this.isQueued()||this.isConfirmed()||this.isRefused()||this.isFlown()||queueTime<0||departureTime<queueTime){
+		if(this.isQueued() || this.isConfirmed() || this.isRefused() || this.isFlown() || queueTime < 0 || departureTime < queueTime){
 			throw new PassengerException("queuePassenger error occured");
 		}
 		this.newState = false;
@@ -322,13 +322,20 @@ public abstract class Passenger {
 	 * 			OR (refusalTime < 0) OR (refusalTime < bookingTime)
 	 */
 	public void refusePassenger(int refusalTime) throws PassengerException {
-		if(this.isConfirmed()||this.isRefused()||this.isFlown()||refusalTime<0||refusalTime<this.bookingTime){//TODO this allows refusalTime to be 0 cause default bookingTime is -1? is this ok?
+		if(this.isConfirmed() || this.isRefused() || this.isFlown() || refusalTime < 0 || refusalTime < this.bookingTime){//TODO this allows refusalTime to be 0 cause default bookingTime is -1? is this ok?
 			throw new PassengerException("queuePassenger error occured");
 		}
-		this.newState = false;
-		this.inQueue = false;
-		//TODO one of the two cases needs a "finalised on departureTime" check? line 4 of pre function doc ^^?
-		this.refused = true;
+		
+		if(this.inQueue && (refusalTime == this.departureTime)){
+			this.refused = true;
+			this.inQueue = false;
+		} else if(this.newState){
+			this.newState = false;
+			this.refused = true;
+		}
+		
+		
+		
 	}
 	
 	/* (non-Javadoc) (Supplied) 
@@ -361,8 +368,9 @@ public abstract class Passenger {
 	 * Transition rules are specific to each fare class
 	 * 
 	 * @return <code>Passenger</code> of the upgraded fare class 
+	 * @throws PassengerException 
 	 */
-	public abstract Passenger upgrade();
+	public abstract Passenger upgrade() throws PassengerException;
 
 	/**
 	 * Boolean status indicating whether passenger was ever confirmed
@@ -371,7 +379,7 @@ public abstract class Passenger {
 	 */
 	public boolean wasConfirmed() {
 		//TODO unsure if correct implementation 
-		if(this.confirmationTime!=0){
+		if(this.confirmationTime != -1 && !this.isConfirmed()){
 			return true;
 		}
 		return false;
@@ -384,7 +392,7 @@ public abstract class Passenger {
 	 */
 	public boolean wasQueued() {
 		//TODO unsure if correct implementation 
-		if(this.enterQueueTime!=0){
+		if(this.enterQueueTime != -1){
 			return true;
 		}
 		return false;

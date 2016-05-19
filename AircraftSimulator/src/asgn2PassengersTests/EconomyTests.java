@@ -45,6 +45,7 @@ public class EconomyTests {
         pConfirmed.confirmSeat(CONFIRM_TIME, DEPARTURE_TIME);
         pRefused.refusePassenger(REFUSED_TIME);
         pQueued.queuePassenger(QUEUED_TIME, DEPARTURE_TIME);
+        pFlown.confirmSeat(CONFIRM_TIME,DEPARTURE_TIME);
         pFlown.flyPassenger(DEPARTURE_TIME);
     }
 

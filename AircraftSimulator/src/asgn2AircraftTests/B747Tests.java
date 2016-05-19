@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Gigness on 15/05/2016.
  */
-public class B747Tests extends Aircraft {
+public class B747Tests {
 
     @org.junit.Before
     public void setUp() throws Exception {
@@ -96,11 +96,6 @@ public class B747Tests extends Aircraft {
 
     @org.junit.Test
     public void seatsAvailable() throws Exception {
-
-    }
-
-    @org.junit.Test
-    public void toString() throws Exception {
 
     }
 

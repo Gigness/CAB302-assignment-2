@@ -381,7 +381,11 @@ public abstract class Aircraft {
                 .filter(p -> p instanceof Business)
                 .forEach(p -> {
                     if(firstAvailable()) {
-                        upgradePassenger(p);
+                        try {
+                            upgradePassenger(p);
+                        } catch (PassengerException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
 
@@ -396,7 +400,11 @@ public abstract class Aircraft {
                 .filter(p -> p instanceof Premium)
                 .forEach(p -> {
                     if(premiumAvailable()) {
-                        upgradePassenger(p);
+                        try {
+                            upgradePassenger(p);
+                        } catch (PassengerException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
 
@@ -405,7 +413,11 @@ public abstract class Aircraft {
                 .filter(p -> p instanceof Economy)
                 .forEach(p -> {
                     if(economyAvailable()) {
-                        upgradePassenger(p);
+                        try {
+                            upgradePassenger(p);
+                        } catch (PassengerException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
 
@@ -472,7 +484,7 @@ public abstract class Aircraft {
      * WARNING - Does not check anything, just does it
      * @param p
      */
-    private void upgradePassenger(Passenger p) {
+    private void upgradePassenger(Passenger p) throws PassengerException {
         Passenger upgradedP = p.upgrade(); // Throws exception?
 
         if (upgradedP instanceof First) {

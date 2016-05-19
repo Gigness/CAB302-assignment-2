@@ -473,8 +473,8 @@ public abstract class Aircraft {
      * @param p
      */
     private void upgradePassenger(Passenger p) {
-        Passenger upgradedP;
-        upgradedP = p.upgrade(); // Throws exception?
+        Passenger upgradedP = p.upgrade(); // Throws exception?
+
         if (upgradedP instanceof First) {
             this.numFirst++;
             this.numBusiness--;

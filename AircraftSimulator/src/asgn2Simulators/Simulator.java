@@ -449,7 +449,8 @@ public class Simulator {
 	 * @param time <code>int</code> time of operation 
 	 * @throws SimulationException See {@link asgn2Simulators.Simulator#getFlights(int)}
 	 */
-	public void processUpgrades(int time) throws SimulationException {
+	//TODO WARNING HAD TO THROW PASSENGER EXCEPTION
+	public void processUpgrades(int time) throws SimulationException, PassengerException {
 		Flights flights = this.getFlights(time);
 		flights.upgradePassengers();
 	}

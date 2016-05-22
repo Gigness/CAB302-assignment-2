@@ -1,4 +1,4 @@
-package asgn2PassengersTests;
+package asgn2Tests;
 
 import asgn2Passengers.Economy;
 import asgn2Passengers.Passenger;
@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class EconomyTests {
+public class FirstTests {
     /**
      * Test Variables
      */
@@ -467,6 +467,8 @@ public class EconomyTests {
         assertFalse(pRefused.wasQueued());
         assertFalse(pFlown.wasQueued());
     }
+
+
 
 
 

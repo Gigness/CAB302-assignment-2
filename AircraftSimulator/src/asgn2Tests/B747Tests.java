@@ -1,4 +1,4 @@
-package asgn2AircraftTests;
+package asgn2Tests;
 
 import asgn2Aircraft.Aircraft;
 import asgn2Aircraft.B747;
@@ -42,7 +42,7 @@ public class B747Tests {
     	
     	testCraft.cancelBooking(testPassenger, CANCELLATION_TIME);
     	assertEquals(testCraft.getNumEonomy(),0);
-    }
+    }t
 
     @Test
     public void confirmBooking() throws Exception {

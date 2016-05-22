@@ -270,6 +270,93 @@ public class EconomyTests {
 //    }
 
     /**
+     * Test method for {@link asgn2Passengers.Economy#queuePassenger(int, int)}
+     */
+    @Test
+    public void QueuePassenger_New() throws PassengerException {
+        pNew.queuePassenger(QUEUED_TIME, DEPARTURE_TIME);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void QueuePassenger_Confirmed() throws PassengerException {
+        pConfirmed.queuePassenger(QUEUED_TIME, DEPARTURE_TIME);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void QueuePassenger_Refused() throws PassengerException {
+        pRefused.queuePassenger(QUEUED_TIME, DEPARTURE_TIME);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void QueuePassenger_Queued() throws PassengerException {
+        pQueued.queuePassenger(QUEUED_TIME, DEPARTURE_TIME);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void QueuePassenger_Flown() throws PassengerException {
+        pFlown.queuePassenger(QUEUED_TIME, DEPARTURE_TIME);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void QueuePassenger_QueueTimeLessZero() throws PassengerException {
+        pNew.queuePassenger(-1, DEPARTURE_TIME);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void QueuePassenger_DepartureTimeLessQueueTime() throws PassengerException {
+        pNew.queuePassenger(DEPARTURE_TIME, QUEUED_TIME);
+    }
+
+    /**
+     * Test method for {@link asgn2Passengers.Economy#refusePassenger(int)}
+     */
+    @Test(expected = PassengerException.class)
+    public void RefusePassenger_Confirmed() throws PassengerException {
+        pConfirmed.refusePassenger(REFUSED_TIME);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void RefusePassenger_Refused() throws PassengerException {
+        pRefused.refusePassenger(REFUSED_TIME);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void RefusePassenger_Flown() throws PassengerException {
+        pFlown.refusePassenger(REFUSED_TIME);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void RefusePassenger_RefusedTimeLessZero() throws PassengerException {
+        pNew.refusePassenger(-1);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void RefusePassenger_RefusedTimeLessBookingTime() throws PassengerException {
+        pNew.refusePassenger(BOOKING_TIME - 1);
+    }
+
+    @Test
+    public void RefusePassenger_New() throws PassengerException {
+        pNew.refusePassenger(REFUSED_TIME);
+    }
+
+    @Test
+    public void RefusePassenger_RefusedTimeZero() throws PassengerException {
+        test = new Economy(0, 200);
+        test.refusePassenger(0);
+    }
+
+    @Test
+    public void RefusePassenger_Queued() throws PassengerException {
+        pQueued.refusePassenger(REFUSED_TIME);
+    }
+
+    @Test
+    public void RefusePassenger_RefusedTimeEqualBookingTime() throws PassengerException {
+        pQueued.refusePassenger(BOOKING_TIME);
+    }
+
+    /**
      * Test method for {@link asgn2Passengers.Economy#isConfirmed()}
      */
     @Test
@@ -317,7 +404,6 @@ public class EconomyTests {
         assertFalse(pRefused.isNew());
     }
 
-
     /**
      * Test method for {@link asgn2Passengers.Economy#isQueued()}
      */
@@ -350,7 +436,37 @@ public class EconomyTests {
         assertFalse(pQueued.isRefused());
     }
 
+    /**
+     * Test method for {@link asgn2Passengers.Economy#wasConfirmed()}
+     */
+    @Test
+    public void WasConfirmed_Confirmed() {
+        assertTrue(pConfirmed.wasConfirmed());
+        assertTrue(pFlown.wasConfirmed());
+    }
 
+    @Test
+    public void WasConfirmed_NotConfirmed() {
+        assertFalse(pNew.wasConfirmed());
+        assertFalse(pQueued.wasConfirmed());
+        assertFalse(pRefused.wasConfirmed());
+    }
+
+    /**
+     * Test method for {@link asgn2Passengers.Economy#wasQueued()}
+     */
+    @Test
+    public void WasQueued_Queued() {
+        assertTrue(pQueued.wasQueued());
+    }
+
+    @Test
+    public void WasQueued_NeverQueued() {
+        assertFalse(pNew.wasQueued());
+        assertFalse(pConfirmed.wasQueued());
+        assertFalse(pRefused.wasQueued());
+        assertFalse(pFlown.wasQueued());
+    }
 
 
 

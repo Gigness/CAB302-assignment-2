@@ -170,7 +170,8 @@ public class Flights {
 	 *  Passengers are upgraded solely within their original aircraft. We do 
 	 *  not move passengers between flights in the schedule. 
 	 */
-	public void upgradePassengers() {
+	//TODO HAD TO ADD THROWS PASSENGER EXCEPTION
+	public void upgradePassengers() throws PassengerException {
 		for (Aircraft a : this.daily) {
 			a.upgradeBookings();
 		}

@@ -237,17 +237,118 @@ public class EconomyTests {
 
     @Test(expected = PassengerException.class)
     public void FlyPassenger_DepartureTimeLessZero() throws PassengerException {
-        pNew.flyPassenger(-1);
+        pConfirmed.flyPassenger(-1);
+    }
+
+    @Test(expected = PassengerException.class)
+    public void FlyPassenger_DepartureTimeZero() throws PassengerException {
+        pConfirmed.flyPassenger(0);
     }
 
     @Test
     public void FlyPassenger_Test() throws PassengerException {
-        pConfirmed.flyPassenger(1);
+        pConfirmed.flyPassenger(FLOWN_TIME);
+        assertTrue(pConfirmed.isFlown());
     }
 
-    
+    //TODO broken tests, what if flown time != departure time
+//    @Test
+//    public void FlyPassenger_WrongDepartureTimeAhead() throws PassengerException {
+//        pConfirmed.flyPassenger(FLOWN_TIME - 100);
+////        assertTrue(pConfirmed.isFlown());
+//    }
+//
+//    @Test
+//    public void FlyPassenger_WrongDepartureTimeLate() throws PassengerException {
+//        pConfirmed.flyPassenger(FLOWN_TIME + 100);
+//        System.out.println(pConfirmed.isFlown());
+//        System.out.println(pConfirmed.isConfirmed());
+//        System.out.println(pConfirmed.isQueued());
+//        System.out.println(pConfirmed.isRefused());
+//        System.out.println(pConfirmed.isNew());
+////        assertTrue(pConfirmed.isFlown());
+//    }
+
+    /**
+     * Test method for {@link asgn2Passengers.Economy#isConfirmed()}
+     */
+    @Test
+    public void IsConfirmed_Confirmed() {
+        assertTrue(pConfirmed.isConfirmed());
+    }
+
+    @Test
+    public void IsConfirmed_NotConfirmed() {
+        assertFalse(pNew.isConfirmed());
+        assertFalse(pFlown.isConfirmed());
+        assertFalse(pQueued.isConfirmed());
+        assertFalse(pRefused.isConfirmed());
+    }
+
+    /**
+     * Test method for {@link asgn2Passengers.Economy#isFlown()}
+     */
+    @Test
+    public void IsFlown_Flown() {
+        assertTrue(pFlown.isFlown());
+    }
+
+    @Test
+    public void IsFlown_NotFlown() {
+        assertFalse(pNew.isFlown());
+        assertFalse(pConfirmed.isFlown());
+        assertFalse(pQueued.isFlown());
+        assertFalse(pRefused.isFlown());
+    }
+
+    /**
+     * Test method for {@link asgn2Passengers.Economy#isNew()}
+     */
+    @Test
+    public void IsNew_New() {
+        assertTrue(pNew.isNew());
+    }
+
+    @Test
+    public void IsNew_NotNew() {
+        assertFalse(pFlown.isNew());
+        assertFalse(pConfirmed.isNew());
+        assertFalse(pQueued.isNew());
+        assertFalse(pRefused.isNew());
+    }
 
 
+    /**
+     * Test method for {@link asgn2Passengers.Economy#isQueued()}
+     */
+    @Test
+    public void IsQueued_Queued() {
+        assertTrue(pQueued.isQueued());
+    }
+
+    @Test
+    public void IsQueued_NotQueued() {
+        assertFalse(pFlown.isQueued());
+        assertFalse(pConfirmed.isQueued());
+        assertFalse(pNew.isQueued());
+        assertFalse(pRefused.isQueued());
+    }
+
+    /**
+     * Test method for {@link asgn2Passengers.Economy#isRefused()}
+     */
+    @Test
+    public void IsRefused_Refused() {
+        assertTrue(pRefused.isRefused());
+    }
+
+    @Test
+    public void IsRefused_NotRefused() {
+        assertFalse(pFlown.isRefused());
+        assertFalse(pConfirmed.isRefused());
+        assertFalse(pNew.isRefused());
+        assertFalse(pQueued.isRefused());
+    }
 
 
 

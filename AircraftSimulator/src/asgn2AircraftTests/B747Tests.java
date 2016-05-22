@@ -169,6 +169,6 @@ public class B747Tests {
     	testPassenger = new Economy(BOOKING_TIME, DEPARTURE_TIME);
     	testCraft.confirmBooking(testPassenger, CONFIRM_TIME);
     	testCraft.upgradeBookings();
-    	assertEquals(testPassenger.getClass().getSimpleName(),"Economy");
+    	assertEquals(testPassenger.getClass().getSimpleName(),"Premium");
     }
 }

@@ -40,7 +40,7 @@ public class First extends Passenger {
 	@Override
 	public Passenger upgrade() {
 		Passenger upgraded = new First();
-        upgraded.copyPassengerState(this);
+        this.copyPassengerState(upgraded);
 		return upgraded;
 	}
 }

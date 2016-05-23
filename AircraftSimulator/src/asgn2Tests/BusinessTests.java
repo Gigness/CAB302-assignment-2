@@ -23,6 +23,8 @@ public class BusinessTests {
     @Test
     public void Upgrade_Business() {
         Passenger first = business.upgrade();
+        System.out.println(first);
+        System.out.println(first.getPassID());
         assertTrue(first instanceof First);
     }
 }

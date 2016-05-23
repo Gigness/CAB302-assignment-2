@@ -589,7 +589,14 @@ public class FirstTests {
     @Test
     public void Upgrade_First() {
         Passenger upgradedP = pConfirmed.upgrade();
-        assertTrue(pConfirmed instanceof First);
         assertTrue(upgradedP instanceof First);
+    }
+
+    @Test
+    public void Upgrade_PassId() {
+        Passenger upgradedP = pConfirmed.upgrade();
+        System.out.println(upgradedP);
+        System.out.println(pConfirmed);
+        assertEquals(pConfirmed.getPassID(), upgradedP.getPassID());
     }
 }

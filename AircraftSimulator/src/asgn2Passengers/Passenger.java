@@ -458,8 +458,21 @@ public abstract class Passenger {
 	 * @param <code>Passenger</code> state to transfer
 	 */
 	protected void copyPassengerState(Passenger p) {
-		//TODO what is this method idek
-		p.passID = this.passID.toString();
+        p.newState = newState;
+        p.confirmed = confirmed;
+        p.inQueue = inQueue;
+        p.flown = flown;
+        p.refused = refused;
+        p.bookingTime = bookingTime;
+        p.enterQueueTime = enterQueueTime;
+        p.exitQueueTime = exitQueueTime;
+        p.confirmationTime = confirmationTime;
+        p.departureTime = departureTime;
+        p.passID = passID.toString();
+        // TODO
+        // the PassId should be changed as follows
+        // business to first J:10 -> F(U):10
+        // Economy to premium Y:1 -> J(U):1
 	}
 	
 	//Various private helper methods to check arguments and throw exceptions

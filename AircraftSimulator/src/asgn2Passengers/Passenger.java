@@ -468,11 +468,12 @@ public abstract class Passenger {
         p.exitQueueTime = exitQueueTime;
         p.confirmationTime = confirmationTime;
         p.departureTime = departureTime;
-        p.passID = passID.toString();
-        // TODO
-        // the PassId should be changed as follows
-        // business to first J:10 -> F(U):10
-        // Economy to premium Y:1 -> J(U):1
+        switch (p.passID.toString().substring(0,1)){
+	        case "Y":	p.passID = "P(U):" + p.passID.toString().substring(2);
+	        case "P":	p.passID = "J(U):" + p.passID.toString().substring(2);
+	        case "J":	p.passID = "F(U):" + p.passID.toString().substring(2);
+	        case "F":	p.passID = "F(U):" + p.passID.toString().substring(2);
+        }
 	}
 	
 	//Various private helper methods to check arguments and throw exceptions

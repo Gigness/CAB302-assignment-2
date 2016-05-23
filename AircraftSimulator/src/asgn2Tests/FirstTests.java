@@ -1,6 +1,6 @@
 package asgn2Tests;
 
-import asgn2Passengers.Economy;
+import asgn2Passengers.First;
 import asgn2Passengers.Passenger;
 import asgn2Passengers.PassengerException;
 import org.junit.Assert;
@@ -32,11 +32,11 @@ public class FirstTests {
      */
     @Before
     public void setUp() throws PassengerException {
-        pNew = new Economy(BOOKING_TIME, DEPARTURE_TIME);
-        pConfirmed = new Economy(BOOKING_TIME, DEPARTURE_TIME);
-        pRefused = new Economy(BOOKING_TIME, DEPARTURE_TIME);
-        pQueued = new Economy(BOOKING_TIME, DEPARTURE_TIME);
-        pFlown = new Economy(BOOKING_TIME, DEPARTURE_TIME);
+        pNew = new First(BOOKING_TIME, DEPARTURE_TIME);
+        pConfirmed = new First(BOOKING_TIME, DEPARTURE_TIME);
+        pRefused = new First(BOOKING_TIME, DEPARTURE_TIME);
+        pQueued = new First(BOOKING_TIME, DEPARTURE_TIME);
+        pFlown = new First(BOOKING_TIME, DEPARTURE_TIME);
 
         // set states
         pConfirmed.confirmSeat(CONFIRM_TIME, DEPARTURE_TIME);
@@ -47,41 +47,46 @@ public class FirstTests {
     }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#Economy(int, int)}
+     * Test method for {@link asgn2Passengers.First#First(int, int)}
      */
     @Test(expected = PassengerException.class)
-    public void EconomyConstructor_BookingTimeLessZero() throws PassengerException {
-         test = new Economy(-1, 100);
+    public void FirstConstructor_BookingTimeLessZero() throws PassengerException {
+         test = new First(-1, 100);
     }
 
     @Test(expected = PassengerException.class)
-    public void EconomyConstructor_DepartureTimeZero() throws PassengerException {
-        test = new Economy(1, 0);
+    public void FirstConstructor_DepartureTimeZero() throws PassengerException {
+        test = new First(1, 0);
     }
 
     @Test(expected = PassengerException.class)
-    public void EconomyConstructor_DepartureTimeLessZero() throws PassengerException {
-        test = new Economy(1, -1);
+    public void FirstConstructor_DepartureTimeLessZero() throws PassengerException {
+        test = new First(1, -1);
     }
 
     @Test(expected = PassengerException.class)
-    public void EconomyConstructor_BookingAndDeparture() throws PassengerException {
-        test = new Economy(-1, 0);
+    public void FirstConstructor_BookingAndDeparture() throws PassengerException {
+        test = new First(-1, 0);
     }
 
     @Test(expected = PassengerException.class)
-    public void EconomyConstructor_DepartureLessBooking() throws PassengerException {
-        test = new Economy(600, 200);
+    public void FirstConstructor_DepartureLessBooking() throws PassengerException {
+        test = new First(600, 200);
     }
 
     @Test
-    public void EconomyConstructor_DepartureEqualBooking() throws PassengerException {
-        test = new Economy(600, 600);
+    public void FirstConstructor_DepartureEqualBooking() throws PassengerException {
+        test = new First(600, 600);
     }
 
     @Test
-    public void EconomyConstructor_CorrectVariables() throws PassengerException {
-        test = new Economy(830, 1630);
+    public void FirstConstructor_BookingTimeZero() throws PassengerException {
+        test = new First(0, 100);
+    }
+
+    @Test
+    public void FirstConstructor_CorrectVariables() throws PassengerException {
+        test = new First(830, 1630);
         assertEquals(test.getBookingTime(),830);
         assertEquals(test.getDepartureTime(), 1630);
         assertTrue(test.isNew());
@@ -93,7 +98,7 @@ public class FirstTests {
 
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#cancelSeat(int)}
+     * Test method for {@link asgn2Passengers.First#cancelSeat(int)}
      */
     @Test(expected = PassengerException.class)
     public void CancelSeat_New() throws PassengerException {
@@ -148,8 +153,13 @@ public class FirstTests {
         assertFalse(pConfirmed.isRefused());
     }
 
+    @Test
+    public void CancelSeat_CancellationTimeZero() throws PassengerException {
+        pConfirmed.cancelSeat(0);
+    }
+
     /**
-     * Test method for {@link asgn2Passengers.Economy#confirmSeat(int, int)}
+     * Test method for {@link asgn2Passengers.First#confirmSeat(int, int)}
      */
     @Test(expected = PassengerException.class)
     public void ConfirmSeat_Refused() throws PassengerException {
@@ -172,7 +182,7 @@ public class FirstTests {
     }
 
     @Test(expected = PassengerException.class)
-    public void ConfirmSeat_NewDepartureTimeBeforeConfirmTime() throws PassengerException {
+    public void ConfirmSeat_NewDepartureTimeLessConfirmTime() throws PassengerException {
         pNew.confirmSeat(CONFIRM_TIME, CONFIRM_TIME - 1);
     }
 
@@ -189,8 +199,9 @@ public class FirstTests {
         assertTrue(pNew.isConfirmed());
         assertFalse(pNew.isFlown());
         assertFalse(pNew.isRefused());
+        assertEquals(pNew.getConfirmationTime(), CONFIRM_TIME);
+        assertEquals(pNew.getDepartureTime(), DEPARTURE_TIME);
     }
-
 
     @Test
     public void ConfirmSeat_Queued() throws PassengerException {
@@ -200,6 +211,8 @@ public class FirstTests {
         assertFalse(pQueued.isQueued());
         assertFalse(pQueued.isFlown());
         assertFalse(pQueued.isRefused());
+        assertEquals(pQueued.getConfirmationTime(), QUEUED_TIME);
+        assertEquals(pQueued.getDepartureTime(), DEPARTURE_TIME);
     }
 
     @Test
@@ -210,10 +223,12 @@ public class FirstTests {
         assertFalse(pNew.isQueued());
         assertFalse(pNew.isFlown());
         assertFalse(pNew.isRefused());
+        assertEquals(pNew.getConfirmationTime(), DEPARTURE_TIME);
+        assertEquals(pNew.getDepartureTime(), DEPARTURE_TIME);
     }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#flyPassenger(int)}
+     * Test method for {@link asgn2Passengers.First#flyPassenger(int)}
      */
     @Test(expected = PassengerException.class)
     public void FlyPassenger_New() throws PassengerException {
@@ -270,7 +285,7 @@ public class FirstTests {
 //    }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#queuePassenger(int, int)}
+     * Test method for {@link asgn2Passengers.First#queuePassenger(int, int)}
      */
     @Test
     public void QueuePassenger_New() throws PassengerException {
@@ -302,13 +317,27 @@ public class FirstTests {
         pNew.queuePassenger(-1, DEPARTURE_TIME);
     }
 
+    @Test
+    public void QueuePassenger_QueueTimeZero() throws PassengerException {
+        pNew.queuePassenger(0, DEPARTURE_TIME);
+        assertTrue(pNew.isQueued());
+        assertFalse(pNew.isNew());
+    }
+
     @Test(expected = PassengerException.class)
     public void QueuePassenger_DepartureTimeLessQueueTime() throws PassengerException {
         pNew.queuePassenger(DEPARTURE_TIME, QUEUED_TIME);
     }
 
+    @Test
+    public void QueuePassenger_DepartureTimeEqualQueueTime() throws PassengerException {
+        pNew.queuePassenger(DEPARTURE_TIME, DEPARTURE_TIME);
+        assertTrue(pNew.isQueued());
+        assertFalse(pNew.isNew());
+    }
+
     /**
-     * Test method for {@link asgn2Passengers.Economy#refusePassenger(int)}
+     * Test method for {@link asgn2Passengers.First#refusePassenger(int)}
      */
     @Test(expected = PassengerException.class)
     public void RefusePassenger_Confirmed() throws PassengerException {
@@ -338,26 +367,32 @@ public class FirstTests {
     @Test
     public void RefusePassenger_New() throws PassengerException {
         pNew.refusePassenger(REFUSED_TIME);
+        assertTrue(pNew.isRefused());
     }
 
     @Test
     public void RefusePassenger_RefusedTimeZero() throws PassengerException {
-        test = new Economy(0, 200);
+        test = new First(0, 200);
         test.refusePassenger(0);
+        assertTrue(test.isRefused());
     }
 
     @Test
     public void RefusePassenger_Queued() throws PassengerException {
         pQueued.refusePassenger(REFUSED_TIME);
+        assertFalse(pQueued.isQueued());
+        assertTrue(pQueued.isRefused());
+        assertFalse(pQueued.isNew());
     }
 
     @Test
     public void RefusePassenger_RefusedTimeEqualBookingTime() throws PassengerException {
         pQueued.refusePassenger(BOOKING_TIME);
+        assertTrue(pQueued.isRefused());
     }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#isConfirmed()}
+     * Test method for {@link asgn2Passengers.First#isConfirmed()}
      */
     @Test
     public void IsConfirmed_Confirmed() {
@@ -373,7 +408,7 @@ public class FirstTests {
     }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#isFlown()}
+     * Test method for {@link asgn2Passengers.First#isFlown()}
      */
     @Test
     public void IsFlown_Flown() {
@@ -389,7 +424,7 @@ public class FirstTests {
     }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#isNew()}
+     * Test method for {@link asgn2Passengers.First#isNew()}
      */
     @Test
     public void IsNew_New() {
@@ -405,7 +440,7 @@ public class FirstTests {
     }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#isQueued()}
+     * Test method for {@link asgn2Passengers.First#isQueued()}
      */
     @Test
     public void IsQueued_Queued() {
@@ -421,7 +456,7 @@ public class FirstTests {
     }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#isRefused()}
+     * Test method for {@link asgn2Passengers.First#isRefused()}
      */
     @Test
     public void IsRefused_Refused() {
@@ -437,7 +472,7 @@ public class FirstTests {
     }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#wasConfirmed()}
+     * Test method for {@link asgn2Passengers.First#wasConfirmed()}
      */
     @Test
     public void WasConfirmed_Confirmed() {
@@ -453,7 +488,7 @@ public class FirstTests {
     }
 
     /**
-     * Test method for {@link asgn2Passengers.Economy#wasQueued()}
+     * Test method for {@link asgn2Passengers.First#wasQueued()}
      */
     @Test
     public void WasQueued_Queued() {

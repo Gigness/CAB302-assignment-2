@@ -42,7 +42,7 @@ public class B747Tests {
     	
     	testCraft.cancelBooking(testPassenger, CANCELLATION_TIME);
     	assertEquals(testCraft.getNumEonomy(),0);
-    }t
+    }
 
     @Test
     public void confirmBooking() throws Exception {

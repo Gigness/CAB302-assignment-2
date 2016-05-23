@@ -377,13 +377,16 @@ public abstract class Passenger {
 			throw new PassengerException("refusalTime cannot be less than this.bookingTime");
 		}
 		
-		if(this.inQueue && (refusalTime == this.departureTime)){
+		if(this.inQueue){
 			this.refused = true;
 			this.inQueue = false;
-		} else if(this.newState){
-			this.newState = false;
-			this.refused = true;
-		}
+		} else if(this.newState) {
+            this.newState = false;
+            this.refused = true;
+        } else {
+            System.out.println("WARNING SOMeTHING WENT WRONG");
+        }
+
 		
 		
 		

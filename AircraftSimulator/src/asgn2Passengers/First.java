@@ -39,6 +39,7 @@ public class First extends Passenger {
 
 	@Override
 	public Passenger upgrade() {
-		return this;
+		Passenger upgraded = new First();
+		return upgraded;
 	}
 }

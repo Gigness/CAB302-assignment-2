@@ -422,9 +422,9 @@ public abstract class Passenger {
 	 * Transition rules are specific to each fare class
 	 * 
 	 * @return <code>Passenger</code> of the upgraded fare class 
-	 * @throws PassengerException 
+	 * @throws PassengerException //TODO java doc changed don't throw this
 	 */
-	public abstract Passenger upgrade() throws PassengerException;
+	public abstract Passenger upgrade();
 
 	/**
 	 * Boolean status indicating whether passenger was ever confirmed

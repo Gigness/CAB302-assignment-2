@@ -4,7 +4,6 @@ import asgn2Passengers.First;
 import asgn2Passengers.Passenger;
 import asgn2Passengers.PassengerException;
 import com.sun.org.apache.regexp.internal.RE;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -584,27 +583,13 @@ public class FirstTests {
         assertTrue(pQueued.wasQueued());
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * Test method for {@link asgn2Passengers.First#upgrade()}
+     */
+    @Test
+    public void Upgrade_First() {
+        Passenger upgradedP = pConfirmed.upgrade();
+        assertTrue(pConfirmed instanceof First);
+        assertTrue(upgradedP instanceof First);
+    }
 }

@@ -82,12 +82,9 @@ public abstract class Aircraft {
         this.premiumCapacity = premium;
         this.economyCapacity = economy;
         this.capacity = first + business + premium + economy;
-        this.seats = new ArrayList<Passenger>();
+        this.seats = new ArrayList<>();
 	}
 
-
-
-    // TODO testing
 	/**
 	 * Method to remove passenger from the aircraft - passenger must have a confirmed 
 	 * seat prior to entry to this method.   
@@ -167,6 +164,13 @@ public abstract class Aircraft {
         }
 	}
 
+    /**
+     * A380:test_flight:600 Pass: 1
+     passID: Y:18
+     BT: 100
+     NotQ
+     ConfT: 200 NotFlown
+     */
 
 	/**
 	 * State dump intended for use in logging the final state of the aircraft. (Supplied) 
@@ -374,53 +378,42 @@ public abstract class Aircraft {
 	 * @throws PassengerException if <code>Passenger</code> is in incorrect state 
 	 * See {@link asgn2Passengers.Passenger#upgrade()}
 	 */
-	public void upgradeBookings() throws PassengerException { 
-		// use java streams??
+	public void upgradeBookings() {
 
-        // business to first
-        seats.stream()
-                .filter(p -> p instanceof Business)
-                .forEach(p -> {
-                    if(firstAvailable()) {
-                        try {
-                            upgradePassenger(p);
-                        } catch (PassengerException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
 
-        // First class should now be populated via business upgrades
-        // if it is not, (there weren't enough business class passengers)
-        // Fill first class from the queue
-        // perform this intermediate step after each stream is filled
-        // this is where passenger exceptions can be thrown
 
-        // premium to business
-        seats.stream()
-                .filter(p -> p instanceof Premium)
-                .forEach(p -> {
-                    if(premiumAvailable()) {
-                        try {
-                            upgradePassenger(p);
-                        } catch (PassengerException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
-
-        // Economy to Premium
-        seats.stream()
-                .filter(p -> p instanceof Economy)
-                .forEach(p -> {
-                    if(economyAvailable()) {
-                        try {
-                            upgradePassenger(p);
-                        } catch (PassengerException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                });
+//        // business to first
+//        seats.stream()
+//                .filter(p -> p instanceof Business)
+//                .forEach(p -> {
+//                    if(firstAvailable()) {
+//                        upgradePassenger(p);
+//                    }
+//                });
+//
+//        // First class should now be populated via business upgrades
+//        // if it is not, (there weren't enough business class passengers)
+//        // Fill first class from the queue
+//        // perform this intermediate step after each stream is filled
+//        // this is where passenger exceptions can be thrown
+//
+//        // premium to business
+//        seats.stream()
+//                .filter(p -> p instanceof Premium)
+//                .forEach(p -> {
+//                    if(premiumAvailable()) {
+//                        upgradePassenger(p);
+//                    }
+//                });
+//
+//        // Economy to Premium
+//        seats.stream()
+//                .filter(p -> p instanceof Economy)
+//                .forEach(p -> {
+//                    if(economyAvailable()) {
+//                        upgradePassenger(p);
+//                    }
+//                });
 
         // Fill economy seats via the Queue
         // this is where passenger exceptions can be thrown
@@ -485,7 +478,7 @@ public abstract class Aircraft {
      * WARNING - Does not check anything, just does it
      * @param p
      */
-    private void upgradePassenger(Passenger p) throws PassengerException {
+    private void upgradePassenger(Passenger p) {
         Passenger upgradedP = p.upgrade(); // Throws exception?
 
         if (upgradedP instanceof First) {
@@ -493,18 +486,22 @@ public abstract class Aircraft {
             this.numBusiness--;
             seats.remove(p);
             seats.add(upgradedP);
-        }
-        else if (upgradedP instanceof Business) {
+        } else if (upgradedP instanceof Business) {
             this.numBusiness++;
             this.numPremium--;
             seats.remove(p);
             seats.add(upgradedP);
-        }
-        else if (upgradedP instanceof Premium) {
+        } else if (upgradedP instanceof Premium) {
             this.numPremium++;
             this.numEconomy--;
             seats.remove(p);
             seats.add(upgradedP);
+        }
+    }
+
+	public void PRINT_SEATS() {
+        for (Passenger i: seats) {
+            System.out.println(i);
         }
     }
 

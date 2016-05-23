@@ -3,6 +3,7 @@ package asgn2Tests;
 import asgn2Passengers.First;
 import asgn2Passengers.Passenger;
 import asgn2Passengers.PassengerException;
+import com.sun.org.apache.regexp.internal.RE;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -400,6 +401,16 @@ public class FirstTests {
     }
 
     @Test
+    public void IsConfirmed_NewToConfirmed() throws PassengerException {
+        pNew.confirmSeat(CONFIRM_TIME, DEPARTURE_TIME);
+        assertTrue(pNew.isConfirmed());
+        assertFalse(pNew.isFlown());
+        assertFalse(pNew.isQueued());
+        assertFalse(pNew.isRefused());
+        assertFalse(pNew.isNew());
+    }
+
+    @Test
     public void IsConfirmed_NotConfirmed() {
         assertFalse(pNew.isConfirmed());
         assertFalse(pFlown.isConfirmed());
@@ -416,6 +427,16 @@ public class FirstTests {
     }
 
     @Test
+    public void IsFlown_ConfirmedToFlown() throws PassengerException {
+        pConfirmed.flyPassenger(DEPARTURE_TIME);
+        assertTrue(pConfirmed.isFlown());
+        assertFalse(pConfirmed.isConfirmed());
+        assertFalse(pConfirmed.isQueued());
+        assertFalse(pConfirmed.isRefused());
+        assertFalse(pConfirmed.isNew());
+    }
+
+    @Test
     public void IsFlown_NotFlown() {
         assertFalse(pNew.isFlown());
         assertFalse(pConfirmed.isFlown());
@@ -429,6 +450,10 @@ public class FirstTests {
     @Test
     public void IsNew_New() {
         assertTrue(pNew.isNew());
+        assertFalse(pNew.isConfirmed());
+        assertFalse(pNew.isQueued());
+        assertFalse(pNew.isRefused());
+        assertFalse(pNew.isFlown());
     }
 
     @Test
@@ -438,6 +463,18 @@ public class FirstTests {
         assertFalse(pQueued.isNew());
         assertFalse(pRefused.isNew());
     }
+
+    @Test
+    public void IsNew_ConfirmedToNew() throws PassengerException {
+        pConfirmed.cancelSeat(CONFIRM_TIME + 50);
+        assertTrue(pConfirmed.isNew());
+        assertFalse(pConfirmed.isConfirmed());
+        assertFalse(pConfirmed.isQueued());
+        assertFalse(pConfirmed.isRefused());
+        assertFalse(pConfirmed.isFlown());
+    }
+
+
 
     /**
      * Test method for {@link asgn2Passengers.First#isQueued()}
@@ -453,6 +490,16 @@ public class FirstTests {
         assertFalse(pConfirmed.isQueued());
         assertFalse(pNew.isQueued());
         assertFalse(pRefused.isQueued());
+    }
+
+    @Test
+    public void IsQueued_NewToQueued() throws PassengerException {
+        pNew.queuePassenger(QUEUED_TIME, DEPARTURE_TIME);
+        assertTrue(pNew.isQueued());
+        assertFalse(pNew.isConfirmed());
+        assertFalse(pNew.isNew());
+        assertFalse(pNew.isRefused());
+        assertFalse(pNew.isFlown());
     }
 
     /**
@@ -471,6 +518,16 @@ public class FirstTests {
         assertFalse(pQueued.isRefused());
     }
 
+    @Test
+    public void IsRefused_NewToRefused() throws PassengerException {
+        pNew.refusePassenger(REFUSED_TIME);
+        assertTrue(pNew.isRefused());
+        assertFalse(pNew.isConfirmed());
+        assertFalse(pNew.isNew());
+        assertFalse(pNew.isQueued());
+        assertFalse(pNew.isFlown());
+    }
+
     /**
      * Test method for {@link asgn2Passengers.First#wasConfirmed()}
      */
@@ -487,6 +544,18 @@ public class FirstTests {
         assertFalse(pRefused.wasConfirmed());
     }
 
+    @Test
+    public void WasConfirmed_ConfirmedToFlown() throws PassengerException {
+        pConfirmed.flyPassenger(DEPARTURE_TIME);
+        assertTrue(pConfirmed.wasConfirmed());
+    }
+
+    @Test
+    public void WasConfirmed_ConfirmedToNew() throws PassengerException {
+        pConfirmed.cancelSeat(DEPARTURE_TIME);
+        assertTrue(pConfirmed.wasConfirmed());
+    }
+
     /**
      * Test method for {@link asgn2Passengers.First#wasQueued()}
      */
@@ -501,6 +570,18 @@ public class FirstTests {
         assertFalse(pConfirmed.wasQueued());
         assertFalse(pRefused.wasQueued());
         assertFalse(pFlown.wasQueued());
+    }
+
+    @Test
+    public void WasQueued_QueuedToConfirmed() throws PassengerException {
+        pQueued.confirmSeat(CONFIRM_TIME, DEPARTURE_TIME);
+        assertTrue(pQueued.wasQueued());
+    }
+
+    @Test
+    public void WasQueued_QueuedToRefused() throws PassengerException {
+        pQueued.refusePassenger(REFUSED_TIME);
+        assertTrue(pQueued.wasQueued());
     }
 
 

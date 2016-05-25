@@ -417,6 +417,7 @@ public class A380Tests {
         for (int i = 0; i < 20; i++) {
             upgradeTestCraft.confirmBooking(economyList.get(i), CONFIRM_TIME);
         }
+
         System.out.println(upgradeTestCraft.getNumEonomy());
         System.out.println(upgradeTestCraft.getNumPremium());
         System.out.println(upgradeTestCraft.getNumBusiness());

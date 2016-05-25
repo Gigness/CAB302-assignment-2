@@ -156,6 +156,14 @@ public class FirstTests {
     @Test
     public void CancelSeat_CancellationTimeZero() throws PassengerException {
         pConfirmed.cancelSeat(0);
+        assertEquals(pConfirmed.getBookingTime(), 0);
+    }
+
+    @Test
+    public void CancelSeat_CorrectStates() throws PassengerException {
+        pConfirmed.cancelSeat(300);
+        assertTrue(pConfirmed.isNew());
+        assertFalse(pConfirmed.isConfirmed());
     }
 
     /**

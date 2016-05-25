@@ -186,9 +186,10 @@ public class Flights {
 	 */
 	private List<Aircraft> createDailyServices(int time) throws AircraftException {
 		List<Aircraft> al = new ArrayList<Aircraft>(); 
-		al.add(new A380("QF11",time)); 
-		al.add(new A380("QF93",time)); 
-		al.add(new B747("QF15",time)); 
+		al.add(new A380("QF11",time, 20, 20, 20, 20));
+		// TODO DEBUGSIM check one aircraft
+//		al.add(new A380("QF93",time));
+//		al.add(new B747("QF15",time));
 		return al; 
 	}
 

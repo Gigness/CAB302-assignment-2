@@ -416,7 +416,8 @@ public class Simulator {
 		cancelPeriodEnd = Math.min(Constants.DURATION,cancelPeriodEnd); 
 
 		for (int cancel=cancelPeriodStart; cancel<=cancelPeriodEnd; cancel++) {
-			Flights flights = this.getFlights(cancel);
+            System.out.println(time);
+            Flights flights = this.getFlights(cancel);
 			this.cancelled.addAll(flights.cancelBookings(this.rng, this.cancelProb, time)); 
 		}
 	}

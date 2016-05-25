@@ -126,23 +126,33 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (cancellationTime < 0) OR (departureTime < cancellationTime)
 	 */
 	public void cancelSeat(int cancellationTime) throws PassengerException {
-		
-		/*Exception checking*/
+
+        System.out.print("Departure Time: ");
+        System.out.println(this.departureTime);
+        System.out.print("Cancel Time: ");
+        System.out.println(cancellationTime);
+        System.out.println();
+
+		// Exception checking
 		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()){ 
-			throw new PassengerException("Cannot be cancled from this Passenger state");
-		}
-		if(cancellationTime < 0){ 
+			throw new PassengerException("Cannot be cancelled from this Passenger state");
+		} else if(cancellationTime < 0){
 			throw new PassengerException("cancellationTime cannot be less than 0");
-		}
-		if(this.departureTime < cancellationTime){ 
+		} else if(this.departureTime < cancellationTime){
 			throw new PassengerException("cancellationTime cannot be less than departureTime");
 		}
-		
+
+
+
 		this.confirmed = false;
-		
-		if(cancellationTime < departureTime){ //TODO is this what the 3rd line of the pre function comment means ^
-			this.newState = true;
-		}
+		this.newState = true;
+        this.bookingTime = cancellationTime;
+
+
+//		if(cancellationTime < departureTime){ //TODO is this what the 3rd line of the pre function comment means ^
+//			this.newState = true;
+//		}
+
 	}
 
 	/**

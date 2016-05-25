@@ -99,7 +99,8 @@ public abstract class Aircraft {
         if (!seats.contains(p)) {
             throw new AircraftException("passenger not recorded in seating");
         }
-		p.cancelSeat(cancellationTime); // this throws passenger exception
+
+        p.cancelSeat(cancellationTime); // this throws passenger exception
 
         // Given code
 		this.status += Log.setPassengerMsg(p,"C","N");

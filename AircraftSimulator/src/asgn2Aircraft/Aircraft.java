@@ -123,7 +123,6 @@ public abstract class Aircraft {
         }
 	}
 
-    // TODO testing
 	/**
 	 * Method to add a Passenger to the aircraft seating. 
 	 * Precondition is a test that a seat is available in the required fare class
@@ -164,13 +163,6 @@ public abstract class Aircraft {
         }
 	}
 
-    /**
-     * A380:test_flight:600 Pass: 1
-     passID: Y:18
-     BT: 100
-     NotQ
-     ConfT: 200 NotFlown
-     */
 
 	/**
 	 * State dump intended for use in logging the final state of the aircraft. (Supplied) 
@@ -203,7 +195,6 @@ public abstract class Aircraft {
 		return this.capacity == seats.size();
 	}
 
-    // TODO needs a testing
 	/**
 	 * Method to finalise the aircraft seating on departure. 
 	 * Effect is to change the state of each passenger to Flown. 
@@ -219,7 +210,6 @@ public abstract class Aircraft {
         }
     }
 
-    // TODO needs testing
 	/**
 	 * Method to return an {@link asgn2Aircraft.Bookings} object containing the Confirmed 
 	 * booking status for this aircraft. 
@@ -241,8 +231,7 @@ public abstract class Aircraft {
 	public int getNumBusiness() {
 		return this.numBusiness;
 	}
-	
-	
+
 	/**
 	 * Simple getter for number of confirmed Economy passengers
 	 * 
@@ -286,7 +275,7 @@ public abstract class Aircraft {
 	 * @return <code>List<Passenger></code> object containing the passengers.  
 	 */
 	public List<Passenger> getPassengers() {
-		return seats;
+        return new ArrayList<Passenger>(seats);
 	}
 	
 	/**
@@ -305,7 +294,6 @@ public abstract class Aircraft {
 		return str+"\n";
 	}
 
-    // TODO testing
 	/**
 	 * Simple boolean to check whether a passenger is included on the aircraft 
 	 * 
@@ -385,6 +373,8 @@ public abstract class Aircraft {
                 if (p instanceof Business) {
                     upgradePassenger(p);
                 }
+            } else {
+                break;
             }
         }
 
@@ -393,6 +383,8 @@ public abstract class Aircraft {
                 if (p instanceof Premium) {
                     upgradePassenger(p);
                 }
+            } else {
+                break;
             }
         }
 
@@ -401,46 +393,10 @@ public abstract class Aircraft {
                 if (p instanceof Economy) {
                     upgradePassenger(p);
                 }
+            } else {
+                break;
             }
         }
-
-
-
-//        // business to first
-//        seats.stream()
-//                .filter(p -> p instanceof Business)
-//                .forEach(p -> {
-//                    if(firstAvailable()) {
-//                        upgradePassenger(p);
-//                    }
-//                });
-//
-//        // First class should now be populated via business upgrades
-//        // if it is not, (there weren't enough business class passengers)
-//        // Fill first class from the queue
-//        // perform this intermediate step after each stream is filled
-//        // this is where passenger exceptions can be thrown
-//
-//        // premium to business
-//        seats.stream()
-//                .filter(p -> p instanceof Premium)
-//                .forEach(p -> {
-//                    if(premiumAvailable()) {
-//                        upgradePassenger(p);
-//                    }
-//                });
-//
-//        // Economy to Premium
-//        seats.stream()
-//                .filter(p -> p instanceof Economy)
-//                .forEach(p -> {
-//                    if(economyAvailable()) {
-//                        upgradePassenger(p);
-//                    }
-//                });
-
-        // Fill economy seats via the Queue
-        // this is where passenger exceptions can be thrown
 	}
 
 	/**

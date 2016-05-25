@@ -597,6 +597,7 @@ public class FirstTests {
         Passenger upgradedP = pConfirmed.upgrade();
         System.out.println(upgradedP);
         System.out.println(pConfirmed);
-        assertEquals(pConfirmed.getPassID(), upgradedP.getPassID());
+
+        assertEquals(upgradedP.getPassID(), "F(U):" + pConfirmed.getPassID().substring(2) );
     }
 }

@@ -31,17 +31,17 @@ public class A380Tests {
     private Passenger testPassenger3;
     private Passenger testPassenger4;
 
-    private static ArrayList<Passenger> economyList= new ArrayList<>();
-    private static ArrayList<Passenger> premiumList= new ArrayList<>();
-    private static ArrayList<Passenger> businessList= new ArrayList<>();
-    private static ArrayList<Passenger> firstList= new ArrayList<>();
+    private ArrayList<Passenger> economyList= new ArrayList<>();
+    private ArrayList<Passenger> premiumList= new ArrayList<>();
+    private ArrayList<Passenger> businessList= new ArrayList<>();
+    private ArrayList<Passenger> firstList= new ArrayList<>();
 
-    private static HashMap<Character, Integer> classSeats= new HashMap<>();
+    private HashMap<Character, Integer> classSeats= new HashMap<>();
 
-    private static int economyPassengers = 20;
-    private static int premiumPassengers = 15;
-    private static int businessPassengers = 10;
-    private static int firstPassengers = 5;
+    private int economyPassengers = 20;
+    private int premiumPassengers = 15;
+    private int businessPassengers = 10;
+    private int firstPassengers = 5;
 
     private static final int BOOKING_TIME = 100;
     private static final int DEPARTURE_TIME = 600;
@@ -53,8 +53,8 @@ public class A380Tests {
 
     private static final String FLIGHT_CODE = "test_flight";
 
-    @BeforeClass
-    public static void beforeSetup() throws PassengerException {
+    @Before
+    public void SetUp_Passengers() throws PassengerException {
         classSeats.put('Y', economyPassengers);
         classSeats.put('P', premiumPassengers);
         classSeats.put('J', businessPassengers);
@@ -83,7 +83,7 @@ public class A380Tests {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void SetUp_Aircraft() throws Exception {
         testCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME);
         fourSeatsCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME, 1, 1, 1, 1);
         upgradeTestCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME, 5, 10, 15, 20);
@@ -91,9 +91,63 @@ public class A380Tests {
         testPassenger1 = new Premium(BOOKING_TIME, DEPARTURE_TIME);
         testPassenger2 = new Business(BOOKING_TIME, DEPARTURE_TIME);
         testPassenger3 = new First(BOOKING_TIME, DEPARTURE_TIME);
-        
     }
 
+    /**
+     * Test method for {@link asgn2Aircraft.A380#A380(String, int)}
+     */
+    @Test (expected = AircraftException.class)
+    public void A380_FlightCodeNull() throws AircraftException {
+        String flightCode = null;
+        Aircraft a = new A380(flightCode, DEPARTURE_TIME);
+    }
+
+    @Test (expected = AircraftException.class)
+    public void A380_FlightDepartureTimeZero() throws AircraftException {
+        String flightCode = "swag flight";
+        Aircraft a = new A380(flightCode, 0);
+    }
+
+    @Test (expected = AircraftException.class)
+    public void A380_FlightDepartureTimeLessZero() throws AircraftException {
+        String flightCode = "swag flight";
+        Aircraft a = new A380(flightCode, -1);
+    }
+
+    @Test (expected = AircraftException.class)
+    public void A380_FirstLessZero() throws AircraftException {
+        String flightCode = "swag flight";
+        Aircraft a = new A380(flightCode, DEPARTURE_TIME, -1, 0, 0, 0);
+    }
+
+    @Test (expected = AircraftException.class)
+    public void A380_BusinessLessZero() throws AircraftException {
+        String flightCode = "swag flight";
+        Aircraft a = new A380(flightCode, DEPARTURE_TIME, 0, -1, 0, 0);
+    }
+
+    @Test (expected = AircraftException.class)
+    public void A380_PremiumLessZero() throws AircraftException {
+        String flightCode = "swag flight";
+        Aircraft a = new A380(flightCode, DEPARTURE_TIME, 0, 0, -1, 0);
+    }
+
+    @Test (expected = AircraftException.class)
+    public void A380_EconomyLessZero() throws AircraftException {
+        String flightCode = "swag flight";
+        Aircraft a = new A380(flightCode, DEPARTURE_TIME, 0, 0, 0, -1);
+    }
+
+    @Test
+    public void A380_AllSeatsZero() throws AircraftException {
+        Aircraft a = new A380("swag flight", DEPARTURE_TIME, 0, 0, 0, 0);
+    }
+
+    @Test
+    public void A380_Normal() throws AircraftException {
+        Aircraft a = new A380("swag flight", DEPARTURE_TIME);
+    }
+    
     /**
      * Test method for {@link asgn2Aircraft.A380#cancelBooking(Passenger, int)}
      */
@@ -339,8 +393,13 @@ public class A380Tests {
     }
 
     @Test
+    public void GetPassengers_Empty() {
+        assertTrue(fourSeatsCraft.getPassengers().isEmpty());
+    }
+
+    @Test
     @Ignore
-    public void getStatus() throws Exception {
+    public void GetStatus() throws Exception {
         // Unable to test as the output changes depending on how many tests were run before this
         testPassenger0 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
         testCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
@@ -359,16 +418,7 @@ public class A380Tests {
         assertFalse(fourSeatsCraft.hasPassenger(testPassenger1));
         assertFalse(fourSeatsCraft.hasPassenger(testPassenger2));
         assertTrue(fourSeatsCraft.hasPassenger(testPassenger3));
-//    	testPassenger0 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
-//    	assertEquals(testCraft.hasPassenger(testPassenger0), false);
-//    	testCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
-//    	assertEquals(testCraft.hasPassenger(testPassenger0), true);
     }
-
-//    @Test
-//    public void initialState() throws Exception {
-//        assertEquals(testCraft.initialState(), "A380:test_flight:600 Capacity: 353 [F: 14 J: 52 P: 32 Y: 255]");
-//    }
 
     /**
      * Test method for {@link asgn2Aircraft.A380#seatsAvailable(Passenger)}
@@ -383,7 +433,6 @@ public class A380Tests {
 
     @Test
     public void SeatsAvailable_Full() throws AircraftException, PassengerException {
-
         fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
         fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
         fourSeatsCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
@@ -395,45 +444,108 @@ public class A380Tests {
         assertFalse(fourSeatsCraft.seatsAvailable(new First(BOOKING_TIME, DEPARTURE_TIME)));
     }
 
-
     /**
      * Test method for {@link asgn2Aircraft.A380#upgradeBookings()}
      */
     @Test
     public void UpgradeBookings_SmallCase() throws AircraftException, PassengerException {
-        // Setup test aircraft: 1F 4B 10P 20E
-        for (int i = 0; i < 1; i++) {
+        // Setup test aircraft: 1F 4J 10P 20Y
+        // J -> F: 5F 0J 10P 20Y
+        // P -> J: 5F 10J 0P 20Y
+        // Y -> P: 5F 10J 15P 5Y
+
+        int initialF = 1;
+        int initialJ = 4;
+        int initialP = 10;
+        int initialY = 20;
+
+        for (int i = 0; i < initialF; i++) {
             upgradeTestCraft.confirmBooking(firstList.get(i), CONFIRM_TIME);
         }
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < initialJ; i++) {
             upgradeTestCraft.confirmBooking(businessList.get(i), CONFIRM_TIME);
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < initialP; i++) {
             upgradeTestCraft.confirmBooking(premiumList.get(i), CONFIRM_TIME);
         }
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < initialY; i++) {
             upgradeTestCraft.confirmBooking(economyList.get(i), CONFIRM_TIME);
         }
-        System.out.println(upgradeTestCraft.getNumEonomy());
-        System.out.println(upgradeTestCraft.getNumPremium());
-        System.out.println(upgradeTestCraft.getNumBusiness());
-        System.out.println(upgradeTestCraft.getNumFirst());
+
+        assertEquals(upgradeTestCraft.getNumFirst(), initialF);
+        assertEquals(upgradeTestCraft.getNumBusiness(), initialJ);
+        assertEquals(upgradeTestCraft.getNumPremium(), initialP);
+        assertEquals(upgradeTestCraft.getNumEonomy(), initialY);
 
         upgradeTestCraft.upgradeBookings();
 
-        System.out.println(upgradeTestCraft.getNumEonomy());
-        System.out.println(upgradeTestCraft.getNumPremium());
-        System.out.println(upgradeTestCraft.getNumBusiness());
-        System.out.println(upgradeTestCraft.getNumFirst());
+        assertEquals(upgradeTestCraft.getNumFirst(), 5);
+        assertEquals(upgradeTestCraft.getNumBusiness(), 10);
+        assertEquals(upgradeTestCraft.getNumPremium(), 15);
+        assertEquals(upgradeTestCraft.getNumEonomy(), 5);
+
+//        System.out.println(upgradeTestCraft.getNumEonomy());
+//        System.out.println(upgradeTestCraft.getNumPremium());
+//        System.out.println(upgradeTestCraft.getNumBusiness());
+//        System.out.println(upgradeTestCraft.getNumFirst());
     }
-//    @Test
-//    public void upgradeBookings() throws Exception {
-//        testPassenger0 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
-//        testCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
-//        testCraft.upgradeBookings();
-//        assertEquals(testPassenger0.getClass().getSimpleName(),"Premium");
-//    }
+
+    @Test
+    public void UpgradeBookings_AirCraftFull() throws AircraftException, PassengerException {
+        // Setup test aircraft: 5F 10J 15P 20Y
+
+
+        for (int i = 0; i < firstPassengers; i++) {
+            upgradeTestCraft.confirmBooking(firstList.get(i), CONFIRM_TIME);
+        }
+        for (int i = 0; i < businessPassengers; i++) {
+            upgradeTestCraft.confirmBooking(businessList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < premiumPassengers; i++) {
+            upgradeTestCraft.confirmBooking(premiumList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < economyPassengers; i++) {
+            upgradeTestCraft.confirmBooking(economyList.get(i), CONFIRM_TIME);
+        }
+
+        upgradeTestCraft.upgradeBookings();
+
+        assertEquals(upgradeTestCraft.getNumFirst(), firstPassengers);
+        assertEquals(upgradeTestCraft.getNumBusiness(), businessPassengers);
+        assertEquals(upgradeTestCraft.getNumPremium(), premiumPassengers);
+        assertEquals(upgradeTestCraft.getNumEonomy(), economyPassengers);
+    }
+
+    @Test
+    public void UpgradeBookings_FirstFullOnly() throws AircraftException, PassengerException {
+        // Setup test aircraft: 5F 8J 2P 20Y
+
+        for (int i = 0; i < firstPassengers; i++) {
+            upgradeTestCraft.confirmBooking(firstList.get(i), CONFIRM_TIME);
+        }
+        for (int i = 0; i < 8; i++) {
+            upgradeTestCraft.confirmBooking(businessList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < 2; i++) {
+            upgradeTestCraft.confirmBooking(premiumList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < economyPassengers; i++) {
+            upgradeTestCraft.confirmBooking(economyList.get(i), CONFIRM_TIME);
+        }
+
+        upgradeTestCraft.upgradeBookings();
+
+        assertEquals(upgradeTestCraft.getNumFirst(), firstPassengers);
+        assertEquals(upgradeTestCraft.getNumBusiness(), 10);
+        assertEquals(upgradeTestCraft.getNumPremium(), 15);
+        assertEquals(upgradeTestCraft.getNumEonomy(), 5);
+    }
+
 }

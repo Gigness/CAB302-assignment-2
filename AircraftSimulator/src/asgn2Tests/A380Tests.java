@@ -401,7 +401,7 @@ public class A380Tests {
      */
     @Test
     public void UpgradeBookings_SmallCase() throws AircraftException, PassengerException {
-        // Setup test aircraft: 1F 4B 6P 20E
+        // Setup test aircraft: 1F 4B 10P 20E
         for (int i = 0; i < 1; i++) {
             upgradeTestCraft.confirmBooking(firstList.get(i), CONFIRM_TIME);
         }

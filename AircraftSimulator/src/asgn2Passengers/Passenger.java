@@ -458,21 +458,21 @@ public abstract class Passenger {
 	 * @param <code>Passenger</code> state to transfer
 	 */
 	protected void copyPassengerState(Passenger p) {
-        p.newState = newState;
-        p.confirmed = confirmed;
-        p.inQueue = inQueue;
-        p.flown = flown;
-        p.refused = refused;
-        p.bookingTime = bookingTime;
-        p.enterQueueTime = enterQueueTime;
-        p.exitQueueTime = exitQueueTime;
-        p.confirmationTime = confirmationTime;
-        p.departureTime = departureTime;
-        switch (p.passID.toString().substring(0,1)){
-	        case "Y":	p.passID = "P(U):" + p.passID.toString().substring(2);
-	        case "P":	p.passID = "J(U):" + p.passID.toString().substring(2);
-	        case "J":	p.passID = "F(U):" + p.passID.toString().substring(2);
-	        case "F":	p.passID = "F(U):" + p.passID.toString().substring(2);
+        p.newState = this.newState;
+        p.confirmed = this.confirmed;
+        p.inQueue = this.inQueue;
+        p.flown = this.flown;
+        p.refused = this.refused;
+        p.bookingTime = this.bookingTime;
+        p.enterQueueTime = this.enterQueueTime;
+        p.exitQueueTime = this.exitQueueTime;
+        p.confirmationTime = this.confirmationTime;
+        p.departureTime = this.departureTime;
+        switch (this.passID.toString().substring(0,1)){
+	        case "Y":	p.passID = "P(U):" + this.passID.toString().substring(2);
+	        case "P":	p.passID = "J(U):" + this.passID.toString().substring(2);
+	        case "J":	p.passID = "F(U):" + this.passID.toString().substring(2);
+	        case "F":	p.passID = "F(U):" + this.passID.toString().substring(2);
         }
 	}
 	

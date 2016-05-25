@@ -380,7 +380,7 @@ public abstract class Aircraft {
 	 */
 	public void upgradeBookings() {
         for (Passenger p: new ArrayList<>(seats)) {
-            if(firstAvailable()) {
+            if (firstAvailable()) {
                 if (p instanceof Business) {
                     upgradePassenger(p);
                 }
@@ -388,7 +388,7 @@ public abstract class Aircraft {
         }
 
         for (Passenger p: new ArrayList<>(seats)) {
-            if(businessAvailable()) {
+            if (businessAvailable()) {
                 if (p instanceof Premium) {
                     upgradePassenger(p);
                 }
@@ -396,8 +396,10 @@ public abstract class Aircraft {
         }
 
         for (Passenger p: new ArrayList<>(seats)) {
-            if (p instanceof Economy) {
-                upgradePassenger(p);
+            if (premiumAvailable()) {
+                if (p instanceof Economy) {
+                    upgradePassenger(p);
+                }
             }
         }
 

@@ -127,6 +127,7 @@ public abstract class Passenger {
 	 */
 	public void cancelSeat(int cancellationTime) throws PassengerException {
 
+		// TODO debugging
         System.out.print("Departure Time: ");
         System.out.println(this.departureTime);
         System.out.print("Cancel Time: ");
@@ -142,17 +143,13 @@ public abstract class Passenger {
 			throw new PassengerException("cancellationTime cannot be less than departureTime");
 		}
 
-
-
 		this.confirmed = false;
 		this.newState = true;
         this.bookingTime = cancellationTime;
 
-
 //		if(cancellationTime < departureTime){ //TODO is this what the 3rd line of the pre function comment means ^
 //			this.newState = true;
 //		}
-
 	}
 
 	/**
@@ -190,7 +187,7 @@ public abstract class Passenger {
 		this.newState = false;
 		this.confirmationTime = confirmationTime;
 		this.confirmed = true;
-		
+        this.departureTime = departureTime;
 	}
 
 	/**

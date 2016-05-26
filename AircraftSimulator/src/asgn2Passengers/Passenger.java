@@ -176,7 +176,7 @@ public abstract class Passenger {
 			throw new PassengerException("confirmationTime cannot be less than 0");
 		}
 		if(departureTime < confirmationTime){
-			throw new PassengerException("confirmationTime cannot be less than departureTime");
+			throw new PassengerException("confirmationTime cannot be more than departureTime");
 		}
 		
 		if(inQueue){

@@ -9,9 +9,13 @@ package asgn2Simulators;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Point;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,20 +23,17 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+
 /**
  * @author hogan
  *
  */
 @SuppressWarnings("serial")
 public class GUISimulator extends JFrame implements Runnable {
-	public static final int WIDTH = 700;
-	public static final int HEIGHT = 400;
-	
-//	private JPanel pnlOne;
-//	private JPanel pnlTwo;
-//	private JPanel pnlThree;
-//	private JPanel pnlFour;
-//	private JPanel pnlFive;
+	public static final int WIDTH = 800;
+	public static final int HEIGHT = 500;
 	
 	/**
 	 * @param arg0
@@ -40,46 +41,70 @@ public class GUISimulator extends JFrame implements Runnable {
 	 */
 	public GUISimulator(String arg0) throws HeadlessException {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	private void createGUI() {
-		JTabbedPane pane = new JTabbedPane();
-        JPanel panel1 = new JPanel();
-        panel1.add(new JLabel("Graph"));
-        JPanel panel2 = new JPanel();
-        panel2.add(new JButton("Settings"));
+		//Setup
+		GridBagLayout layout = new GridBagLayout();
+		this.setTitle("Aircraft Booking Simulator");
+		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		this.setLayout(layout);
+		
+		
 
-        pane.add("Graph", panel1);
-        pane.add("Settings", panel2);
-        getContentPane().add(pane);
-
+        displayGraph();
+        displaySettings();
         
-        // Display the window.
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        // Display the window
         pack();
         setLocationRelativeTo(null);
-        setVisible(true);
-	    
-	    //Solution code uses different colours to highlight different panels 
-//	    pnlOne = createPanel(Color.BLUE);
-//	    pnlTwo = createPanel(Color.CYAN);
-//	    pnlThree = createPanel(Color.DARK_GRAY);
-//	    pnlFour = createPanel(Color.RED);
-//	    pnlFive = createPanel(Color.GREEN);
-	        
-//	    this.getContentPane().add(pnlOne,BorderLayout.CENTER);
-//	    this.getContentPane().add(pnlTwo,BorderLayout.NORTH);
-//	    this.getContentPane().add(pnlThree,BorderLayout.SOUTH);
-//	    this.getContentPane().add(pnlFour,BorderLayout.EAST);
-//	    this.getContentPane().add(pnlFive,BorderLayout.WEST);
 	    repaint();
 	    this.setVisible(true);
 	}
-	private JPanel createPanel(Color c) {
-			JPanel jp = new JPanel();
-			jp.setBackground(c);
-			return jp;
+
+	private void displayGraph() {
+		//TODO idk, fix JFreeChart
+		JPanel graph = new JPanel();
+		graph.setBackground(Color.BLACK);
+		
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.anchor = GridBagConstraints.PAGE_START;
+		gbc.weightx = 100;
+		gbc.weighty = 100;
+		gbc.gridwidth = 10;
+		gbc.gridheight = 10;
+		
+		this.add(graph, gbc);
+		
+//		JFreeChart chart = new JFreeChart("asdf", null);
+//		ChartPanel chartPanel = new ChartPanel(chart);
+//		graph.add(chart,BorderLayout.CENTER);
+	}
+
+	private void displaySettings() {
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.anchor = GridBagConstraints.PAGE_END;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		JPanel settings = new JPanel();
+		
+		JLabel simulationLabel = new JLabel("Simulation");
+		JLabel fareClassesLabel = new JLabel("Fare Classes");
+		JLabel OperationLabel = new JLabel("Operation");	
+		
+		//TODO 8 text areas with 8 labels attached to them
+		
+		JButton run = new JButton();
+		JButton showChart2 = new JButton();
+		
+		getContentPane().add(settings, gbc);
+		settings.add(simulationLabel);
+		settings.add(fareClassesLabel);
+		settings.add(OperationLabel);
+		settings.add(run);
+		settings.add(showChart2);
 	}
 
 	/* (non-Javadoc)

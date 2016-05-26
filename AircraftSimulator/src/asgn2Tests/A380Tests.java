@@ -157,12 +157,14 @@ public class A380Tests {
     }
 
     @Test
-    public void cancelBooking_Economy() throws Exception {
+    public void CancelBooking_Economy() throws Exception {
         fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
         fourSeatsCraft.cancelBooking(testPassenger0, CANCELLATION_TIME);
         assertEquals(fourSeatsCraft.getNumEonomy(),0);
     }
-    
+
+//    public void CancelBooking_
+
     @Test
     public void CancelBooking_Premium() throws AircraftException, PassengerException {
         fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);

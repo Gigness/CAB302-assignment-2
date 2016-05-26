@@ -50,8 +50,6 @@ public class GUISimulator extends JFrame implements Runnable {
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		this.setLayout(layout);
 		
-		
-
         displayGraph();
         displaySettings();
         

@@ -12,6 +12,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
+import java.awt.Insets;
 import java.awt.Point;
 
 import javax.swing.Box;
@@ -21,10 +22,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+
+import com.sun.glass.ui.Screen;
 
 /**
  * @author hogan
@@ -33,7 +38,7 @@ import org.jfree.chart.JFreeChart;
 @SuppressWarnings("serial")
 public class GUISimulator extends JFrame implements Runnable {
 	public static final int WIDTH = 800;
-	public static final int HEIGHT = 500;
+	public static final int HEIGHT = 600;
 	
 	/**
 	 * @param arg0
@@ -45,6 +50,7 @@ public class GUISimulator extends JFrame implements Runnable {
 
 	private void createGUI() {
 		//Setup
+		this.setSize(WIDTH, HEIGHT);
 		GridBagLayout layout = new GridBagLayout();
 		this.setTitle("Aircraft Booking Simulator");
 		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -62,6 +68,7 @@ public class GUISimulator extends JFrame implements Runnable {
 
 	private void displayGraph() {
 		//TODO idk, fix JFreeChart
+		//TODO magic numbers galore lmao
 		JPanel graph = new JPanel();
 		graph.setBackground(Color.BLACK);
 		
@@ -70,10 +77,24 @@ public class GUISimulator extends JFrame implements Runnable {
 		gbc.anchor = GridBagConstraints.PAGE_START;
 		gbc.weightx = 100;
 		gbc.weighty = 100;
-		gbc.gridwidth = 10;
-		gbc.gridheight = 10;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		Insets inset = new Insets(0,0,10,0);
+		gbc.insets = inset;
 		
-		this.add(graph, gbc);
+		JTextArea text = new JTextArea();
+		Dimension size = new Dimension();
+		size.height = (int) (this.getSize().getHeight()*0.6);
+		size.width = (int) (this.getSize().getWidth()*0.97);
+		text.setPreferredSize(size);
+		Dimension minSize = new Dimension();
+		minSize.height = (int) (this.getSize().getHeight()*0.6);
+		minSize.width = (int) (this.getSize().getWidth()*0.97);
+		text.setMinimumSize(minSize);
+		graph.add(text);
+		getContentPane().add(graph, gbc);
 		
 //		JFreeChart chart = new JFreeChart("asdf", null);
 //		ChartPanel chartPanel = new ChartPanel(chart);
@@ -81,25 +102,51 @@ public class GUISimulator extends JFrame implements Runnable {
 	}
 
 	private void displaySettings() {
+		//Wrapper JPanel constraints
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.anchor = GridBagConstraints.PAGE_END;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.anchor = GridBagConstraints.PAGE_START;
 		gbc.gridx = 0;
-		gbc.gridy = 0;
+		gbc.gridy = 1;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
+		gbc.weightx = 100;
+		gbc.weighty = 100;
 		JPanel settings = new JPanel();
+		Dimension size = new Dimension();
+		size.height = (int) (this.getSize().getHeight()/2*0.9);
+		size.width = (int) (this.getSize().getWidth()*0.95);
+		settings.setSize(size);
+		getContentPane().add(settings, gbc);
 		
+		//TODO 8 text areas with 8 labels attached to them
+		// Settings Options
 		JLabel simulationLabel = new JLabel("Simulation");
 		JLabel fareClassesLabel = new JLabel("Fare Classes");
 		JLabel OperationLabel = new JLabel("Operation");	
+		JButton run = new JButton("Run Simulation");
+		JButton showChart2 = new JButton("Show Chart 2");
+		showChart2.setEnabled(false);
 		
-		//TODO 8 text areas with 8 labels attached to them
+		//TODO settingsgbc isnt affecting the settings idk
+		//TODO make this into a function passing constraints after I figure out how this works
+		GridBagConstraints settingsgbc = new GridBagConstraints();
+		settingsgbc.gridx = 0;
+		settingsgbc.gridy = 1;
+		settingsgbc.gridwidth = 1;
+		settingsgbc.gridheight = 1;
+		settingsgbc.weightx = 100;
+		settingsgbc.weighty = 100;
 		
-		JButton run = new JButton();
-		JButton showChart2 = new JButton();
+		settings.add(simulationLabel,settingsgbc);
+		settingsgbc.gridx = 0;
+		settingsgbc.gridy = 0;
+		settingsgbc.gridwidth = 1;
+		settingsgbc.gridheight = 1;
+		settingsgbc.weightx = 100;
+		settingsgbc.weighty = 100;
 		
-		getContentPane().add(settings, gbc);
-		settings.add(simulationLabel);
-		settings.add(fareClassesLabel);
+		settings.add(fareClassesLabel,settingsgbc);
 		settings.add(OperationLabel);
 		settings.add(run);
 		settings.add(showChart2);

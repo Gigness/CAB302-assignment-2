@@ -174,7 +174,6 @@ public class Flights {
 		for (Aircraft a : this.daily) {
 			a.upgradeBookings();
 		}
-		
 	}
 
 	/**
@@ -186,10 +185,11 @@ public class Flights {
 	 */
 	private List<Aircraft> createDailyServices(int time) throws AircraftException {
 		List<Aircraft> al = new ArrayList<Aircraft>(); 
-		al.add(new A380("QF11",time, 20, 20, 20, 20));
+//		al.add(new A380("QF11",time, 20, 20, 20, 20));
+		al.add(new A380("QF11",time));
 		// TODO DEBUGSIM check one aircraft
-//		al.add(new A380("QF93",time));
-//		al.add(new B747("QF15",time));
+		al.add(new A380("QF93",time));
+		al.add(new B747("QF15",time));
 		return al; 
 	}
 

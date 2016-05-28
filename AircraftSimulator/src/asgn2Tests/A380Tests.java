@@ -81,6 +81,11 @@ public class A380Tests {
                 }
             }
         }
+
+        testPassenger0 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
+        testPassenger1 = new Premium(BOOKING_TIME, DEPARTURE_TIME);
+        testPassenger2 = new Business(BOOKING_TIME, DEPARTURE_TIME);
+        testPassenger3 = new First(BOOKING_TIME, DEPARTURE_TIME);
     }
 
     @Before
@@ -89,10 +94,6 @@ public class A380Tests {
         fourSeatsCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME, 1, 1, 1, 1);
         upgradeTestCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME, 5, 10, 15, 20);
         getStatusTestCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME, 1, 1, 1, 1);
-        testPassenger0 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
-        testPassenger1 = new Premium(BOOKING_TIME, DEPARTURE_TIME);
-        testPassenger2 = new Business(BOOKING_TIME, DEPARTURE_TIME);
-        testPassenger3 = new First(BOOKING_TIME, DEPARTURE_TIME);
     }
 
     /**

@@ -128,11 +128,11 @@ public abstract class Passenger {
 	public void cancelSeat(int cancellationTime) throws PassengerException {
 
 		// TODO debugging
-        System.out.print("Departure Time: ");
-        System.out.println(this.departureTime);
-        System.out.print("Cancel Time: ");
-        System.out.println(cancellationTime);
-        System.out.println();
+//        System.out.print("Departure Time: ");
+//        System.out.println(this.departureTime);
+//        System.out.print("Cancel Time: ");
+//        System.out.println(cancellationTime);
+//        System.out.println();
 
 		// Exception checking
 		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()){ 

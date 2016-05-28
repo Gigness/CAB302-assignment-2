@@ -144,6 +144,7 @@ public class A380Tests {
     @Test
     public void A380_AllSeatsZero() throws AircraftException {
         Aircraft a = new A380("swag flight", DEPARTURE_TIME, 0, 0, 0, 0);
+        assertEquals(a.getNumPassengers(),0);
     }
 
     @Test
@@ -185,6 +186,38 @@ public class A380Tests {
         fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
         fourSeatsCraft.cancelBooking(testPassenger3, CANCELLATION_TIME);
         assertEquals(fourSeatsCraft.getNumFirst(),0);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void CancelBooking_CancellationTimeLessZero() throws PassengerException, AircraftException {
+        testPassenger4 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
+
+        testCraft.confirmBooking(testPassenger4, CONFIRM_TIME);
+        testCraft.cancelBooking(testPassenger4, -1);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void CancelBooking_DepartureTimeLessCancellationTime() throws PassengerException, AircraftException {
+        testPassenger4 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
+
+        testCraft.confirmBooking(testPassenger4, CONFIRM_TIME);
+        testCraft.cancelBooking(testPassenger4, DEPARTURE_TIME + 1);
+    }
+
+    @Test
+    public void CancelBooking_DepartureTimeEqualCancellationTime() throws PassengerException, AircraftException {
+        testPassenger4 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
+
+        testCraft.confirmBooking(testPassenger4, CONFIRM_TIME);
+        testCraft.cancelBooking(testPassenger4, DEPARTURE_TIME);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void CancelBooking_PassengerNotConfirmed() throws PassengerException, AircraftException {
+        testPassenger4 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
+        testCraft.confirmBooking(testPassenger4, CONFIRM_TIME);
+        testCraft.flyPassengers(DEPARTURE_TIME);
+        testCraft.cancelBooking(testPassenger4, CANCELLATION_TIME);
     }
 
     /**

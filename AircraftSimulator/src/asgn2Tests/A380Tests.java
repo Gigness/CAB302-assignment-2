@@ -7,6 +7,8 @@ import asgn2Aircraft.Bookings;
 import asgn2Passengers.*;
 
 import static org.junit.Assert.*;
+
+import com.sun.org.apache.regexp.internal.RE;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -213,12 +215,34 @@ public class A380Tests {
     }
 
     @Test (expected = PassengerException.class)
-    public void CancelBooking_PassengerNotConfirmed() throws PassengerException, AircraftException {
+    public void CancelBooking_Flown() throws PassengerException, AircraftException {
         testPassenger4 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
         testCraft.confirmBooking(testPassenger4, CONFIRM_TIME);
         testCraft.flyPassengers(DEPARTURE_TIME);
         testCraft.cancelBooking(testPassenger4, CANCELLATION_TIME);
     }
+
+    @Test (expected = PassengerException.class)
+    public void CancelBooking_Queued() throws PassengerException, AircraftException {
+        testCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        testPassenger0.queuePassenger(QUEUED_TIME, DEPARTURE_TIME);
+        testCraft.cancelBooking(testPassenger0, CANCELLATION_TIME);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void CancelBooking_New() throws PassengerException, AircraftException {
+        testCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        testPassenger0.cancelSeat(CANCELLATION_TIME);
+        testCraft.cancelBooking(testPassenger0, CANCELLATION_TIME);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void CancelBooking_Refused() throws PassengerException, AircraftException {
+        testCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        testPassenger0.refusePassenger(REFUSED_TIME);
+        testCraft.cancelBooking(testPassenger0, CANCELLATION_TIME);
+    }
+
 
     /**
      * Test method for {@link asgn2Aircraft.A380#confirmBooking(Passenger, int)}
@@ -280,6 +304,34 @@ public class A380Tests {
         assertEquals(fourSeatsCraft.getNumFirst(), 1);
     }
 
+    @Test (expected = PassengerException.class)
+    public void ConfirmBooking_Confirmed() throws PassengerException, AircraftException {
+        testPassenger0.confirmSeat(CONFIRM_TIME, DEPARTURE_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void ConfirmBooking_Refused() throws PassengerException, AircraftException {
+        testPassenger0.refusePassenger(REFUSED_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void ConfirmBooking_Flown() throws PassengerException, AircraftException {
+        testPassenger0.flyPassenger(DEPARTURE_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void ConfirmBooking_ConfirmationTimeLessZero() throws PassengerException, AircraftException {
+        fourSeatsCraft.confirmBooking(testPassenger0, -1);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void ConfirmBooking_DepartureTimeLessConfirmTime() throws PassengerException, AircraftException {
+        fourSeatsCraft.confirmBooking(testPassenger0, DEPARTURE_TIME + 1);
+    }
+
     /**
      * Test method for {@link asgn2Aircraft.A380#finalState()}
      */
@@ -301,8 +353,6 @@ public class A380Tests {
     @Test
     public void FlightEmpty() throws Exception {
         assertEquals(testCraft.flightEmpty(), true);
-        testCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
-        assertEquals(testCraft.flightEmpty(), false);
     }
 
     /**
@@ -337,6 +387,54 @@ public class A380Tests {
         assertTrue(testPassenger1.isFlown());
         assertTrue(testPassenger2.isFlown());
         assertTrue(testPassenger3.isFlown());
+    }
+
+    @Test (expected = PassengerException.class)
+    public void FlyPassengers_PassengerNew() throws AircraftException, PassengerException {
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+
+        testPassenger0.cancelSeat(CANCELLATION_TIME);
+
+        fourSeatsCraft.flyPassengers(DEPARTURE_TIME);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void FlyPassengers_PassengerQueued() throws AircraftException, PassengerException {
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+
+        testPassenger0.queuePassenger(QUEUED_TIME, DEPARTURE_TIME);
+
+        fourSeatsCraft.flyPassengers(DEPARTURE_TIME);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void FlyPassengers_PassengerRefused() throws AircraftException, PassengerException {
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+
+        testPassenger0.refusePassenger(REFUSED_TIME);
+
+        fourSeatsCraft.flyPassengers(DEPARTURE_TIME);
+    }
+
+    @Test (expected = PassengerException.class)
+    public void FlyPassengers_PassengerFlown() throws AircraftException, PassengerException {
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+
+        testPassenger0.flyPassenger(DEPARTURE_TIME);
+
+        fourSeatsCraft.flyPassengers(DEPARTURE_TIME);
     }
 
     /**
@@ -516,12 +614,13 @@ public class A380Tests {
     @Test
     public void HasPassenger() throws Exception {
         fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
-        fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
-
         assertTrue(fourSeatsCraft.hasPassenger(testPassenger0));
-        assertFalse(fourSeatsCraft.hasPassenger(testPassenger1));
-        assertFalse(fourSeatsCraft.hasPassenger(testPassenger2));
-        assertTrue(fourSeatsCraft.hasPassenger(testPassenger3));
+    }
+
+    @Test
+    public void HasPassenger_NoPassenger() throws Exception {
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        assertFalse(fourSeatsCraft.hasPassenger(testPassenger3));
     }
 
     /**

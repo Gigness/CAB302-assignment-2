@@ -369,8 +369,9 @@ public abstract class Aircraft {
 	 * See {@link asgn2Passengers.Passenger#upgrade()}
 	 */
 	public void upgradeBookings() {
-
+        // Upgrade Business class to First
         for (Passenger p: new ArrayList<>(seats)) {
+            // If upgrade destination is full, exit the loop
             if (firstAvailable()) {
                 if (p instanceof Business) {
                     upgradePassenger(p);
@@ -380,6 +381,7 @@ public abstract class Aircraft {
             }
         }
 
+        // Upgrade Premium to Business
         for (Passenger p: new ArrayList<>(seats)) {
             if (businessAvailable()) {
                 if (p instanceof Premium) {
@@ -390,6 +392,7 @@ public abstract class Aircraft {
             }
         }
 
+        // Upgrade Economy to Premium
         for (Passenger p: new ArrayList<>(seats)) {
             if (premiumAvailable()) {
                 if (p instanceof Economy) {

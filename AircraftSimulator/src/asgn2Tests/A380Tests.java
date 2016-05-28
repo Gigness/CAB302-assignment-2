@@ -339,7 +339,7 @@ public class A380Tests {
     public void FinalState() throws Exception {
         // TEST CANNOT BE RUN IN ISOLATION - as the passID will be incorrect
         getStatusTestCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
-        assertEquals(getStatusTestCraft.finalState(),"A380:test_flight:600 Pass: 1\npassID: Y:1136\nBT: 100\nNotQ\nConfT: 200 NotFlown\n\n");
+        assertEquals(getStatusTestCraft.finalState(),"A380:test_flight:600 Pass: 1\npassID: Y:1732\nBT: 100\nNotQ\nConfT: 200 NotFlown\n\n");
     }
 
     @Test

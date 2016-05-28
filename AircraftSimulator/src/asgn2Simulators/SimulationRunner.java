@@ -26,22 +26,23 @@ public class SimulationRunner {
 	 * see {@link asgn2Simulators.SimulationRunner#printErrorAndExit()}
 	 */
 	public static void main(String[] args) {
-		final int NUM_ARGS = 9; 
-		Simulator s = null; 
-		Log l = null; 
-		
+		final int NUM_ARGS = 9;
+		Simulator s = null;
+		Log l = null;
+
 		try {
+			// TODO - provide user input here
 			switch (args.length) {
 				case NUM_ARGS: {
-					s = createSimulatorUsingArgs(args); 
+					s = createSimulatorUsingArgs(args);
 					break;
 				}
 				case 0: {
-					s = new Simulator(); 
+					s = new Simulator();
 					break;
 				}
 				default: {
-					printErrorAndExit(); 
+					printErrorAndExit();
 				}
 			}
 			l = new Log();
@@ -49,7 +50,7 @@ public class SimulationRunner {
 			e1.printStackTrace();
 			System.exit(-1);
 		}
-	
+
 		//Run the simulation 
 		SimulationRunner sr = new SimulationRunner(s,l);
 		try {
@@ -57,8 +58,9 @@ public class SimulationRunner {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
-		} 
+		}
 	}
+
 	/**
 	 * Helper to process args for Simulator  
 	 * 
@@ -78,9 +80,9 @@ public class SimulationRunner {
 		double economyProb = Double.parseDouble(args[7]);
 		double cancelProb = Double.parseDouble(args[8]);
 		return new Simulator(seed,maxQueueSize,meanBookings,sdBookings,firstProb,businessProb,
-						  premiumProb,economyProb,cancelProb);	
+				premiumProb,economyProb,cancelProb);
 	}
-	
+
 	/**
 	 *  Helper to generate usage message 
 	 */
@@ -121,18 +123,18 @@ public class SimulationRunner {
 	public void runSimulation() throws AircraftException, PassengerException, SimulationException, IOException {
 		this.sim.createSchedule();
 		this.log.initialEntry(this.sim);
-		
+
 		//Main simulation loop 
 		for (int time=0; time<=Constants.DURATION; time++) {
-			this.sim.resetStatus(time); 
-			this.sim.rebookCancelledPassengers(time); 
+			this.sim.resetStatus(time);
+			this.sim.rebookCancelledPassengers(time);
 			this.sim.generateAndHandleBookings(time);
 			this.sim.processNewCancellations(time);
 			if (time >= Constants.FIRST_FLIGHT) {
 				this.sim.processUpgrades(time);
 				this.sim.processQueue(time);
 				this.sim.flyPassengers(time);
-				this.sim.updateTotalCounts(time); 
+				this.sim.updateTotalCounts(time);
 				this.log.logFlightEntries(time, sim);
 			} else {
 				this.sim.processQueue(time);
@@ -141,8 +143,9 @@ public class SimulationRunner {
 			this.log.logQREntries(time, sim);
 			this.log.logEntry(time,this.sim);
 		}
-		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION); 
-		this.log.logQREntries(Constants.DURATION, sim);
+		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION);
+        // TODO stuff from here can go to gui somewhere - text area podcast4: 11.30
+		this.log.logQREntries(Constants.DURATION, sim); // individual queue refused transitions savestatus method
 		this.log.finalise(this.sim);
 	}
 }

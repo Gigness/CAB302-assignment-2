@@ -219,8 +219,9 @@ public abstract class Aircraft {
 	 */
 	public Bookings getBookings() {
         int remainingCapacity = this.capacity - seats.size();
+		int total = this.numFirst + this.numBusiness + this.numPremium + this.numEconomy;
 		Bookings status = new Bookings(this.numFirst, this.numBusiness, this.numPremium, this.numEconomy,
-                this.capacity, remainingCapacity);
+                total, remainingCapacity);
         return status;
 	}
 	

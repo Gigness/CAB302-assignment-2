@@ -27,7 +27,7 @@ import asgn2Passengers.Premium;
 public class Log {
 	
 	//Controls logging of detailed status information 
-	public static final boolean SAVE_STATUS = false; 
+	public static final boolean SAVE_STATUS = false;
 	
 	/**
 	 * Helper to set Passenger transition messages

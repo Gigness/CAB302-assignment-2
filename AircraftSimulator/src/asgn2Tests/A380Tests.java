@@ -25,6 +25,7 @@ public class A380Tests {
     private A380 testCraft;
     private A380 fourSeatsCraft;
     private A380 upgradeTestCraft;
+    private A380 getStatusTestCraft;
     private Passenger testPassenger0;
     private Passenger testPassenger1;
     private Passenger testPassenger2;
@@ -87,6 +88,7 @@ public class A380Tests {
         testCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME);
         fourSeatsCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME, 1, 1, 1, 1);
         upgradeTestCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME, 5, 10, 15, 20);
+        getStatusTestCraft = new A380(FLIGHT_CODE, DEPARTURE_TIME, 1, 1, 1, 1);
         testPassenger0 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
         testPassenger1 = new Premium(BOOKING_TIME, DEPARTURE_TIME);
         testPassenger2 = new Business(BOOKING_TIME, DEPARTURE_TIME);
@@ -162,8 +164,6 @@ public class A380Tests {
         fourSeatsCraft.cancelBooking(testPassenger0, CANCELLATION_TIME);
         assertEquals(fourSeatsCraft.getNumEonomy(),0);
     }
-
-//    public void CancelBooking_
 
     @Test
     public void CancelBooking_Premium() throws AircraftException, PassengerException {
@@ -250,13 +250,15 @@ public class A380Tests {
      * Test method for {@link asgn2Aircraft.A380#finalState()}
      */
     @Test
-    @Ignore
     public void FinalState() throws Exception {
-        // Unable to test this, due to randomness of creating passengers in setup methods
-        testCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
-        System.out.println(testCraft.finalState());
+        // TEST CANNOT BE RUN IN ISOLATION - as the passID will be incorrect
+        getStatusTestCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        assertEquals(getStatusTestCraft.finalState(),"A380:test_flight:600 Pass: 1\npassID: Y:1136\nBT: 100\nNotQ\nConfT: 200 NotFlown\n\n");
+    }
 
-        assertEquals(testCraft.finalState(),"A380:test_flight:600 Pass: 1\npassID: Y:18\nBT: 100\nNotQ\nConfT: 200 NotFlown\n\n");
+    @Test
+    public void FinalState_ZeroPassengers() throws Exception {
+        assertEquals(getStatusTestCraft.finalState(),"A380:test_flight:600 Pass: 0\n\n");
     }
 
     /**
@@ -399,13 +401,79 @@ public class A380Tests {
         assertTrue(fourSeatsCraft.getPassengers().isEmpty());
     }
 
+    /**
+     * Test method for {@link asgn2Aircraft.A380#getStatus(int))}
+
+     */
+
     @Test
-    @Ignore
-    public void GetStatus() throws Exception {
-        // Unable to test as the output changes depending on how many tests were run before this
-        testPassenger0 = new Economy(BOOKING_TIME, DEPARTURE_TIME);
-        testCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
-        assertEquals(testCraft.getStatus(BOOKING_TIME),"100::1::F:0::J:0::P:0::Y:1|Y:N/Q>C|\n");
+    public void GetStatus_Empty() throws Exception {
+        A380 tempCraft = new A380("swag flight", DEPARTURE_TIME);
+        assertEquals(tempCraft.getStatus(100), "100::0::F:0::J:0::P:0::Y:0\n");
+    }
+
+    @Test
+    public void GetStatus_Economy() throws Exception {
+        A380 tempCraft = new A380("swag flight", DEPARTURE_TIME);
+        tempCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        assertEquals(tempCraft.getStatus(BOOKING_TIME),"100::1::F:0::J:0::P:0::Y:1|Y:N/Q>C|\n");
+    }
+
+    @Test
+    public void GetStatus_Premium() throws Exception {
+        A380 tempCraft = new A380("swag flight", DEPARTURE_TIME);
+        tempCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        assertEquals(tempCraft.getStatus(BOOKING_TIME),"100::1::F:0::J:0::P:1::Y:0|P:N/Q>C|\n");
+    }
+
+    @Test
+    public void GetStatus_Business() throws Exception {
+        A380 tempCraft = new A380("swag flight", DEPARTURE_TIME);
+        tempCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        assertEquals(tempCraft.getStatus(BOOKING_TIME),"100::1::F:0::J:1::P:0::Y:0|J:N/Q>C|\n");
+    }
+
+    @Test
+    public void GetStatus_First() throws Exception {
+        A380 tempCraft = new A380("swag flight", DEPARTURE_TIME);
+        tempCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+        assertEquals(tempCraft.getStatus(BOOKING_TIME),"100::1::F:1::J:0::P:0::Y:0|F:N/Q>C|\n");
+    }
+
+    @Test
+    public void GetStatus_Full() throws Exception {
+        A380 tempCraft = new A380("swag flight", DEPARTURE_TIME);
+        tempCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        tempCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        tempCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        tempCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+        assertEquals(tempCraft.getStatus(BOOKING_TIME),"100::4::F:1::J:1::P:1::Y:1|Y:N/Q>C|" +
+                "|P:N/Q>C||J:N/Q>C||F:N/Q>C|\n");
+    }
+
+    @Test
+    public void GetStatus_Cancel() throws Exception {
+        A380 tempCraft = new A380("swag flight", DEPARTURE_TIME);
+        tempCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+        tempCraft.cancelBooking(testPassenger3, CANCELLATION_TIME);
+        assertEquals(tempCraft.getStatus(BOOKING_TIME),"100::0::F:0::J:0::P:0::Y:0|F:N/Q>C||F:C>N|\n");
+    }
+
+    @Test
+    public void GetStatus_CancelFullFlight() throws Exception {
+        A380 tempCraft = new A380("swag flight", DEPARTURE_TIME);
+        tempCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        tempCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        tempCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        tempCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+        tempCraft.cancelBooking(testPassenger0, CANCELLATION_TIME);
+        tempCraft.cancelBooking(testPassenger1, CANCELLATION_TIME);
+        tempCraft.cancelBooking(testPassenger2, CANCELLATION_TIME);
+        tempCraft.cancelBooking(testPassenger3, CANCELLATION_TIME);
+
+        assertEquals(tempCraft.getStatus(BOOKING_TIME),"100::0::F:0::J:0::P:0::Y:0" +
+                "|Y:N/Q>C||P:N/Q>C||J:N/Q>C||F:N/Q>C|" +
+                "|Y:C>N||P:C>N||J:C>N||F:C>N|\n");
     }
 
     /**

@@ -386,7 +386,7 @@ public class Simulator {
 	 * 
 	 * @return #queue
 	 */
-	public int numInQueue() {
+	public int    numInQueue() {
 		return this.queue.size();
 	}
 	

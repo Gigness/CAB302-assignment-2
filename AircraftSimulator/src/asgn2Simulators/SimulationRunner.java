@@ -29,8 +29,9 @@ public class SimulationRunner {
 		final int NUM_ARGS = 9;
 		Simulator s = null;
 		Log l = null;
+        System.out.println(args[0]);
+        try {
 
-		try {
 			// TODO - provide user input here
 			switch (args.length) {
 				case NUM_ARGS: {
@@ -54,7 +55,7 @@ public class SimulationRunner {
 		//Run the simulation 
 		SimulationRunner sr = new SimulationRunner(s,l);
 		try {
-			sr.runSimulation();
+			sr.runSimulation(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);
@@ -120,7 +121,7 @@ public class SimulationRunner {
 	 * @throws IOException on logging failures See methods from {@link asgn2Simulators.Log} 
 
 	 */
-	public void runSimulation() throws AircraftException, PassengerException, SimulationException, IOException {
+	public void runSimulation(GUISimulator gui) throws AircraftException, PassengerException, SimulationException, IOException {
 		this.sim.createSchedule();
 		this.log.initialEntry(this.sim);
 
@@ -134,6 +135,7 @@ public class SimulationRunner {
 				this.sim.processUpgrades(time);
 				this.sim.processQueue(time);
 				this.sim.flyPassengers(time);
+
 				this.sim.updateTotalCounts(time);
 				this.log.logFlightEntries(time, sim);
 			} else {

@@ -127,13 +127,6 @@ public abstract class Passenger {
 	 */
 	public void cancelSeat(int cancellationTime) throws PassengerException {
 
-		// TODO debugging
-//        System.out.print("Departure Time: ");
-//        System.out.println(this.departureTime);
-//        System.out.print("Cancel Time: ");
-//        System.out.println(cancellationTime);
-//        System.out.println();
-
 		// Exception checking
 		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()){ 
 			throw new PassengerException("Cannot be cancelled from this Passenger state");
@@ -146,10 +139,6 @@ public abstract class Passenger {
 		this.confirmed = false;
 		this.newState = true;
         this.bookingTime = cancellationTime;
-
-//		if(cancellationTime < departureTime){ //TODO is this what the 3rd line of the pre function comment means ^
-//			this.newState = true;
-//		}
 	}
 
 	/**
@@ -212,10 +201,8 @@ public abstract class Passenger {
 		} 
 		
 		this.confirmed = false;
-		
-		if(departureTime == this.departureTime){
-			this.flown = true;
-		}
+		this.flown = true;
+
 	}
 
 	/**
@@ -391,12 +378,9 @@ public abstract class Passenger {
             this.newState = false;
             this.refused = true;
         } else {
+            //TODO remove this later
             System.out.println("WARNING SOMeTHING WENT WRONG");
         }
-
-		
-		
-		
 	}
 	
 	/* (non-Javadoc) (Supplied) 

@@ -96,7 +96,6 @@ public class FirstTests {
         assertFalse(test.isRefused());
     }
 
-
     /**
      * Test method for {@link asgn2Passengers.First#cancelSeat(int)}
      */
@@ -163,7 +162,10 @@ public class FirstTests {
     public void CancelSeat_CorrectStates() throws PassengerException {
         pConfirmed.cancelSeat(300);
         assertTrue(pConfirmed.isNew());
+        assertFalse(pConfirmed.isQueued());
         assertFalse(pConfirmed.isConfirmed());
+        assertFalse(pConfirmed.isFlown());
+        assertFalse(pConfirmed.isRefused());
     }
 
     /**
@@ -195,7 +197,7 @@ public class FirstTests {
     }
 
     @Test(expected = PassengerException.class)
-    public void ConfirmSeat_QueuedDepartureTimeBeforeConfirmTime() throws PassengerException {
+    public void ConfirmSeat_QueuedDepartureTimeLessConfirmTime() throws PassengerException {
         pQueued.confirmSeat(CONFIRM_TIME, CONFIRM_TIME - 1);
     }
 
@@ -274,23 +276,11 @@ public class FirstTests {
         assertTrue(pConfirmed.isFlown());
     }
 
-    //TODO broken tests, what if flown time != departure time
-//    @Test
-//    public void FlyPassenger_WrongDepartureTimeAhead() throws PassengerException {
-//        pConfirmed.flyPassenger(FLOWN_TIME - 100);
-////        assertTrue(pConfirmed.isFlown());
-//    }
-//
-//    @Test
-//    public void FlyPassenger_WrongDepartureTimeLate() throws PassengerException {
-//        pConfirmed.flyPassenger(FLOWN_TIME + 100);
-//        System.out.println(pConfirmed.isFlown());
-//        System.out.println(pConfirmed.isConfirmed());
-//        System.out.println(pConfirmed.isQueued());
-//        System.out.println(pConfirmed.isRefused());
-//        System.out.println(pConfirmed.isNew());
-////        assertTrue(pConfirmed.isFlown());
-//    }
+    @Test
+    public void FlyPassenger_FlownTimeLessDepartureTime() throws PassengerException {
+        pConfirmed.flyPassenger(DEPARTURE_TIME - 1);
+        assertTrue(pConfirmed.isFlown());
+    }
 
     /**
      * Test method for {@link asgn2Passengers.First#queuePassenger(int, int)}
@@ -603,9 +593,6 @@ public class FirstTests {
     @Test
     public void Upgrade_PassId() {
         Passenger upgradedP = pConfirmed.upgrade();
-        System.out.println(upgradedP);
-        System.out.println(pConfirmed);
-
         assertEquals(upgradedP.getPassID(), "F(U):" + pConfirmed.getPassID().substring(2) );
     }
 }

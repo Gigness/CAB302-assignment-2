@@ -27,18 +27,26 @@ public class SimulationRunner {
 	 */
 	public static void main(String[] args) {
 		final int NUM_ARGS = 9;
+        final int NUM_ARGS_GUI_OPTION = 10;
+        boolean run_gui = true;
+
 		Simulator s = null;
 		Log l = null;
-        System.out.println(args[0]);
+        System.out.println(args);
         try {
-
-			// TODO - provide user input here
+            // TODO - provide user input here
 			switch (args.length) {
 				case NUM_ARGS: {
 					s = createSimulatorUsingArgs(args);
 					break;
 				}
+                case NUM_ARGS_GUI_OPTION: {
+                    if (args[NUM_ARGS_GUI_OPTION - 1] == "0") {
+                        run_gui = false;
+                    }
+                }
 				case 0: {
+                    // TODO, default launch GUI
 					s = new Simulator();
 					break;
 				}
@@ -52,10 +60,20 @@ public class SimulationRunner {
 			System.exit(-1);
 		}
 
+
+
 		//Run the simulation 
 		SimulationRunner sr = new SimulationRunner(s,l);
 		try {
-			sr.runSimulation(null);
+            if (run_gui) {
+                System.out.println("Run with Gui");
+                // run the gui
+                sr.runSimulation(null);
+            } else {
+                // don't run the gui
+                System.out.println("No Gui");
+                sr.runSimulation(null);
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(-1);

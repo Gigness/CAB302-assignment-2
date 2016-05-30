@@ -16,7 +16,6 @@ import com.sun.tools.internal.jxc.ap.Const;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 
-import com.sun.glass.ui.Screen;
 
 /**
  * @author hogan
@@ -47,24 +46,27 @@ public class GUISimulator extends JFrame implements Runnable {
 
     private JButton runButton;
     private JButton chartButton;
-    
+
+    private String simulatorArgs;
+    private String[] args;
     /**
 	 * @param arg0
 	 * @throws HeadlessException
 	 */
-	public GUISimulator(String arg0) throws HeadlessException {
+	public GUISimulator(String arg0, String[] args) throws HeadlessException {
 		super(arg0);
+        this.args = args;
 	}
 
 	private void createGUI() {
 
         setLayout(new BorderLayout());  // basic frame
 
-
         // create swing components
         textArea = new JTextArea();
         textArea.setEditable(false);
         textArea.setEnabled(false);
+
 
         settingsPanel = new JPanel();
 
@@ -82,7 +84,7 @@ public class GUISimulator extends JFrame implements Runnable {
         // Add to main content pane
         Container c = getContentPane();
         c.add(textArea, BorderLayout.NORTH);
-        c.add(settingsPanel, BorderLayout.SOUTH );
+        c.add(settingsPanel, BorderLayout.SOUTH);
 
         // Main Labels
         JLabel simulationLabel = new JLabel("Simulation");
@@ -97,7 +99,7 @@ public class GUISimulator extends JFrame implements Runnable {
 
         // Fare class labels
         JLabel firstLabel = new JLabel("First");
-        JLabel bussinessLabel = new JLabel("Business");
+        JLabel businessLabel = new JLabel("Business");
         JLabel premiumLabel = new JLabel("Premium");
         JLabel econLabel = new JLabel("Economy");
 
@@ -194,7 +196,7 @@ public class GUISimulator extends JFrame implements Runnable {
         gc.weightx = 1;
         gc.gridx = 2;
         gc.gridy = 2;
-        settingsPanel.add(bussinessLabel, gc);
+        settingsPanel.add(businessLabel, gc);
 
         gc.weighty = FIELD_Y_WEIGHT;
         gc.weightx = 1;
@@ -259,10 +261,104 @@ public class GUISimulator extends JFrame implements Runnable {
         premiumField.setText(Double.toString(Constants.DEFAULT_PREMIUM_PROB));
         econField.setText(Double.toString(Constants.DEFAULT_ECONOMY_PROB));
 
+
+        // Add actions to buttons
+        runButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+
+                boolean inputsInvalid = false;
+                // validate all textField
+                String rngInput = rngField.getText();
+                String meanInput = meanField.getText();
+                String cancelInput = cancelField.getText();
+                String queueInput = queueField.getText();
+                String firstInput = firstField.getText();
+                String businessInput = businessField.getText();
+                String premiumInput = premiumField.getText();
+                String economyInput = econField.getText();
+
+                
+                if(!isInteger(rngInput)) {
+                    rngLabel.setForeground(Color.RED);
+                    inputsInvalid = true;
+                } else {
+                    rngLabel.setForeground(Color.BLACK);
+                }
+                if(!isDouble(meanInput)) {
+                    meanLabel.setForeground(Color.RED);
+                    inputsInvalid = true;
+                } else {
+                    meanLabel.setForeground(Color.BLACK);
+                }
+                if(!isDouble(cancelInput)) {
+                    cancelLabel.setForeground(Color.RED);
+                    inputsInvalid = true;
+                } else {
+                    cancelLabel.setForeground(Color.BLACK);
+                }
+                if(!isInteger(queueInput)) {
+                    queueLabel.setForeground(Color.RED);
+                    inputsInvalid = true;
+                } else {
+                    queueLabel.setForeground(Color.BLACK);
+                }
+
+                // TODO validate probabalites are less than or equal to 1?
+                if(!isDouble(firstInput)) {
+                    firstLabel.setForeground(Color.RED);
+                    inputsInvalid = true;
+                } else {
+                    firstLabel.setForeground(Color.BLACK);
+                }
+                if(!isDouble(businessInput)) {
+                    businessLabel.setForeground(Color.RED);
+                    inputsInvalid = true;
+                } else {
+                    businessLabel.setForeground(Color.BLACK);
+                }
+                if(!isDouble(premiumInput)) {
+                    premiumLabel.setForeground(Color.RED);
+                    inputsInvalid = true;
+                } else {
+                    premiumLabel.setForeground(Color.BLACK);
+                }
+                if(!isDouble(economyInput)) {
+                    econLabel.setForeground(Color.RED);
+                    inputsInvalid = true;
+                } else {
+                    econLabel.setForeground(Color.BLACK);
+                }
+
+                if (!inputsInvalid) {
+                    double stdDev = 0.33 * Double.parseDouble(meanInput);
+
+                    int rngValue = Integer.parseInt(rngInput);
+                    double meanValue = Double.parseDouble(meanInput);
+                    double cancelValue = Double.parseDouble(cancelInput);
+                    int queueValue = Integer.parseInt(queueInput);
+                    double firstValue = Double.parseDouble(firstInput);
+                    double businessValue = Double.parseDouble(businessInput);
+                    double premiumValue = Double.parseDouble(premiumInput);
+                    double econValue = Double.parseDouble(economyInput);
+
+                    try {
+                        Simulator simulator = new Simulator(rngValue, queueValue, meanValue,
+                                stdDev, firstValue, businessValue, premiumValue, econValue, cancelValue);
+                    } catch (SimulationException e1) {
+                        e1.printStackTrace();
+                    }
+
+                }
+
+
+            }
+        });
+
         this.setVisible(true);
         this.setSize(WIDTH, HEIGHT);
-
-
 
         //Setup
 //		this.setSize(WIDTH, HEIGHT);
@@ -374,12 +470,23 @@ public class GUISimulator extends JFrame implements Runnable {
 		createGUI();
 	}
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		 JFrame.setDefaultLookAndFeelDecorated(true);
-	     SwingUtilities.invokeLater(new GUISimulator("BorderLayout"));
-	}
+    private boolean isInteger( String input ) {
+        try {
+            Integer.parseInt( input );
+            return true;
+        }
+        catch( Exception e ) {
+            return false;
+        }
+    }
 
+    public boolean isDouble( String input ) {
+        try {
+            Double.parseDouble( input );
+            return true;
+        }
+        catch( Exception e ) {
+            return false;
+        }
+    }
 }

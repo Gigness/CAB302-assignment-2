@@ -11,6 +11,8 @@ import java.io.IOException;
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
 
+import javax.swing.*;
+
 /**
  * Class to operate the simulation, taking parameters and utility methods from the Simulator
  * to control the available resources, and using Log to provide a record of operation. 
@@ -41,7 +43,9 @@ public class SimulationRunner {
 					break;
 				}
                 case NUM_ARGS_GUI_OPTION: {
-                    if (args[NUM_ARGS_GUI_OPTION - 1] == "0") {
+                    System.out.println(args[9]);
+                    String optionGui = args[NUM_ARGS_GUI_OPTION - 1];
+                    if (optionGui.equals("0")) {
                         run_gui = false;
                     }
                 }
@@ -60,19 +64,19 @@ public class SimulationRunner {
 			System.exit(-1);
 		}
 
-
-
 		//Run the simulation 
 		SimulationRunner sr = new SimulationRunner(s,l);
 		try {
-            if (run_gui) {
-                System.out.println("Run with Gui");
-                // run the gui
-                sr.runSimulation(null);
-            } else {
+            if (run_gui ) {
+                System.out.println("Run gui with given settings");
+                SwingUtilities.invokeLater(new GUISimulator("Aircraft Simulator", args));
+            } else if(!run_gui) {
                 // don't run the gui
                 System.out.println("No Gui");
                 sr.runSimulation(null);
+            } else {
+                System.out.println("Run Gui with default settings");
+                SwingUtilities.invokeLater(new GUISimulator("Aircraft Simulator", null));
             }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,7 +112,7 @@ public class SimulationRunner {
 	private static void printErrorAndExit() {
 		String str = "Usage: java asgn2Simulators.SimulationRunner [SIM Args]\n";
 		str += "SIM Args: seed maxQueueSize meanBookings sdBookings "; 
-		str += "firstProb businessProb premiumProb economyProb cancelProb\n";
+		str += "firstProb businessProb premiumProb economyProb cancelProb guiSelect\n";
 		str += "If no arguments, default values are used\n";
 		System.err.println(str);
 		System.exit(-1);

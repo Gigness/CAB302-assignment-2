@@ -155,6 +155,9 @@ public class SimulationRunner {
             System.out.println(timeLog);
             System.out.println(this.sim.toString());
             System.out.println(capacities);
+            gui.writeText(timeLog);
+            gui.writeText(this.sim.toString());
+            gui.writeText(capacities);
         }
 
 
@@ -181,6 +184,7 @@ public class SimulationRunner {
             if (gui != null) {
                 String dailySum = this.sim.getSummary(time, time >= Constants.FIRST_FLIGHT);
                 System.out.println(dailySum);
+                gui.writeText(dailySum);
             }
         }
 		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION);
@@ -191,6 +195,7 @@ public class SimulationRunner {
             String endSimString = "\n" + endTime  + ": End of Simulation\n";
             String finalState = this.sim.finalState();
             System.out.println(endSimString + finalState);
+            gui.writeText(endSimString + finalState);
         }
 
         this.log.logQREntries(Constants.DURATION, sim); // individual queue refused transitions savestatus method

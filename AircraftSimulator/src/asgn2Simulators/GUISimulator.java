@@ -30,11 +30,13 @@ public class GUISimulator extends JFrame implements Runnable {
 	public static final int HEIGHT = 600;
 
     public static final int SETTINGS_PANEL_HEIGHT = 200;
+    public static final int SCROLL_PANE_HEIGHT = 400;
     public static final int TEXT_AREA_PANEL_HEIGHT = 400;
 
     public static final double FIELD_Y_WEIGHT = 0.2;
     public static final int TITLE_LABEL_Y_WEIGHT = 1;
 
+    private JScrollPane textScrollPane;
     private JTextArea textArea;
 	private JPanel settingsPanel;
 
@@ -75,8 +77,11 @@ public class GUISimulator extends JFrame implements Runnable {
         textArea = new JTextArea();
         textArea.setEditable(false);
         textArea.setEnabled(false);
+//        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
 
-
+        textScrollPane = new JScrollPane(textArea);
+        textScrollPane.setBounds(0, 0, WIDTH, 1000);
         settingsPanel = new JPanel();
 
         // Dimensions
@@ -85,14 +90,19 @@ public class GUISimulator extends JFrame implements Runnable {
         sizeSettingsPanel.height = SETTINGS_PANEL_HEIGHT;
         settingsPanel.setPreferredSize(sizeSettingsPanel);
 
-        Dimension sizeTextArea = textArea.getPreferredSize();
-        sizeTextArea.width = WIDTH;
-        sizeTextArea.height = TEXT_AREA_PANEL_HEIGHT;
-        textArea.setPreferredSize(sizeTextArea);
+        Dimension sizeTextScrollPane = textScrollPane.getPreferredSize();
+        sizeTextScrollPane.width = WIDTH;
+        sizeTextScrollPane.height = SCROLL_PANE_HEIGHT;
+        textArea.setPreferredSize(sizeTextScrollPane);
+
+//        Dimension sizeTextArea = textArea.getPreferredSize();
+//        sizeTextArea.width = WIDTH;
+//        sizeTextArea.height = TEXT_AREA_PANEL_HEIGHT;
+//        textArea.setPreferredSize(sizeTextArea);
 
         // Add to main content pane
         Container c = getContentPane();
-        c.add(textArea, BorderLayout.NORTH);
+        c.add(textScrollPane, BorderLayout.NORTH);
         c.add(settingsPanel, BorderLayout.SOUTH);
 
         // Main Labels
@@ -380,6 +390,7 @@ public class GUISimulator extends JFrame implements Runnable {
             }
         });
 
+        pack();
         this.setVisible(true);
         this.setSize(WIDTH, HEIGHT);
 
@@ -399,6 +410,10 @@ public class GUISimulator extends JFrame implements Runnable {
 //	    repaint();
 //	    this.setVisible(true);
 	}
+
+    public void writeText(String message) {
+        textArea.append(message);
+    }
 
 	private void displayGraph() {
 		//TODO idk, fix JFreeChart

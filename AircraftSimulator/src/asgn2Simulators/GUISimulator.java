@@ -9,9 +9,12 @@ package asgn2Simulators;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.*;
 
+import asgn2Aircraft.AircraftException;
+import asgn2Passengers.PassengerException;
 import com.sun.tools.internal.jxc.ap.Const;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -47,8 +50,13 @@ public class GUISimulator extends JFrame implements Runnable {
     private JButton runButton;
     private JButton chartButton;
 
+    private Simulator sim;
     private String simulatorArgs;
     private String[] args;
+    private Log l;
+    private GUISimulator guiSim;
+
+
     /**
 	 * @param arg0
 	 * @throws HeadlessException
@@ -56,6 +64,7 @@ public class GUISimulator extends JFrame implements Runnable {
 	public GUISimulator(String arg0, String[] args) throws HeadlessException {
 		super(arg0);
         this.args = args;
+        this.guiSim = this;
 	}
 
 	private void createGUI() {
@@ -266,9 +275,6 @@ public class GUISimulator extends JFrame implements Runnable {
         runButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
-
                 boolean inputsInvalid = false;
                 // validate all textField
                 String rngInput = rngField.getText();
@@ -345,15 +351,32 @@ public class GUISimulator extends JFrame implements Runnable {
                     double econValue = Double.parseDouble(economyInput);
 
                     try {
-                        Simulator simulator = new Simulator(rngValue, queueValue, meanValue,
+                        sim = new Simulator(rngValue, queueValue, meanValue,
                                 stdDev, firstValue, businessValue, premiumValue, econValue, cancelValue);
+
                     } catch (SimulationException e1) {
                         e1.printStackTrace();
                     }
+                    try {
+                        l = new Log();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    SimulationRunner sr = new SimulationRunner(sim,l);
+                    try {
+                        sr.runSimulation(guiSim);
+                    } catch (AircraftException e1) {
+                        e1.printStackTrace();
+                    } catch (PassengerException e1) {
+                        e1.printStackTrace();
+                    } catch (SimulationException e1) {
+                        e1.printStackTrace();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+
 
                 }
-
-
             }
         });
 
@@ -480,7 +503,7 @@ public class GUISimulator extends JFrame implements Runnable {
         }
     }
 
-    public boolean isDouble( String input ) {
+    private boolean isDouble( String input ) {
         try {
             Double.parseDouble( input );
             return true;

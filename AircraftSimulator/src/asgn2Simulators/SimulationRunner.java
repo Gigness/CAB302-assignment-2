@@ -7,6 +7,8 @@
 package asgn2Simulators;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
@@ -34,7 +36,6 @@ public class SimulationRunner {
 
 		Simulator s = null;
 		Log l = null;
-        System.out.println(args);
         try {
             // TODO - provide user input here
 			switch (args.length) {
@@ -43,7 +44,6 @@ public class SimulationRunner {
 					break;
 				}
                 case NUM_ARGS_GUI_OPTION: {
-                    System.out.println(args[9]);
                     String optionGui = args[NUM_ARGS_GUI_OPTION - 1];
                     if (optionGui.equals("0")) {
                         run_gui = false;
@@ -67,7 +67,7 @@ public class SimulationRunner {
 		//Run the simulation 
 		SimulationRunner sr = new SimulationRunner(s,l);
 		try {
-            if (run_gui ) {
+            if (run_gui) {
                 System.out.println("Run gui with given settings");
                 SwingUtilities.invokeLater(new GUISimulator("Aircraft Simulator", args));
             } else if(!run_gui) {
@@ -147,7 +147,18 @@ public class SimulationRunner {
 		this.sim.createSchedule();
 		this.log.initialEntry(this.sim);
 
-		//Main simulation loop 
+        //TODO -> Gui
+
+        if(gui != null) {
+            String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+            String capacities = sim.getFlights(Constants.FIRST_FLIGHT).initialState();
+            System.out.println(timeLog);
+            System.out.println(this.sim.toString());
+            System.out.println(capacities);
+        }
+
+
+        //Main simulation loop
 		for (int time=0; time<=Constants.DURATION; time++) {
 			this.sim.resetStatus(time);
 			this.sim.rebookCancelledPassengers(time);
@@ -157,7 +168,6 @@ public class SimulationRunner {
 				this.sim.processUpgrades(time);
 				this.sim.processQueue(time);
 				this.sim.flyPassengers(time);
-
 				this.sim.updateTotalCounts(time);
 				this.log.logFlightEntries(time, sim);
 			} else {
@@ -166,10 +176,24 @@ public class SimulationRunner {
 			//Log progress 
 			this.log.logQREntries(time, sim);
 			this.log.logEntry(time,this.sim);
-		}
+
+            // TODO -> Gui
+            if (gui != null) {
+                String dailySum = this.sim.getSummary(time, time >= Constants.FIRST_FLIGHT);
+                System.out.println(dailySum);
+            }
+        }
 		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION);
         // TODO stuff from here can go to gui somewhere - text area podcast4: 11.30
-		this.log.logQREntries(Constants.DURATION, sim); // individual queue refused transitions savestatus method
+        // TODO -> Gui
+        if (gui != null) {
+            String endTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+            String endSimString = "\n" + endTime  + ": End of Simulation\n";
+            String finalState = this.sim.finalState();
+            System.out.println(endSimString + finalState);
+        }
+
+        this.log.logQREntries(Constants.DURATION, sim); // individual queue refused transitions savestatus method
 		this.log.finalise(this.sim);
 	}
 }

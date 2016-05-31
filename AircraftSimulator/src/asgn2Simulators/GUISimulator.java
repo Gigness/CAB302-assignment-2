@@ -75,6 +75,7 @@ public class GUISimulator extends JFrame implements Runnable {
     private JTextField econField;
 
     private JButton runButton;
+    private JButton textButton;
     private JButton chartButton;
     private JButton chartButton2;
 
@@ -155,8 +156,10 @@ public class GUISimulator extends JFrame implements Runnable {
 
         // buttons
         runButton = new JButton("Run Simulation");
+        textButton = new JButton("Show Text Log");
         chartButton = new JButton("Show Daily Chart");
         chartButton2 = new JButton("Show Summary Chart");
+        textButton.setEnabled(false);
         chartButton.setEnabled(false);
         chartButton2.setEnabled(false);
 
@@ -359,9 +362,14 @@ public class GUISimulator extends JFrame implements Runnable {
 
         gc.weighty = FIELD_Y_WEIGHT;
         gc.gridx = 4;
-        gc.gridy = 2;
+        gc.gridy = 1;
         settingsPanel.add(runButton,gc);
 
+        gc.weighty = FIELD_Y_WEIGHT;
+        gc.gridx = 4;
+        gc.gridy = 2;
+        settingsPanel.add(textButton,gc);
+        
         gc.weighty = FIELD_Y_WEIGHT;
         gc.gridx = 4;
         gc.gridy = 3;
@@ -491,13 +499,29 @@ public class GUISimulator extends JFrame implements Runnable {
             }
         });
 
+        textButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	textButton.setEnabled(false);
+            	chartButton.setEnabled(true);
+            	chartButton2.setEnabled(true);
+            	textScrollPane.setVisible(true);
+            	summaryChartPanel.setVisible(false);
+                progressChartPanel.setVisible(false);
+                c.revalidate();
+            }
+        });
+        
         chartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	textScrollPane.setVisible(false);
+            	textButton.setEnabled(true);
             	summaryChartPanel.setVisible(false);
             	c.add(progressChartPanel, BorderLayout.CENTER);
                 progressChartPanel.setVisible(true);
+                chartButton.setEnabled(false);
+                chartButton2.setEnabled(true);
                 c.revalidate();
             }
         });
@@ -506,9 +530,12 @@ public class GUISimulator extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
             	textScrollPane.setVisible(false);
+            	textButton.setEnabled(true);
             	progressChartPanel.setVisible(false);
             	c.add(summaryChartPanel, BorderLayout.CENTER);
             	summaryChartPanel.setVisible(true);
+            	chartButton2.setEnabled(false);
+            	chartButton.setEnabled(true);
                 c.revalidate();
             }
         });

@@ -16,7 +16,6 @@ import javax.swing.border.Border;
 
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
-import com.sun.tools.internal.jxc.ap.Const;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -165,7 +164,7 @@ public class GUISimulator extends JFrame implements Runnable {
         queueField = new JTextField(10);
         cancelField = new JTextField(10);
 
-        // Fare classs Text Fields
+        // Fare class Text Fields
         firstField = new JTextField(10);
         businessField = new JTextField(10);
         premiumField = new JTextField(10);
@@ -434,7 +433,6 @@ public class GUISimulator extends JFrame implements Runnable {
     public void writeText(String message) {
         textArea.append(message);
     }
-    
 
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()

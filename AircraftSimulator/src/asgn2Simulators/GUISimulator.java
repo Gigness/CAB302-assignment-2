@@ -16,11 +16,17 @@ import javax.swing.border.Border;
 
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
+import javafx.scene.chart.XYChart;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.DefaultCategoryItemRenderer;
+import org.jfree.chart.renderer.xy.DeviationRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -34,10 +40,26 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class GUISimulator extends JFrame implements Runnable {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
-
+	
     public static final int SETTINGS_PANEL_HEIGHT = 200;
     public static final double FIELD_Y_WEIGHT = 0.2;
     public static final int TITLE_LABEL_Y_WEIGHT = 1;
+    
+    private int oldTotalRefused = 0;
+    private int oldTotalEcon = 0;
+    private int oldTotalPremium = 0;
+    private int oldTotalBusiness = 0;
+    private int oldTotalFirst = 0;
+    private int oldTotalTotal = 0;
+    private int oldTotalEmpty = 0;
+    
+    private int tempOldTotalRefused = 0;
+    private int tempOldTotalEcon = 0;
+    private int tempOldTotalPremium = 0;
+    private int tempOldTotalBusiness = 0;
+    private int tempOldTotalFirst = 0;
+    private int tempOldTotalTotal = 0;
+    private int tempOldTotalEmpty = 0;
 
     private JScrollPane textScrollPane;
     private JTextArea textArea;
@@ -54,13 +76,14 @@ public class GUISimulator extends JFrame implements Runnable {
 
     private JButton runButton;
     private JButton chartButton;
+    private JButton chartButton2;
 
 
     JFreeChart progressChart;
     ChartPanel progressChartPanel;
     JFreeChart summaryChart;
     ChartPanel summaryChartPanel;
-
+    
     // TODO - For progress chart
     XYSeriesCollection dailyDataset;
     XYSeries econData;
@@ -68,6 +91,9 @@ public class GUISimulator extends JFrame implements Runnable {
     XYSeries businessData;
     XYSeries firstData;
     XYSeries totalData;
+    XYSeries emptySeatsData;
+    XYSeries queData;
+    XYSeries refusedData;
 
     // TODO - For summary chart
     XYSeriesCollection summaryDataset;
@@ -109,8 +135,6 @@ public class GUISimulator extends JFrame implements Runnable {
 
         // Add to main content pane
         Container c = getContentPane();
-        c.add(textScrollPane, BorderLayout.CENTER);
-        c.add(settingsPanel, BorderLayout.SOUTH);
 
         // Main Labels
         JLabel simulationLabel = new JLabel("Simulation");
@@ -131,19 +155,25 @@ public class GUISimulator extends JFrame implements Runnable {
 
         // buttons
         runButton = new JButton("Run Simulation");
-        chartButton = new JButton("Show Chart");
+        chartButton = new JButton("Show Daily Chart");
+        chartButton2 = new JButton("Show Summary Chart");
+        chartButton.setEnabled(false);
+        chartButton2.setEnabled(false);
 
         // Chart
-        econData = new XYSeries("Econ Test");
-        econData.add(1, 400);
-        econData.add(2, 500);
-        econData.add(3, 400);
-        econData.add(4, 400);
-        econData.add(5, 500);
-        econData.add(6, 700);
+        econData = new XYSeries("Economy");
+        premiumData = new XYSeries("Premium");
+        businessData = new XYSeries("Business");
+        firstData = new XYSeries("First");
+        totalData = new XYSeries("Total");
+        emptySeatsData = new XYSeries("Empty");
 
         dailyDataset = new XYSeriesCollection();
-        dailyDataset.addSeries(econData);
+        
+        queData = new XYSeries("Qued");
+        refusedData = new XYSeries("Refused");
+        
+        summaryDataset = new XYSeriesCollection();
 
         progressChart = ChartFactory.createXYLineChart(
                 "Simulation Results: Daily Progress",
@@ -154,10 +184,45 @@ public class GUISimulator extends JFrame implements Runnable {
                 true, true, false);
 
         progressChartPanel = new ChartPanel(progressChart);
-
         c.add(progressChartPanel, BorderLayout.CENTER);
-        textArea.setVisible(false);
+        progressChartPanel.setVisible(false);
+        
+        //Chart 2
+        summaryChart = ChartFactory.createXYLineChart(
+                "Simulation Results: Summary",
+                "Days",
+                "Passengers",
+                summaryDataset,
+                PlotOrientation.VERTICAL,
+                true, true, false);
 
+        summaryChartPanel = new ChartPanel(summaryChart);
+        c.add(summaryChartPanel, BorderLayout.CENTER);
+        summaryChartPanel.setVisible(false);
+        
+        //adding color for chart 1 
+        XYPlot chart1 = progressChart.getXYPlot();
+        XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer();
+        renderer1.setSeriesPaint(0, Color.GRAY);
+        renderer1.setSeriesPaint(1, Color.CYAN);
+        renderer1.setSeriesPaint(2, Color.BLUE);
+        renderer1.setSeriesPaint(3, Color.BLACK);
+        renderer1.setSeriesPaint(4, Color.GREEN);
+        renderer1.setSeriesPaint(5, Color.RED);
+        renderer1.setShapesVisible(false);
+        chart1.setRenderer(renderer1);
+        
+        //adding color for chart 2
+        XYPlot chart2 = summaryChart.getXYPlot();
+        XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer();
+        renderer2.setSeriesPaint(0, Color.BLACK);
+        renderer2.setSeriesPaint(1, Color.RED);
+        renderer2.setShapesVisible(false);
+        chart2.setRenderer(renderer2);
+        
+        c.add(textScrollPane, BorderLayout.CENTER);
+        c.add(settingsPanel, BorderLayout.SOUTH);
+        
         // Simulation Text Fields
         rngField = new JTextField(10);
         meanField = new JTextField(10);
@@ -301,6 +366,11 @@ public class GUISimulator extends JFrame implements Runnable {
         gc.gridx = 4;
         gc.gridy = 3;
         settingsPanel.add(chartButton,gc);
+        
+        gc.weighty = FIELD_Y_WEIGHT;
+        gc.gridx = 4;
+        gc.gridy = 4;
+        settingsPanel.add(chartButton2,gc);
 
         // default values for input fields
         rngField.setText(Integer.toString(Constants.DEFAULT_SEED));
@@ -406,6 +476,8 @@ public class GUISimulator extends JFrame implements Runnable {
                     textArea.setText(null);
                     try {
                         sr.runSimulation(guiSim);
+                        chartButton.setEnabled(true);
+                        chartButton2.setEnabled(true);
                     } catch (AircraftException e1) {
                         e1.printStackTrace();
                     } catch (PassengerException e1) {
@@ -422,9 +494,25 @@ public class GUISimulator extends JFrame implements Runnable {
         chartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textArea.append("swag\n\n");
+            	textScrollPane.setVisible(false);
+            	summaryChartPanel.setVisible(false);
+            	c.add(progressChartPanel, BorderLayout.CENTER);
+                progressChartPanel.setVisible(true);
+                c.revalidate();
             }
         });
+        
+        chartButton2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	textScrollPane.setVisible(false);
+            	progressChartPanel.setVisible(false);
+            	c.add(summaryChartPanel, BorderLayout.CENTER);
+            	summaryChartPanel.setVisible(true);
+                c.revalidate();
+            }
+        });
+        
         pack();
         this.setVisible(true);
         this.setSize(WIDTH, HEIGHT);
@@ -433,7 +521,69 @@ public class GUISimulator extends JFrame implements Runnable {
     public void writeText(String message) {
         textArea.append(message);
     }
+    
+    public void addDataToChart1(int day, int econ, int premium, int business, int first, int empty){
+    	//storing the overall totals for the sim
+    	int total;
+    	oldTotalEcon = econ;
+    	oldTotalPremium = premium;
+    	oldTotalBusiness = business;
+    	oldTotalFirst = first;
+    	oldTotalTotal = econ + premium + business + first;
+    	oldTotalEmpty = empty;
+    	
+    	//isolating only the daily total from each total
+    	econ -= tempOldTotalEcon;
+    	premium -= tempOldTotalPremium;
+    	business -= tempOldTotalBusiness;
+    	first -= tempOldTotalFirst;
+    	total = oldTotalTotal - tempOldTotalTotal;
+    	empty -= tempOldTotalEmpty;
+    	
+    	//adding each total to each series
+    	econData.add(day, econ);
+    	premiumData.add(day, premium);
+    	businessData.add(day, business);
+    	firstData.add(day, first);
+    	totalData.add(day, total);
+    	emptySeatsData.add(day, empty);
+    	
+    	//preparing the temp totals for the next call
+    	tempOldTotalEcon = oldTotalEcon;
+    	tempOldTotalPremium = oldTotalPremium;
+    	tempOldTotalBusiness = oldTotalBusiness;
+    	tempOldTotalFirst = oldTotalFirst;
+    	tempOldTotalTotal = oldTotalTotal;
+    	tempOldTotalEmpty = oldTotalEmpty;
+    	
+    }
+    
+    public void addDataToChart2(int day, int qued, int refused){
+    	//storing the overall total for the refused
+    	oldTotalRefused = refused;
+    	
+    	//isolating only the daily total from each total
+    	refused -= tempOldTotalRefused;
+    	
+    	refusedData.add(day, refused);
+    	//this process is not needed for que as it is current que not cumulative
+    	queData.add(day, qued);
+    	
+    	tempOldTotalRefused = oldTotalRefused;
+    }
 
+    public void addDataToXYSeriesCollections(){
+    	dailyDataset.addSeries(econData);
+    	dailyDataset.addSeries(premiumData);
+    	dailyDataset.addSeries(businessData);
+    	dailyDataset.addSeries(firstData);
+    	dailyDataset.addSeries(totalData);
+    	dailyDataset.addSeries(emptySeatsData);
+    	
+    	summaryDataset.addSeries(queData);
+    	summaryDataset.addSeries(refusedData);
+    }
+    
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */

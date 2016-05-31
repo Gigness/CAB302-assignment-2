@@ -180,8 +180,12 @@ public class SimulationRunner {
             if (gui != null) {
                 String dailySum = this.sim.getSummary(time, time >= Constants.FIRST_FLIGHT);
                 gui.writeText(dailySum);
+                //TODO is getTotalFlown what we want
+                gui.addDataToChart1(time, this.sim.getTotalEconomy(), this.sim.getTotalPremium(), this.sim.getTotalBusiness(), this.sim.getTotalFirst(), this.sim.getTotalEmpty());
+                gui.addDataToChart2(time, this.sim.numInQueue(), this.sim.numRefused());
             }
         }
+		gui.addDataToXYSeriesCollections();
 		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION);
         // TODO stuff from here can go to gui somewhere - text area podcast4: 11.30
         // TODO -> Gui

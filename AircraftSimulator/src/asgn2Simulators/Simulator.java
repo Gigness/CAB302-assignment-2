@@ -579,8 +579,9 @@ public class Simulator {
 	public String toString() {
 		return "Simulator [meanDailyBookings=" + meanDailyBookings + ", sdDailyBookings=" + sdDailyBookings
 				+ ", seed=" + seed + ", firstProb=" + firstProb + ", businessProb="
-				+ businessProb + ", premiumProb=" + premiumProb 
-				+ ", economyProb=" + economyProb +"]";
+				+ businessProb + ", premiumProb=" + premiumProb
+                + ", economyProb=" + economyProb + ", maxQueueSize=" + maxQueueSize
+                + ", cancellationProb=" + cancelProb + "]";
 	}
 
 	/**

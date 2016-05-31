@@ -152,14 +152,10 @@ public class SimulationRunner {
         if(gui != null) {
             String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             String capacities = sim.getFlights(Constants.FIRST_FLIGHT).initialState();
-            System.out.println(timeLog);
-            System.out.println(this.sim.toString());
-            System.out.println(capacities);
-            gui.writeText(timeLog);
-            gui.writeText(this.sim.toString());
+            gui.writeText(timeLog + ": Start of Simulation\n");
+            gui.writeText(this.sim.toString() + "\n");
             gui.writeText(capacities);
         }
-
 
         //Main simulation loop
 		for (int time=0; time<=Constants.DURATION; time++) {
@@ -183,7 +179,6 @@ public class SimulationRunner {
             // TODO -> Gui
             if (gui != null) {
                 String dailySum = this.sim.getSummary(time, time >= Constants.FIRST_FLIGHT);
-                System.out.println(dailySum);
                 gui.writeText(dailySum);
             }
         }
@@ -194,7 +189,6 @@ public class SimulationRunner {
             String endTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             String endSimString = "\n" + endTime  + ": End of Simulation\n";
             String finalState = this.sim.finalState();
-            System.out.println(endSimString + finalState);
             gui.writeText(endSimString + finalState);
         }
 

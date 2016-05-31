@@ -77,11 +77,8 @@ public class GUISimulator extends JFrame implements Runnable {
         textArea = new JTextArea();
         textArea.setEditable(false);
         textArea.setEnabled(false);
-//        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
 
         textScrollPane = new JScrollPane(textArea);
-        textScrollPane.setBounds(0, 0, WIDTH, 1000);
         settingsPanel = new JPanel();
 
         // Dimensions
@@ -90,19 +87,14 @@ public class GUISimulator extends JFrame implements Runnable {
         sizeSettingsPanel.height = SETTINGS_PANEL_HEIGHT;
         settingsPanel.setPreferredSize(sizeSettingsPanel);
 
-        Dimension sizeTextScrollPane = textScrollPane.getPreferredSize();
-        sizeTextScrollPane.width = WIDTH;
-        sizeTextScrollPane.height = SCROLL_PANE_HEIGHT;
-        textArea.setPreferredSize(sizeTextScrollPane);
-
-//        Dimension sizeTextArea = textArea.getPreferredSize();
-//        sizeTextArea.width = WIDTH;
-//        sizeTextArea.height = TEXT_AREA_PANEL_HEIGHT;
-//        textArea.setPreferredSize(sizeTextArea);
+//        Dimension sizeTextScrollPane = textScrollPane.getPreferredSize();
+////        sizeTextScrollPane.width = WIDTH;
+//        sizeTextScrollPane.height = SCROLL_PANE_HEIGHT;
+//        textArea.setPreferredSize(sizeTextScrollPane);
 
         // Add to main content pane
         Container c = getContentPane();
-        c.add(textScrollPane, BorderLayout.NORTH);
+        c.add(textScrollPane, BorderLayout.CENTER);
         c.add(settingsPanel, BorderLayout.SOUTH);
 
         // Main Labels
@@ -373,6 +365,7 @@ public class GUISimulator extends JFrame implements Runnable {
                         e1.printStackTrace();
                     }
                     SimulationRunner sr = new SimulationRunner(sim,l);
+                    textArea.setText(null);
                     try {
                         sr.runSimulation(guiSim);
                     } catch (AircraftException e1) {
@@ -390,6 +383,12 @@ public class GUISimulator extends JFrame implements Runnable {
             }
         });
 
+        chartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textArea.append("swag\n\n");
+            }
+        });
         pack();
         this.setVisible(true);
         this.setSize(WIDTH, HEIGHT);

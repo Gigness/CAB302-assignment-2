@@ -12,12 +12,19 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
 import com.sun.tools.internal.jxc.ap.Const;
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.DefaultCategoryItemRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 
 /**
@@ -30,9 +37,6 @@ public class GUISimulator extends JFrame implements Runnable {
 	public static final int HEIGHT = 600;
 
     public static final int SETTINGS_PANEL_HEIGHT = 200;
-    public static final int SCROLL_PANE_HEIGHT = 400;
-    public static final int TEXT_AREA_PANEL_HEIGHT = 400;
-
     public static final double FIELD_Y_WEIGHT = 0.2;
     public static final int TITLE_LABEL_Y_WEIGHT = 1;
 
@@ -52,6 +56,15 @@ public class GUISimulator extends JFrame implements Runnable {
     private JButton runButton;
     private JButton chartButton;
 
+    JFreeChart progressChart;
+    ChartPanel progressChartPanel;
+    JFreeChart summaryChart;
+    XYSeriesCollection dailyDataset;
+    XYSeries econData;
+    XYSeries premiumData;
+    XYSeriesCollection summaryDataset;
+
+
     private Simulator sim;
     private String simulatorArgs;
     private String[] args;
@@ -70,7 +83,6 @@ public class GUISimulator extends JFrame implements Runnable {
 	}
 
 	private void createGUI() {
-
         setLayout(new BorderLayout());  // basic frame
 
         // create swing components
@@ -86,11 +98,6 @@ public class GUISimulator extends JFrame implements Runnable {
         sizeSettingsPanel.width = WIDTH;
         sizeSettingsPanel.height = SETTINGS_PANEL_HEIGHT;
         settingsPanel.setPreferredSize(sizeSettingsPanel);
-
-//        Dimension sizeTextScrollPane = textScrollPane.getPreferredSize();
-////        sizeTextScrollPane.width = WIDTH;
-//        sizeTextScrollPane.height = SCROLL_PANE_HEIGHT;
-//        textArea.setPreferredSize(sizeTextScrollPane);
 
         // Add to main content pane
         Container c = getContentPane();
@@ -117,6 +124,34 @@ public class GUISimulator extends JFrame implements Runnable {
         // buttons
         runButton = new JButton("Run Simulation");
         chartButton = new JButton("Show Chart");
+
+        // Chart
+
+        econData = new XYSeries("Econ Test");
+        econData.add(1, 400);
+        econData.add(2, 500);
+        econData.add(3, 400);
+        econData.add(4, 400);
+        econData.add(5, 500);
+        econData.add(6, 700);
+
+        dailyDataset = new XYSeriesCollection();
+        dailyDataset.addSeries(econData);
+
+        progressChart = ChartFactory.createXYLineChart(
+                "Simulation Results: Daily Progress",
+                "Days",
+                "Passengers",
+                dailyDataset,
+                PlotOrientation.VERTICAL,
+                true, true, false);
+
+        progressChartPanel = new ChartPanel(progressChart);
+
+        c.add(progressChartPanel, BorderLayout.CENTER);
+        textArea.setVisible(false);
+
+
 
         // Simulation Text Fields
         rngField = new JTextField(10);
@@ -392,22 +427,6 @@ public class GUISimulator extends JFrame implements Runnable {
         pack();
         this.setVisible(true);
         this.setSize(WIDTH, HEIGHT);
-
-        //Setup
-//		this.setSize(WIDTH, HEIGHT);
-//		GridBagLayout layout = new GridBagLayout();
-//		this.setTitle("Aircraft Booking Simulator");
-//		this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-//		this.setLayout(layout);
-//		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        displayGraph();
-//        displaySettings();
-//
-//        // Display the window
-//        pack();
-//        setLocationRelativeTo(null);
-//	    repaint();
-//	    this.setVisible(true);
 	}
 
     public void writeText(String message) {

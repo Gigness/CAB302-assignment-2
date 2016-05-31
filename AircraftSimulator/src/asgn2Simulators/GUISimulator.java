@@ -15,7 +15,6 @@ import javax.swing.*;
 
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
-import com.sun.tools.internal.jxc.ap.Const;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 

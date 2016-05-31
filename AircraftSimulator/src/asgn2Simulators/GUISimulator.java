@@ -56,21 +56,30 @@ public class GUISimulator extends JFrame implements Runnable {
     private JButton runButton;
     private JButton chartButton;
 
+
     JFreeChart progressChart;
     ChartPanel progressChartPanel;
     JFreeChart summaryChart;
+    ChartPanel summaryChartPanel;
+
+    // TODO - For progress chart
     XYSeriesCollection dailyDataset;
     XYSeries econData;
     XYSeries premiumData;
-    XYSeriesCollection summaryDataset;
+    XYSeries businessData;
+    XYSeries firstData;
+    XYSeries totalData;
 
+    // TODO - For summary chart
+    XYSeriesCollection summaryDataset;
+    XYSeries queueSize;
+    XYSeries refusedPassengers;
 
     private Simulator sim;
     private String simulatorArgs;
     private String[] args;
     private Log l;
     private GUISimulator guiSim;
-
 
     /**
 	 * @param arg0
@@ -126,7 +135,6 @@ public class GUISimulator extends JFrame implements Runnable {
         chartButton = new JButton("Show Chart");
 
         // Chart
-
         econData = new XYSeries("Econ Test");
         econData.add(1, 400);
         econData.add(2, 500);
@@ -150,8 +158,6 @@ public class GUISimulator extends JFrame implements Runnable {
 
         c.add(progressChartPanel, BorderLayout.CENTER);
         textArea.setVisible(false);
-
-
 
         // Simulation Text Fields
         rngField = new JTextField(10);
@@ -307,7 +313,6 @@ public class GUISimulator extends JFrame implements Runnable {
         premiumField.setText(Double.toString(Constants.DEFAULT_PREMIUM_PROB));
         econField.setText(Double.toString(Constants.DEFAULT_ECONOMY_PROB));
 
-
         // Add actions to buttons
         runButton.addActionListener(new ActionListener() {
             @Override
@@ -323,7 +328,6 @@ public class GUISimulator extends JFrame implements Runnable {
                 String premiumInput = premiumField.getText();
                 String economyInput = econField.getText();
 
-                
                 if(!isInteger(rngInput)) {
                     rngLabel.setForeground(Color.RED);
                     inputsInvalid = true;
@@ -412,8 +416,6 @@ public class GUISimulator extends JFrame implements Runnable {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-
-
                 }
             }
         });
@@ -432,91 +434,7 @@ public class GUISimulator extends JFrame implements Runnable {
     public void writeText(String message) {
         textArea.append(message);
     }
-
-	private void displayGraph() {
-		//TODO idk, fix JFreeChart
-//		JPanel graph = new JPanel();
-//		graph.setBackground(Color.BLACK);
-//
-//		GridBagConstraints gbc = new GridBagConstraints();
-//		gbc.fill = GridBagConstraints.NONE;
-//		gbc.anchor = GridBagConstraints.PAGE_START;
-//		gbc.weightx = 100;
-//		gbc.weighty = 100;
-//		gbc.gridwidth = 1;
-//		gbc.gridheight = 1;
-//		gbc.gridx = 0;
-//		gbc.gridy = 0;
-//		Insets inset = new Insets(0,0,10,0);
-//		gbc.insets = inset;
-//
-//		JTextArea text = new JTextArea();
-//		Dimension size = new Dimension();
-//		size.height = (int) (this.getSize().getHeight()*0.6);
-//		size.width = (int) (this.getSize().getWidth()*0.97);
-//		text.setPreferredSize(size);
-//		Dimension minSize = new Dimension();
-//		minSize.height = (int) (this.getSize().getHeight()*0.6);
-//		minSize.width = (int) (this.getSize().getWidth()*0.97);
-//		text.setMinimumSize(minSize);
-//		graph.add(text);
-//		getContentPane().add(graph, gbc);
-		
-//		JFreeChart chart = new JFreeChart("asdf", null);
-//		ChartPanel chartPanel = new ChartPanel(chart);
-//		graph.add(chart,BorderLayout.CENTER);
-	}
-
-	private void displaySettings() {
-		//Wrapper JPanel constraints
-//		GridBagConstraints gbc = new GridBagConstraints();
-//		gbc.fill = GridBagConstraints.BOTH;
-//		gbc.anchor = GridBagConstraints.PAGE_START;
-//		gbc.gridx = 0;
-//		gbc.gridy = 1;
-//		gbc.gridwidth = 1;
-//		gbc.gridheight = 1;
-//		gbc.weightx = 100;
-//		gbc.weighty = 100;
-//		JPanel settings = new JPanel();
-//		Dimension size = new Dimension();
-//		size.height = (int) (this.getSize().getHeight()/2*0.9);
-//		size.width = (int) (this.getSize().getWidth()*0.95);
-//		settings.setSize(size);
-//		getContentPane().add(settings, gbc);
-//
-//		//TODO 8 text areas with 8 labels attached to them
-//		// Settings Options
-//		JLabel simulationLabel = new JLabel("Simulation");
-//		JLabel fareClassesLabel = new JLabel("Fare Classes");
-//		JLabel OperationLabel = new JLabel("Operation");
-//		JButton run = new JButton("Run Simulation");
-//		JButton showChart2 = new JButton("Show Chart 2");
-//		showChart2.setEnabled(false);
-//
-//		//TODO settingsgbc isnt affecting the settings idk
-//		//TODO make this into a function passing constraints after I figure out how this works
-//		GridBagConstraints settingsgbc = new GridBagConstraints();
-//		settingsgbc.gridx = 0;
-//		settingsgbc.gridy = 1;
-//		settingsgbc.gridwidth = 1;
-//		settingsgbc.gridheight = 1;
-//		settingsgbc.weightx = 100;
-//		settingsgbc.weighty = 100;
-//
-//		settings.add(simulationLabel,settingsgbc);
-//		settingsgbc.gridx = 0;
-//		settingsgbc.gridy = 0;
-//		settingsgbc.gridwidth = 1;
-//		settingsgbc.gridheight = 1;
-//		settingsgbc.weightx = 100;
-//		settingsgbc.weighty = 100;
-//
-//		settings.add(fareClassesLabel,settingsgbc);
-//		settings.add(OperationLabel);
-//		settings.add(run);
-//		settings.add(showChart2);
-	}
+    
 
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()

@@ -409,45 +409,33 @@ public class GUISimulator extends JFrame implements Runnable {
                 String businessInput = businessField.getText();
                 String premiumInput = premiumField.getText();
                 String economyInput = econField.getText();
-                int errorCount = 0;
+                String errorMsg = "";
                 
                 if(!isInteger(rngInput)) {
                     rngLabel.setForeground(Color.RED);
                     inputsInvalid = true;
-                    if(errorCount==0){
-                    	JOptionPane.showMessageDialog(c, "RNG Seed must be a Integer");
-                    }
-                    errorCount++;
+                    errorMsg += "RNG Seed must be a Integer\n";
                 } else {
                     rngLabel.setForeground(Color.BLACK);
                 }
                 if(!isDouble(meanInput)) {
                     meanLabel.setForeground(Color.RED);
                     inputsInvalid = true;
-                    if(errorCount==0){
-                    	JOptionPane.showMessageDialog(c, "Daily Mean must be a double");
-                    }
-                    errorCount++;
+                    errorMsg += "Daily Mean must be a double\n";        
                 } else {
                     meanLabel.setForeground(Color.BLACK);
                 }
                 if(!isDouble(cancelInput)) {
                     cancelLabel.setForeground(Color.RED);
                     inputsInvalid = true;
-                    if(errorCount==0){
-                    	JOptionPane.showMessageDialog(c, "Cancellation probability  must be a double");
-                    }
-                    errorCount++;
+                    errorMsg += "Cancellation probability  must be a double\n";
                 } else {
                     cancelLabel.setForeground(Color.BLACK);
                 }
                 if(!isInteger(queueInput)) {
                     queueLabel.setForeground(Color.RED);
                     inputsInvalid = true;
-                    if(errorCount==0){
-                    	JOptionPane.showMessageDialog(c, "Queue Size must be a integer");
-                    }
-                    errorCount++;
+                    errorMsg += "Queue Size must be a integer\n";
                 } else {
                     queueLabel.setForeground(Color.BLACK);
                 }
@@ -458,10 +446,7 @@ public class GUISimulator extends JFrame implements Runnable {
                 if(!isDouble(firstInput)) {
                     firstLabel.setForeground(Color.RED);
                     inputsInvalid = true;
-                    if(errorCount==0){
-                    	JOptionPane.showMessageDialog(c, "First probability must be a double");
-                    }
-                    errorCount++;
+                    errorMsg += "First probability must be a double\n";
                 } else {
                     firstLabel.setForeground(Color.BLACK);
                     double firstValue = Double.parseDouble(firstInput);
@@ -470,10 +455,7 @@ public class GUISimulator extends JFrame implements Runnable {
                 if(!isDouble(businessInput)) {
                     businessLabel.setForeground(Color.RED);
                     inputsInvalid = true;
-                    if(errorCount==0){
-                    	JOptionPane.showMessageDialog(c, "Business probability must be a double");
-                    }
-                    errorCount++;
+                    errorMsg += "Business probability must be a double\n";
                 } else {
                     businessLabel.setForeground(Color.BLACK);
                     double businessValue = Double.parseDouble(businessInput);
@@ -482,10 +464,7 @@ public class GUISimulator extends JFrame implements Runnable {
                 if(!isDouble(premiumInput)) {
                     premiumLabel.setForeground(Color.RED);
                     inputsInvalid = true;
-                    if(errorCount==0){
-                    	JOptionPane.showMessageDialog(c, "Premium probability must be a double");
-                    }
-                    errorCount++;
+                    errorMsg += "Premium probability must be a double\n";
                 } else {
                     premiumLabel.setForeground(Color.BLACK);
                     double premiumValue = Double.parseDouble(premiumInput);
@@ -494,33 +473,29 @@ public class GUISimulator extends JFrame implements Runnable {
                 if(!isDouble(economyInput)) {
                     econLabel.setForeground(Color.RED);
                     inputsInvalid = true;
-                    if(errorCount==0){
-                    	JOptionPane.showMessageDialog(c, "Economy probability must be a double");
-                    }
-                    errorCount++;
+                    errorMsg += "Economy probability must be a double\n";
                 } else {
                     econLabel.setForeground(Color.BLACK);
                     double econValue = Double.parseDouble(economyInput);
                     probVal += econValue;
                 }
 
-                if(probVal!=1){
-                	inputsInvalid = true;
-                	econLabel.setForeground(Color.RED);
-                	premiumLabel.setForeground(Color.RED);
-                	businessLabel.setForeground(Color.RED);
-                	firstLabel.setForeground(Color.RED);
-                	if(errorCount==0){
-                    	JOptionPane.showMessageDialog(c, "Booking probability across all seats types must be equal to 1");
-                    }
-                }else{
+                if(probVal!=1 && (isDouble(economyInput) && isDouble(premiumInput) && isDouble(businessInput) && isDouble(firstInput))){
+                	if(Double.parseDouble(economyInput) >= 0 && Double.parseDouble(economyInput) <= 1 && Double.parseDouble(premiumInput) >= 0 && Double.parseDouble(premiumInput) <= 1 && Double.parseDouble(businessInput) >= 0 && Double.parseDouble(businessInput) <= 1 && Double.parseDouble(firstInput) >= 0 && Double.parseDouble(firstInput) <= 1){
+	                	inputsInvalid = true;
+	                	econLabel.setForeground(Color.RED);
+	                	premiumLabel.setForeground(Color.RED);
+	                	businessLabel.setForeground(Color.RED);
+	                	firstLabel.setForeground(Color.RED);
+	                	errorMsg += "Booking probability across all seats types must be equal to 1 and each probability must be between 0 and 1 inclusive";
+                	}
+                }
+                
+                if (!inputsInvalid) {
                 	econLabel.setForeground(Color.BLACK);
                 	premiumLabel.setForeground(Color.BLACK);
                 	businessLabel.setForeground(Color.BLACK);
                 	firstLabel.setForeground(Color.BLACK);
-                }
-                
-                if (!inputsInvalid) {
                     double stdDev = 0.33 * Double.parseDouble(meanInput);
 
                     int rngValue = Integer.parseInt(rngInput);
@@ -559,6 +534,8 @@ public class GUISimulator extends JFrame implements Runnable {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
+                } else {
+                	JOptionPane.showMessageDialog(c, errorMsg);
                 }
             }
         });

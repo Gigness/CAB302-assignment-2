@@ -506,9 +506,18 @@ public class GUISimulator extends JFrame implements Runnable {
 
                 if(probVal!=1){
                 	inputsInvalid = true;
+                	econLabel.setForeground(Color.RED);
+                	premiumLabel.setForeground(Color.RED);
+                	businessLabel.setForeground(Color.RED);
+                	firstLabel.setForeground(Color.RED);
                 	if(errorCount==0){
                     	JOptionPane.showMessageDialog(c, "Booking probability across all seats types must be equal to 1");
                     }
+                }else{
+                	econLabel.setForeground(Color.BLACK);
+                	premiumLabel.setForeground(Color.BLACK);
+                	businessLabel.setForeground(Color.BLACK);
+                	firstLabel.setForeground(Color.BLACK);
                 }
                 
                 if (!inputsInvalid) {

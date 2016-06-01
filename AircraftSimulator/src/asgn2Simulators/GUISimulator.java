@@ -123,6 +123,7 @@ public class GUISimulator extends JFrame implements Runnable {
 	}
 
 	private void createGUI() {
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());  // basic frame
 
         // create swing components
@@ -481,7 +482,7 @@ public class GUISimulator extends JFrame implements Runnable {
                 }
 
                 if(probVal!=1 && (isDouble(economyInput) && isDouble(premiumInput) && isDouble(businessInput) && isDouble(firstInput))){
-                	if(Double.parseDouble(economyInput) >= 0 && Double.parseDouble(economyInput) <= 1 && Double.parseDouble(premiumInput) >= 0 && Double.parseDouble(premiumInput) <= 1 && Double.parseDouble(businessInput) >= 0 && Double.parseDouble(businessInput) <= 1 && Double.parseDouble(firstInput) >= 0 && Double.parseDouble(firstInput) <= 1){
+                	if(Double.parseDouble(economyInput) < 0 || Double.parseDouble(economyInput) > 1 || Double.parseDouble(premiumInput) < 0 || Double.parseDouble(premiumInput) > 1 || Double.parseDouble(businessInput) < 0 || Double.parseDouble(businessInput) > 1 || Double.parseDouble(firstInput) < 0 || Double.parseDouble(firstInput) > 1){
 	                	inputsInvalid = true;
 	                	econLabel.setForeground(Color.RED);
 	                	premiumLabel.setForeground(Color.RED);

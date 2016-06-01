@@ -505,6 +505,7 @@ public class GUISimulator extends JFrame implements Runnable {
                 }
 
                 if(probVal!=1){
+                	inputsInvalid = true;
                 	if(errorCount==0){
                     	JOptionPane.showMessageDialog(c, "Booking probability across all seats types must be equal to 1");
                     }

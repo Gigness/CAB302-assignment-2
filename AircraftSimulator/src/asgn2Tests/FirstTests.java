@@ -373,6 +373,7 @@ public class FirstTests {
     public void RefusePassenger_New() throws PassengerException {
         pNew.refusePassenger(REFUSED_TIME);
         assertTrue(pNew.isRefused());
+        assertFalse(pNew.isNew());
     }
 
     @Test

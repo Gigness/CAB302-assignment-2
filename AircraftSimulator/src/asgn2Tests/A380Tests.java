@@ -544,6 +544,20 @@ public class A380Tests {
         assertTrue(fourSeatsCraft.getPassengers().isEmpty());
     }
 
+    @Test
+    public void GetPassengers_DeepCopy() throws Exception {
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+
+        List<Passenger> passengers = fourSeatsCraft.getPassengers();
+
+        passengers.remove(testPassenger0);
+
+        assertTrue(fourSeatsCraft.hasPassenger(testPassenger0));
+    }
+
     /**
      * Test method for {@link asgn2Aircraft.A380#getStatus(int))}
      */
@@ -656,6 +670,42 @@ public class A380Tests {
         assertFalse(fourSeatsCraft.seatsAvailable(new First(BOOKING_TIME, DEPARTURE_TIME)));
     }
 
+    @Test
+    public void SeatsAvail_Econ() throws AircraftException, PassengerException {
+        fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+
+        assertTrue(fourSeatsCraft.seatsAvailable(testPassenger0));
+    }
+
+    @Test
+    public void SeatsAvail_Premium() throws AircraftException, PassengerException {
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+
+        assertTrue(fourSeatsCraft.seatsAvailable(testPassenger1));
+    }
+
+    @Test
+    public void SeatsAvail_Business() throws AircraftException, PassengerException {
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger3, CONFIRM_TIME);
+
+        assertTrue(fourSeatsCraft.seatsAvailable(testPassenger2));
+    }
+
+    @Test
+    public void SeatsAvail_First() throws AircraftException, PassengerException {
+        fourSeatsCraft.confirmBooking(testPassenger0, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger1, CONFIRM_TIME);
+        fourSeatsCraft.confirmBooking(testPassenger2, CONFIRM_TIME);
+
+        assertTrue(fourSeatsCraft.seatsAvailable(testPassenger3));
+    }
+
     /**
      * Test method for {@link asgn2Aircraft.A380#upgradeBookings()}
      */
@@ -758,6 +808,106 @@ public class A380Tests {
         assertEquals(upgradeTestCraft.getNumBusiness(), 10);
         assertEquals(upgradeTestCraft.getNumPremium(), 15);
         assertEquals(upgradeTestCraft.getNumEconomy(), 5);
+    }
+
+    @Test
+    public void UpgradeBookings_FromEconOnly() throws AircraftException, PassengerException {
+        for (int i = 0; i < firstPassengers; i++) {
+            upgradeTestCraft.confirmBooking(firstList.get(i), CONFIRM_TIME);
+        }
+        for (int i = 0; i < businessPassengers; i++) {
+            upgradeTestCraft.confirmBooking(businessList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(premiumList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < economyPassengers; i++) {
+            upgradeTestCraft.confirmBooking(economyList.get(i), CONFIRM_TIME);
+        }
+
+        upgradeTestCraft.upgradeBookings();
+
+        assertEquals(upgradeTestCraft.getNumFirst(), firstPassengers);
+        assertEquals(upgradeTestCraft.getNumBusiness(), businessPassengers);
+        assertEquals(upgradeTestCraft.getNumPremium(), premiumPassengers);
+        assertEquals(upgradeTestCraft.getNumEconomy(), 5);
+    }
+
+    @Test
+    public void UpgradeBookings_FromPremiumOnly() throws AircraftException, PassengerException {
+        for (int i = 0; i < firstPassengers; i++) {
+            upgradeTestCraft.confirmBooking(firstList.get(i), CONFIRM_TIME);
+        }
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(businessList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < premiumPassengers; i++) {
+            upgradeTestCraft.confirmBooking(premiumList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(economyList.get(i), CONFIRM_TIME);
+        }
+
+        upgradeTestCraft.upgradeBookings();
+
+        assertEquals(upgradeTestCraft.getNumFirst(), firstPassengers);
+        assertEquals(upgradeTestCraft.getNumBusiness(), businessPassengers);
+        assertEquals(upgradeTestCraft.getNumPremium(), 5);
+        assertEquals(upgradeTestCraft.getNumEconomy(), 0);
+    }
+
+    @Test
+    public void UpgradeBookings_FromBusinessOnly() throws AircraftException, PassengerException {
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(firstList.get(i), CONFIRM_TIME);
+        }
+        for (int i = 0; i < businessPassengers; i++) {
+            upgradeTestCraft.confirmBooking(businessList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(premiumList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(economyList.get(i), CONFIRM_TIME);
+        }
+
+        upgradeTestCraft.upgradeBookings();
+
+        assertEquals(upgradeTestCraft.getNumFirst(), firstPassengers);
+        assertEquals(upgradeTestCraft.getNumBusiness(), 5);
+        assertEquals(upgradeTestCraft.getNumPremium(), 0);
+        assertEquals(upgradeTestCraft.getNumEconomy(), 0);
+    }
+
+    @Test
+    public void UpgradeBookings_Empty() throws AircraftException, PassengerException {
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(firstList.get(i), CONFIRM_TIME);
+        }
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(businessList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(premiumList.get(i), CONFIRM_TIME);
+
+        }
+        for (int i = 0; i < 0; i++) {
+            upgradeTestCraft.confirmBooking(economyList.get(i), CONFIRM_TIME);
+        }
+
+        upgradeTestCraft.upgradeBookings();
+
+        assertEquals(upgradeTestCraft.getNumFirst(), 0);
+        assertEquals(upgradeTestCraft.getNumBusiness(), 0);
+        assertEquals(upgradeTestCraft.getNumPremium(), 0);
+        assertEquals(upgradeTestCraft.getNumEconomy(), 0);
     }
 
 }

@@ -101,6 +101,9 @@ public class GUISimulator extends JFrame implements Runnable {
     XYSeries queueSize;
     XYSeries refusedPassengers;
 
+    XYPlot chart1;
+    XYPlot chart2;
+
     private Simulator sim;
     private String simulatorArgs;
     private String[] args;
@@ -204,7 +207,7 @@ public class GUISimulator extends JFrame implements Runnable {
         summaryChartPanel.setVisible(false);
         
         //adding color for chart 1 
-        XYPlot chart1 = progressChart.getXYPlot();
+        chart1 = progressChart.getXYPlot();
         XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer();
         renderer1.setSeriesPaint(0, Color.GRAY);
         renderer1.setSeriesPaint(1, Color.CYAN);
@@ -216,7 +219,7 @@ public class GUISimulator extends JFrame implements Runnable {
         chart1.setRenderer(renderer1);
         
         //adding color for chart 2
-        XYPlot chart2 = summaryChart.getXYPlot();
+        chart2 = summaryChart.getXYPlot();
         XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer();
         renderer2.setSeriesPaint(0, Color.BLACK);
         renderer2.setSeriesPaint(1, Color.RED);
@@ -609,6 +612,21 @@ public class GUISimulator extends JFrame implements Runnable {
     	
     	summaryDataset.addSeries(queData);
     	summaryDataset.addSeries(refusedData);
+    }
+
+    public void clearGraphingData() {
+        econData.clear();
+        premiumData.clear();
+        businessData.clear();
+        firstData.clear();
+        totalData.clear();
+        emptySeatsData.clear();
+        queData.clear();
+        refusedData.clear();
+
+        dailyDataset.removeAllSeries();
+        summaryDataset.removeAllSeries();
+
     }
     
 	/* (non-Javadoc)

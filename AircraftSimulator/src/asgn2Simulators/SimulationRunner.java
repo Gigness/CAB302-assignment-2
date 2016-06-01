@@ -150,6 +150,7 @@ public class SimulationRunner {
         //TODO -> Gui
 
         if(gui != null) {
+            gui.clearGraphingData();
             String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             String capacities = sim.getFlights(Constants.FIRST_FLIGHT).initialState();
             gui.writeText(timeLog + ": Start of Simulation\n");

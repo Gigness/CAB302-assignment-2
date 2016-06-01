@@ -80,11 +80,11 @@ public class GUISimulator extends JFrame implements Runnable {
     private JButton chartButton2;
 
 
-    JFreeChart progressChart;
+    private JFreeChart progressChart;
     ChartPanel progressChartPanel;
     JFreeChart summaryChart;
     ChartPanel summaryChartPanel;
-    
+
     // TODO - For progress chart
     XYSeriesCollection dailyDataset;
     XYSeries econData;
@@ -109,6 +109,8 @@ public class GUISimulator extends JFrame implements Runnable {
     private String[] args;
     private Log l;
     private GUISimulator guiSim;
+
+
 
     /**
 	 * @param arg0
@@ -585,7 +587,6 @@ public class GUISimulator extends JFrame implements Runnable {
     	tempOldTotalFirst = oldTotalFirst;
     	tempOldTotalTotal = oldTotalTotal;
     	tempOldTotalEmpty = oldTotalEmpty;
-    	
     }
     
     public void addDataToChart2(int day, int qued, int refused){
@@ -609,12 +610,28 @@ public class GUISimulator extends JFrame implements Runnable {
     	dailyDataset.addSeries(firstData);
     	dailyDataset.addSeries(totalData);
     	dailyDataset.addSeries(emptySeatsData);
-    	
+
     	summaryDataset.addSeries(queData);
     	summaryDataset.addSeries(refusedData);
     }
 
     public void clearGraphingData() {
+        oldTotalRefused = 0;
+        oldTotalEcon = 0;
+        oldTotalPremium = 0;
+        oldTotalBusiness = 0;
+        oldTotalFirst = 0;
+        oldTotalTotal = 0;
+        oldTotalEmpty = 0;
+
+        tempOldTotalRefused = 0;
+        tempOldTotalEcon = 0;
+        tempOldTotalPremium = 0;
+        tempOldTotalBusiness = 0;
+        tempOldTotalFirst = 0;
+        tempOldTotalTotal = 0;
+        tempOldTotalEmpty = 0;
+
         econData.clear();
         premiumData.clear();
         businessData.clear();

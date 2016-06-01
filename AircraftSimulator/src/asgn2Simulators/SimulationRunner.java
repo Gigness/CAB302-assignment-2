@@ -182,6 +182,7 @@ public class SimulationRunner {
                 String dailySum = this.sim.getSummary(time, time >= Constants.FIRST_FLIGHT);
                 gui.writeText(dailySum);
                 //TODO is getTotalFlown what we want
+
                 gui.addDataToChart1(time, this.sim.getTotalEconomy(), this.sim.getTotalPremium(), this.sim.getTotalBusiness(), this.sim.getTotalFirst(), this.sim.getTotalEmpty());
                 gui.addDataToChart2(time, this.sim.numInQueue(), this.sim.numRefused());
             }

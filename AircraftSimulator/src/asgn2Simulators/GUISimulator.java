@@ -44,7 +44,7 @@ public class GUISimulator extends JFrame implements Runnable {
     public static final int SETTINGS_PANEL_HEIGHT = 200;
     public static final double FIELD_Y_WEIGHT = 0.2;
     public static final int TITLE_LABEL_Y_WEIGHT = 1;
-    
+    int count = 0;
     private int oldTotalRefused = 0;
     private int oldTotalEcon = 0;
     private int oldTotalPremium = 0;
@@ -551,37 +551,42 @@ public class GUISimulator extends JFrame implements Runnable {
     
     public void addDataToChart1(int day, int econ, int premium, int business, int first, int empty){
     	//storing the overall totals for the sim
-    	int total;
-    	oldTotalEcon = econ;
-    	oldTotalPremium = premium;
-    	oldTotalBusiness = business;
-    	oldTotalFirst = first;
-    	oldTotalTotal = econ + premium + business + first;
-    	oldTotalEmpty = empty;
-    	
-    	//isolating only the daily total from each total
-    	econ -= tempOldTotalEcon;
-    	premium -= tempOldTotalPremium;
-    	business -= tempOldTotalBusiness;
-    	first -= tempOldTotalFirst;
-    	total = oldTotalTotal - tempOldTotalTotal;
-    	empty -= tempOldTotalEmpty;
-    	
-    	//adding each total to each series
-    	econData.add(day, econ);
-    	premiumData.add(day, premium);
-    	businessData.add(day, business);
-    	firstData.add(day, first);
-    	totalData.add(day, total);
-    	emptySeatsData.add(day, empty);
-    	
-    	//preparing the temp totals for the next call
-    	tempOldTotalEcon = oldTotalEcon;
-    	tempOldTotalPremium = oldTotalPremium;
-    	tempOldTotalBusiness = oldTotalBusiness;
-    	tempOldTotalFirst = oldTotalFirst;
-    	tempOldTotalTotal = oldTotalTotal;
-    	tempOldTotalEmpty = oldTotalEmpty;
+//    	int total;
+//    	oldTotalEcon = econ;
+//    	oldTotalPremium = premium;
+//    	oldTotalBusiness = business;
+//    	oldTotalFirst = first;
+//    	oldTotalTotal = econ + premium + business + first;
+//    	oldTotalEmpty = empty;
+//    	
+//    	//isolating only the daily total from each total
+//    	econ -= tempOldTotalEcon;
+//    	premium -= tempOldTotalPremium;
+//    	business -= tempOldTotalBusiness;
+//    	first -= tempOldTotalFirst;
+//    	total = oldTotalTotal - tempOldTotalTotal;
+//    	empty -= tempOldTotalEmpty;
+//    	
+//    	//adding each total to each series
+//    	econData.add(day, econ);
+//    	premiumData.add(day, premium);
+//    	businessData.add(day, business);
+//    	firstData.add(day, first);
+//    	totalData.add(day, total);
+//    	emptySeatsData.add(day, empty);
+//    	
+//    	//preparing the temp totals for the next call
+//    	tempOldTotalEcon = oldTotalEcon;
+//    	tempOldTotalPremium = oldTotalPremium;
+//    	tempOldTotalBusiness = oldTotalBusiness;
+//    	tempOldTotalFirst = oldTotalFirst;
+//    	tempOldTotalTotal = oldTotalTotal;
+//    	tempOldTotalEmpty = oldTotalEmpty;
+    	if (count==0){
+    			econData.add(day, day);	
+    	} else{
+    		econData.add(day, 126-day+1);
+    	}
     	
     }
     
@@ -600,12 +605,13 @@ public class GUISimulator extends JFrame implements Runnable {
     }
 
     public void addDataToXYSeriesCollections(){
+    	count++;
     	dailyDataset.addSeries(econData);
-    	dailyDataset.addSeries(premiumData);
-    	dailyDataset.addSeries(businessData);
-    	dailyDataset.addSeries(firstData);
-    	dailyDataset.addSeries(totalData);
-    	dailyDataset.addSeries(emptySeatsData);
+//    	dailyDataset.addSeries(premiumData);
+//    	dailyDataset.addSeries(businessData);
+//    	dailyDataset.addSeries(firstData);
+//    	dailyDataset.addSeries(totalData);
+//    	dailyDataset.addSeries(emptySeatsData);
     	
     	summaryDataset.addSeries(queData);
     	summaryDataset.addSeries(refusedData);

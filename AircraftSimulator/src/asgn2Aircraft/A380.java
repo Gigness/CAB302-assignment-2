@@ -42,7 +42,6 @@ public class A380 extends Aircraft {
 	 */
 	public A380(String flightCode,int departureTime,int first, int business, int premium, int economy) throws AircraftException {
         super(flightCode, departureTime, first, business, premium, economy);
-		//Call here 
 		this.type = "A380";
 	}
 }

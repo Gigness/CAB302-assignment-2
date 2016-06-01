@@ -47,9 +47,7 @@ package asgn2Passengers;
  */
 public abstract class Passenger {
 
-	
 	private static final int NOT_APPLICABLE = -1;
-	
 	private static int index = 0;
 	protected String passID;
 	protected boolean newState; 
@@ -62,8 +60,7 @@ public abstract class Passenger {
 	protected int exitQueueTime;
 	protected int confirmationTime;
 	protected int departureTime; 
-	
-	
+
 	/**
 	 * Passenger Constructor 
 	 * On creation, Passenger is in a New state. Subsequent processing transitions to a 
@@ -76,18 +73,18 @@ public abstract class Passenger {
 	 */
 	public Passenger(int bookingTime, int departureTime) throws PassengerException  {
 
-		/*Exception checking*/
-		if(bookingTime < 0){
+		// Exception checking
+		if (bookingTime < 0){
 			throw new PassengerException("bookingTime cannot be less than 0");
 		}
-		if(departureTime <= 0){
+		if (departureTime <= 0){
 			throw new PassengerException("departureTime cannot be less or equal to 0");
 		}
-		if(departureTime < bookingTime){
+		if (departureTime < bookingTime){
 			throw new PassengerException("bookingTime cannot be greater than departureTime");
 		}
 
-		/*Passenger state initialization*/
+		// Passenger state initialization
 		this.newState = true;
 		this.confirmed = false;
 		this.inQueue = false;
@@ -128,11 +125,11 @@ public abstract class Passenger {
 	public void cancelSeat(int cancellationTime) throws PassengerException {
 
 		// Exception checking
-		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()){ 
+		if (this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()) {
 			throw new PassengerException("Cannot be cancelled from this Passenger state");
-		} else if(cancellationTime < 0){
+		} else if (cancellationTime < 0) {
 			throw new PassengerException("cancellationTime cannot be less than 0");
-		} else if(this.departureTime < cancellationTime){
+		} else if (this.departureTime < cancellationTime) {
 			throw new PassengerException("cancellationTime cannot be less than departureTime");
 		}
 
@@ -154,21 +151,19 @@ public abstract class Passenger {
 	 * @throws PassengerException if isConfirmed(this) OR isRefused(this) OR isFlown(this)
 	 * 		   OR (confirmationTime < 0) OR (departureTime < confirmationTime)
 	 */
-	//<li>confirmSeat: Queued -> Confirmed; up until departureTime</li>---- what does this mean
 	public void confirmSeat(int confirmationTime, int departureTime) throws PassengerException {
 
-		/*Exception checking*/
-		if(this.isConfirmed() || this.isRefused() || this.isFlown()){
+		if (this.isConfirmed() || this.isRefused() || this.isFlown()) {
 			throw new PassengerException("Cannot be confirmed from this Passenger state");
 		}
-		if(confirmationTime < 0){
+		if (confirmationTime < 0) {
 			throw new PassengerException("confirmationTime cannot be less than 0");
 		}
-		if(departureTime < confirmationTime){
+		if (departureTime < confirmationTime) {
 			throw new PassengerException("confirmationTime cannot be more than departureTime");
 		}
 		
-		if(inQueue){
+		if (inQueue) {
 			this.inQueue = false;
 			this.exitQueueTime = confirmationTime;
 		}
@@ -191,18 +186,15 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (departureTime <= 0)
 	 */
 	public void flyPassenger(int departureTime) throws PassengerException {
-		
-		/*Exception checking*/
-		if(this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()){
+
+		if (this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()) {
 			throw new PassengerException("Cannot be flown from this Passenger state");
 		}
-		if(departureTime <= 0){
+		if (departureTime <= 0) {
 			throw new PassengerException("departureTime cannot be less than 0");
-		} 
-		
+		}
 		this.confirmed = false;
 		this.flown = true;
-
 	}
 
 	/**
@@ -328,15 +320,14 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (queueTime < 0) OR (departureTime < queueTime)
 	 */
 	public void queuePassenger(int queueTime, int departureTime) throws PassengerException {
-		
-		/*Exception check*/
-		if(this.isQueued() || this.isConfirmed() || this.isRefused() || this.isFlown()){
+
+		if (this.isQueued() || this.isConfirmed() || this.isRefused() || this.isFlown()) {
 			throw new PassengerException("Cannot be queued from this Passenger state");
 		}
-		if(queueTime < 0){
+		if (queueTime < 0) {
 			throw new PassengerException("queueTime cannot be less than 0");
 		}
-		if(departureTime < queueTime){
+		if (departureTime < queueTime) {
 			throw new PassengerException("queueTime cannot be greater than departureTime");
 		}
 		
@@ -360,26 +351,22 @@ public abstract class Passenger {
 	 */
 	public void refusePassenger(int refusalTime) throws PassengerException {
 
-		/*Exception check*/
-		if(this.isConfirmed() || this.isRefused() || this.isFlown()){
+		if (this.isConfirmed() || this.isRefused() || this.isFlown()) {
 			throw new PassengerException("Cannot be refused from this Passenger state");
 		}
-		if(refusalTime < 0){
+		if (refusalTime < 0) {
 			throw new PassengerException("refusalTime cannot be less than 0");
 		}
-		if(refusalTime < this.bookingTime){
+		if (refusalTime < this.bookingTime) {
 			throw new PassengerException("refusalTime cannot be less than this.bookingTime");
 		}
 		
-		if(this.inQueue){
+		if (this.inQueue) {
 			this.refused = true;
 			this.inQueue = false;
-		} else if(this.newState) {
+		} else if (this.newState) {
             this.newState = false;
             this.refused = true;
-        } else {
-            //TODO remove this later
-            System.out.println("WARNING SOMeTHING WENT WRONG");
         }
 	}
 	
@@ -423,11 +410,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if was Confirmed state; false otherwise
 	 */
 	public boolean wasConfirmed() {
-		//TODO unsure if correct implementation 
-		if(this.confirmationTime != NOT_APPLICABLE){
-			return true;
-		}
-		return false;
+		return this.confirmationTime != NOT_APPLICABLE;
 	}
 
 	/**
@@ -436,17 +419,14 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if was Queued state; false otherwise
 	 */
 	public boolean wasQueued() {
-		//TODO unsure if correct implementation 
-		if(this.enterQueueTime != NOT_APPLICABLE){
-			return true;
-		}
-		return false;
+		return this.enterQueueTime != NOT_APPLICABLE;
+
 	}
 	
 	/**
 	 * Helper method to copy state to facilitate {@link #upgrade()}
 	 * 
-	 * @param <code>Passenger</code> state to transfer
+	 * @param p <code>Passenger</code> state to transfer
 	 */
 	protected void copyPassengerState(Passenger p) {
         p.newState = this.newState;
@@ -466,7 +446,4 @@ public abstract class Passenger {
 	        case "F":	p.passID = "F(U):" + this.passID.toString().substring(2);
         }
 	}
-	
-	//Various private helper methods to check arguments and throw exceptions
-
 }

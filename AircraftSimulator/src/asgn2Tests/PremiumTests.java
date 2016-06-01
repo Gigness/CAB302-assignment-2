@@ -1,3 +1,10 @@
+/**
+ *
+ * This file is part of the testing suite for the AircraftSimulator Project
+ * for CAB302, Semester 1, 2016
+ * Junit tests for {@link asgn2Passengers.Premium}
+ *
+ */
 package asgn2Tests;
 
 import asgn2Passengers.*;

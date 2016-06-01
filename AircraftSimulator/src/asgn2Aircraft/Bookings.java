@@ -21,7 +21,6 @@ public class Bookings {
 	private int numEconomy;
 	private int total;
 	private int available;
-	
 
 	/**
 	 * @param numFirst <code>int</code> number of First Class passengers

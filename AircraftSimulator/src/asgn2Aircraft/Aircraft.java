@@ -97,13 +97,13 @@ public abstract class Aircraft {
 	 */
 	public void cancelBooking(Passenger p, int cancellationTime) throws PassengerException, AircraftException {
         if (!seats.contains(p)) {
-            throw new AircraftException("passenger not recorded in seating");
+            throw new AircraftException("passenger is not recorded in seating");
         }
-
-        p.cancelSeat(cancellationTime); // this throws passenger exception
+        p.cancelSeat(cancellationTime);
 
         // Given code
 		this.status += Log.setPassengerMsg(p,"C","N");
+
         // remove passenger from seats,  decrement corresponding passenger counter
         seats.remove(p);
         if (p instanceof Economy) {
@@ -135,12 +135,10 @@ public abstract class Aircraft {
 	 * @throws AircraftException if no seats available in <code>Passenger</code> fare class. 
 	 */
 	public void confirmBooking(Passenger p,int confirmationTime) throws AircraftException, PassengerException {
-        // check available seats first
         if (!seatsAvailable(p)) {
             throw new AircraftException("No seats available");
         }
 
-        // may throw passenger exception
         p.confirmSeat(confirmationTime, this.departureTime);
 
         this.status += Log.setPassengerMsg(p,"N/Q","C");
@@ -163,7 +161,6 @@ public abstract class Aircraft {
             seats.add(p);
         }
 	}
-
 
 	/**
 	 * State dump intended for use in logging the final state of the aircraft. (Supplied) 
@@ -220,9 +217,8 @@ public abstract class Aircraft {
 	public Bookings getBookings() {
         int remainingCapacity = this.capacity - seats.size();
 		int total = this.numFirst + this.numBusiness + this.numPremium + this.numEconomy;
-		Bookings status = new Bookings(this.numFirst, this.numBusiness, this.numPremium, this.numEconomy,
+		return new Bookings(this.numFirst, this.numBusiness, this.numPremium, this.numEconomy,
                 total, remainingCapacity);
-        return status;
 	}
 	
 	/**
@@ -239,7 +235,7 @@ public abstract class Aircraft {
 	 * 
 	 * @return <code>int</code> number of Economy Class passengers 
 	 */
-	public int getNumEonomy() {
+	public int getNumEconomy() {
 		return this.numEconomy;
 	}
 
@@ -369,9 +365,10 @@ public abstract class Aircraft {
 	 * See {@link asgn2Passengers.Passenger#upgrade()}
 	 */
 	public void upgradeBookings() {
+
         // Upgrade Business class to First
         for (Passenger p: new ArrayList<>(seats)) {
-            // If upgrade destination is full, exit the loop
+            // If upgrade destination is full, break the loop
             if (firstAvailable()) {
                 if (p instanceof Business) {
                     upgradePassenger(p);
@@ -430,45 +427,51 @@ public abstract class Aircraft {
 		return msg + p.noSeatsMsg(); 
 	}
 
-    // TODO test
     /**
-     * Gets the class of the passenger
-     * @param p
-     * @return class String Y F J P etc
+     * Checks if economy class has seats available
+     * @return boolean
      */
-    private char passengerType(Passenger p) {
-        String passId = p.getPassID();
-        char passType = passId.charAt(0);
-        return passType;
-    }
-
     private boolean economyAvailable() {
         return this.numEconomy < this.economyCapacity;
     }
 
+    /**
+     * Checks if premium class has seats available
+     * @return boolean
+     */
     private boolean premiumAvailable() {
         return this.numPremium < this.premiumCapacity;
     }
 
+    /**
+     * Checks if business class has seats available
+     * @return boolean
+     */
     private boolean businessAvailable() {
         return this.numBusiness < this.businessCapacity;
     }
 
+    /**
+     * Checks if first class has seats available
+     * @return boolean
+     */
     private boolean firstAvailable() {
         return this.numFirst < this.firstCapacity;
     }
 
     /**
-     * Given a passenger, upgrade it to the next class
-     * WARNING - Does not check anything, just does it
-     * @param p
+     * Upgrade a passenger to the next class.
+     * @param p <code>Passenger</code> to be upgraded
      */
     private void upgradePassenger(Passenger p) {
-        Passenger upgradedP = p.upgrade(); // Throws exception?
+        Passenger upgradedP = p.upgrade();
 
+        // Check the class of the passenger upgraded
         if (upgradedP instanceof First) {
+            // Increment upgraded class, decrement original class
             this.numFirst++;
             this.numBusiness--;
+            // Add upgraded copy to seats, remove original passenger form seats
             seats.remove(p);
             seats.add(upgradedP);
         } else if (upgradedP instanceof Business) {
@@ -483,11 +486,4 @@ public abstract class Aircraft {
             seats.add(upgradedP);
         }
     }
-
-	public void PRINT_SEATS() {
-        for (Passenger i: seats) {
-            System.out.println(i);
-        }
-    }
-
 }

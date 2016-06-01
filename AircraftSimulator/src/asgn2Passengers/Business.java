@@ -1,5 +1,8 @@
 /**
- * 
+ *
+ * This file is part of the AircraftSimulator Project, written as
+ * part of the assessment for CAB302, Semester 1, 2016.
+ *
  */
 package asgn2Passengers;
 

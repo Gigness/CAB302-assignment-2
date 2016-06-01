@@ -486,7 +486,7 @@ public class GUISimulator extends JFrame implements Runnable {
                 	premiumLabel.setForeground(Color.RED);
                 	businessLabel.setForeground(Color.RED);
                 	firstLabel.setForeground(Color.RED);
-                	errorMsg += "Booking probability across all seats types must be equal to 1 and each probability must be between 0 and 1 inclusive";
+                	errorMsg += "Booking probability across all seats types must be equal to 1\n";
                 }
                 if(isDouble(economyInput) && isDouble(premiumInput) && isDouble(businessInput) && isDouble(firstInput)){
 	                if(Double.parseDouble(economyInput) < 0 || Double.parseDouble(economyInput) > 1 || Double.parseDouble(premiumInput) < 0 || Double.parseDouble(premiumInput) > 1 || Double.parseDouble(businessInput) < 0 || Double.parseDouble(businessInput) > 1 || Double.parseDouble(firstInput) < 0 || Double.parseDouble(firstInput) > 1){
@@ -495,7 +495,7 @@ public class GUISimulator extends JFrame implements Runnable {
 	                	premiumLabel.setForeground(Color.RED);
 	                	businessLabel.setForeground(Color.RED);
 	                	firstLabel.setForeground(Color.RED);
-	                	errorMsg += "Booking probability across all seats types must be equal to 1 and each probability must be between 0 and 1 inclusive";
+	                	errorMsg += "Each probability must be between 0 and 1 inclusive";
 	                }
                 }
                 

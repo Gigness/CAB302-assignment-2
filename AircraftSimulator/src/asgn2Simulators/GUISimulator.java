@@ -401,6 +401,7 @@ public class GUISimulator extends JFrame implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 boolean inputsInvalid = false;
+                
                 // validate all textField
                 String rngInput = rngField.getText();
                 String meanInput = meanField.getText();
@@ -411,6 +412,7 @@ public class GUISimulator extends JFrame implements Runnable {
                 String premiumInput = premiumField.getText();
                 String economyInput = econField.getText();
                 String errorMsg = "";
+                double probVal = 0;
                 
                 if(!isInteger(rngInput)) {
                     rngLabel.setForeground(Color.RED);
@@ -441,9 +443,6 @@ public class GUISimulator extends JFrame implements Runnable {
                     queueLabel.setForeground(Color.BLACK);
                 }
 
-                // TODO validate probabalites are less than or equal to 1?
-                
-                double probVal = 0;
                 if(!isDouble(firstInput)) {
                     firstLabel.setForeground(Color.RED);
                     inputsInvalid = true;
@@ -481,15 +480,23 @@ public class GUISimulator extends JFrame implements Runnable {
                     probVal += econValue;
                 }
 
-                if(probVal!=1 && (isDouble(economyInput) && isDouble(premiumInput) && isDouble(businessInput) && isDouble(firstInput))){
-                	if(Double.parseDouble(economyInput) < 0 || Double.parseDouble(economyInput) > 1 || Double.parseDouble(premiumInput) < 0 || Double.parseDouble(premiumInput) > 1 || Double.parseDouble(businessInput) < 0 || Double.parseDouble(businessInput) > 1 || Double.parseDouble(firstInput) < 0 || Double.parseDouble(firstInput) > 1){
+                if(probVal!=1){
+                	inputsInvalid = true;
+                	econLabel.setForeground(Color.RED);
+                	premiumLabel.setForeground(Color.RED);
+                	businessLabel.setForeground(Color.RED);
+                	firstLabel.setForeground(Color.RED);
+                	errorMsg += "Booking probability across all seats types must be equal to 1 and each probability must be between 0 and 1 inclusive";
+                }
+                if(isDouble(economyInput) && isDouble(premiumInput) && isDouble(businessInput) && isDouble(firstInput)){
+	                if(Double.parseDouble(economyInput) < 0 || Double.parseDouble(economyInput) > 1 || Double.parseDouble(premiumInput) < 0 || Double.parseDouble(premiumInput) > 1 || Double.parseDouble(businessInput) < 0 || Double.parseDouble(businessInput) > 1 || Double.parseDouble(firstInput) < 0 || Double.parseDouble(firstInput) > 1){
 	                	inputsInvalid = true;
 	                	econLabel.setForeground(Color.RED);
 	                	premiumLabel.setForeground(Color.RED);
 	                	businessLabel.setForeground(Color.RED);
 	                	firstLabel.setForeground(Color.RED);
 	                	errorMsg += "Booking probability across all seats types must be equal to 1 and each probability must be between 0 and 1 inclusive";
-                	}
+	                }
                 }
                 
                 if (!inputsInvalid) {

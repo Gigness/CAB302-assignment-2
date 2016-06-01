@@ -44,7 +44,7 @@ public class GUISimulator extends JFrame implements Runnable {
     public static final int SETTINGS_PANEL_HEIGHT = 200;
     public static final double FIELD_Y_WEIGHT = 0.2;
     public static final int TITLE_LABEL_Y_WEIGHT = 1;
-    
+    int count = 0;
     private int oldTotalRefused = 0;
     private int oldTotalEcon = 0;
     private int oldTotalPremium = 0;
@@ -604,12 +604,14 @@ public class GUISimulator extends JFrame implements Runnable {
     }
 
     public void addDataToXYSeriesCollections(){
+    	count++;
     	dailyDataset.addSeries(econData);
     	dailyDataset.addSeries(premiumData);
     	dailyDataset.addSeries(businessData);
     	dailyDataset.addSeries(firstData);
     	dailyDataset.addSeries(totalData);
     	dailyDataset.addSeries(emptySeatsData);
+
 
     	summaryDataset.addSeries(queData);
     	summaryDataset.addSeries(refusedData);

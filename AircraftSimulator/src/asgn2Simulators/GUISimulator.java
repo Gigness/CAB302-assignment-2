@@ -33,8 +33,10 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 
 /**
- * @author hogan
+ * Constructs a GUI for the operation of the AircraftSimulator project.
  *
+ * @author Paul Foo, Brenton Wheeler
+ * @version 1.0
  */
 @SuppressWarnings("serial")
 public class GUISimulator extends JFrame implements Runnable {

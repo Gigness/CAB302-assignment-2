@@ -183,9 +183,8 @@ public class SimulationRunner {
 		this.sim.createSchedule();
 		this.log.initialEntry(this.sim);
 
-        //TODO -> Gui
-
         if(gui != null) {
+            // initial gui setup
             gui.clearGraphingData();
             String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             String capacities = sim.getFlights(Constants.FIRST_FLIGHT).initialState();
@@ -213,28 +212,27 @@ public class SimulationRunner {
 			this.log.logQREntries(time, sim);
 			this.log.logEntry(time,this.sim);
 
-            // TODO -> Gui
             if (gui != null) {
+                // append daily sum to text area
                 String dailySum = this.sim.getSummary(time, time >= Constants.FIRST_FLIGHT);
                 gui.writeText(dailySum);
-                //TODO is getTotalFlown what we want
-
+                // add passenger data to data series
                 gui.addDataToChart1(time, this.sim.getTotalEconomy(), this.sim.getTotalPremium(), this.sim.getTotalBusiness(), this.sim.getTotalFirst(), this.sim.getTotalEmpty());
                 gui.addDataToChart2(time, this.sim.numInQueue(), this.sim.numRefused());
             }
         }
 		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION);
-        // TODO stuff from here can go to gui somewhere - text area podcast4: 11.30
-        // TODO -> Gui
         if (gui != null) {
+            // add data series to data collection
             gui.addDataToXYSeriesCollections();
+            // finalise gui text
             String endTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             String endSimString = "\n" + endTime  + ": End of Simulation\n";
             String finalState = this.sim.finalState();
             gui.writeText(endSimString + finalState);
         }
 
-        this.log.logQREntries(Constants.DURATION, sim); // individual queue refused transitions savestatus method
+        this.log.logQREntries(Constants.DURATION, sim);
 		this.log.finalise(this.sim);
 	}
 }

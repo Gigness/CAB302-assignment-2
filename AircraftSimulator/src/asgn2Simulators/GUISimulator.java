@@ -46,7 +46,7 @@ public class GUISimulator extends JFrame implements Runnable {
     public static final int SETTINGS_PANEL_HEIGHT = 200;
     public static final double FIELD_Y_WEIGHT = 0.2;
     public static final int TITLE_LABEL_Y_WEIGHT = 1;
-    int count = 0;
+
     private int oldTotalRefused = 0;
     private int oldTotalEcon = 0;
     private int oldTotalPremium = 0;
@@ -128,7 +128,7 @@ public class GUISimulator extends JFrame implements Runnable {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());  // basic frame
 
-        // create swing components
+        // Create swing components
         textArea = new JTextArea();
         textArea.setEditable(false);
         textArea.setEnabled(false);
@@ -142,7 +142,7 @@ public class GUISimulator extends JFrame implements Runnable {
         sizeSettingsPanel.height = SETTINGS_PANEL_HEIGHT;
         settingsPanel.setPreferredSize(sizeSettingsPanel);
 
-        // Add to main content pane
+        // assigning the content pane to a variable
         Container c = getContentPane();
 
         // Main Labels
@@ -171,7 +171,7 @@ public class GUISimulator extends JFrame implements Runnable {
         chartButton.setEnabled(false);
         chartButton2.setEnabled(false);
 
-        // Chart
+        // Chart 1 setup
         econData = new XYSeries("Economy");
         premiumData = new XYSeries("Premium");
         businessData = new XYSeries("Business");
@@ -198,7 +198,7 @@ public class GUISimulator extends JFrame implements Runnable {
         c.add(progressChartPanel, BorderLayout.CENTER);
         progressChartPanel.setVisible(false);
         
-        //Chart 2
+        // Chart 2 setup
         summaryChart = ChartFactory.createXYLineChart(
                 "Simulation Results: Summary",
                 "Days",
@@ -211,7 +211,7 @@ public class GUISimulator extends JFrame implements Runnable {
         c.add(summaryChartPanel, BorderLayout.CENTER);
         summaryChartPanel.setVisible(false);
         
-        //adding color for chart 1 
+        // Adding color for chart 1 
         chart1 = progressChart.getXYPlot();
         XYLineAndShapeRenderer renderer1 = new XYLineAndShapeRenderer();
         renderer1.setSeriesPaint(0, Color.GRAY);
@@ -223,7 +223,7 @@ public class GUISimulator extends JFrame implements Runnable {
         renderer1.setShapesVisible(false);
         chart1.setRenderer(renderer1);
         
-        //adding color for chart 2
+        // Adding color for chart 2
         chart2 = summaryChart.getXYPlot();
         XYLineAndShapeRenderer renderer2 = new XYLineAndShapeRenderer();
         renderer2.setSeriesPaint(0, Color.BLACK);
@@ -231,6 +231,7 @@ public class GUISimulator extends JFrame implements Runnable {
         renderer2.setShapesVisible(false);
         chart2.setRenderer(renderer2);
         
+        // Adding the text area to the pane
         c.add(textScrollPane, BorderLayout.CENTER);
         c.add(settingsPanel, BorderLayout.SOUTH);
         
@@ -573,6 +574,7 @@ public class GUISimulator extends JFrame implements Runnable {
         textButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	// Setting up the new state of the gui
             	textButton.setEnabled(false);
             	chartButton.setEnabled(true);
             	chartButton2.setEnabled(true);
@@ -586,6 +588,7 @@ public class GUISimulator extends JFrame implements Runnable {
         chartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	// Setting up the new state of the gui
             	textScrollPane.setVisible(false);
             	textButton.setEnabled(true);
             	summaryChartPanel.setVisible(false);
@@ -600,13 +603,14 @@ public class GUISimulator extends JFrame implements Runnable {
         chartButton2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+            	// Setting up the new state of the gui
             	textScrollPane.setVisible(false);
-            	textButton.setEnabled(true);
             	progressChartPanel.setVisible(false);
-            	c.add(summaryChartPanel, BorderLayout.CENTER);
-            	summaryChartPanel.setVisible(true);
+            	textButton.setEnabled(true);
             	chartButton2.setEnabled(false);
             	chartButton.setEnabled(true);
+            	c.add(summaryChartPanel, BorderLayout.CENTER);
+            	summaryChartPanel.setVisible(true);
                 c.revalidate();
             }
         });
@@ -621,7 +625,7 @@ public class GUISimulator extends JFrame implements Runnable {
     }
     
     public void addDataToChart1(int day, int econ, int premium, int business, int first, int empty){
-    	//storing the overall totals for the sim
+    	// Storing the overall totals for the sim
     	int total;
     	oldTotalEcon = econ;
     	oldTotalPremium = premium;
@@ -630,7 +634,7 @@ public class GUISimulator extends JFrame implements Runnable {
     	oldTotalTotal = econ + premium + business + first;
     	oldTotalEmpty = empty;
     	
-    	//isolating only the daily total from each total
+    	// Isolating only the daily total from each total
     	econ -= tempOldTotalEcon;
     	premium -= tempOldTotalPremium;
     	business -= tempOldTotalBusiness;
@@ -638,7 +642,7 @@ public class GUISimulator extends JFrame implements Runnable {
     	total = oldTotalTotal - tempOldTotalTotal;
     	empty -= tempOldTotalEmpty;
     	
-    	//adding each total to each series
+    	// Adding each total to each series
     	econData.add(day, econ);
     	premiumData.add(day, premium);
     	businessData.add(day, business);
@@ -646,7 +650,7 @@ public class GUISimulator extends JFrame implements Runnable {
     	totalData.add(day, total);
     	emptySeatsData.add(day, empty);
     	
-    	//preparing the temp totals for the next call
+    	// Preparing the temp totals for the next call
     	tempOldTotalEcon = oldTotalEcon;
     	tempOldTotalPremium = oldTotalPremium;
     	tempOldTotalBusiness = oldTotalBusiness;
@@ -656,21 +660,21 @@ public class GUISimulator extends JFrame implements Runnable {
     }
     
     public void addDataToChart2(int day, int qued, int refused){
-    	//storing the overall total for the refused
+    	// Storing the overall total for the refused
     	oldTotalRefused = refused;
     	
-    	//isolating only the daily total from each total
+    	// Isolating only the daily total from each total
     	refused -= tempOldTotalRefused;
     	
     	refusedData.add(day, refused);
-    	//this process is not needed for que as it is current que not cumulative
+    	// This process is not needed for que as it is current que not cumulative
     	queData.add(day, qued);
     	
     	tempOldTotalRefused = oldTotalRefused;
     }
 
     public void addDataToXYSeriesCollections(){
-    	count++;
+    	// This is run after the series are full of the data to then add them to the
     	dailyDataset.addSeries(econData);
     	dailyDataset.addSeries(premiumData);
     	dailyDataset.addSeries(businessData);
@@ -678,20 +682,12 @@ public class GUISimulator extends JFrame implements Runnable {
     	dailyDataset.addSeries(totalData);
     	dailyDataset.addSeries(emptySeatsData);
 
-
     	summaryDataset.addSeries(queData);
     	summaryDataset.addSeries(refusedData);
     }
 
     public void clearGraphingData() {
-        oldTotalRefused = 0;
-        oldTotalEcon = 0;
-        oldTotalPremium = 0;
-        oldTotalBusiness = 0;
-        oldTotalFirst = 0;
-        oldTotalTotal = 0;
-        oldTotalEmpty = 0;
-
+    	// Reseting variables used in the charting for the next run
         tempOldTotalRefused = 0;
         tempOldTotalEcon = 0;
         tempOldTotalPremium = 0;
@@ -711,7 +707,6 @@ public class GUISimulator extends JFrame implements Runnable {
 
         dailyDataset.removeAllSeries();
         summaryDataset.removeAllSeries();
-
     }
     
 	/* (non-Javadoc)

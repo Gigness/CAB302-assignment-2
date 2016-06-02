@@ -63,6 +63,8 @@ public class GUISimulator extends JFrame implements Runnable {
     private int tempOldTotalTotal = 0;
     private int tempOldTotalEmpty = 0;
 
+    private int runCount = 0;
+    
     private JScrollPane textScrollPane;
     private JTextArea textArea;
 	private JPanel settingsPanel;
@@ -80,7 +82,6 @@ public class GUISimulator extends JFrame implements Runnable {
     private JButton textButton;
     private JButton chartButton;
     private JButton chartButton2;
-
 
     private JFreeChart progressChart;
     ChartPanel progressChartPanel;
@@ -554,8 +555,12 @@ public class GUISimulator extends JFrame implements Runnable {
                     textArea.setText(null);
                     try {
                         sr.runSimulation(guiSim);
-                        chartButton.setEnabled(true);
-                        chartButton2.setEnabled(true);
+                        // Ensures the buttons aren't incorrectly enabled on a subsequent run
+                        if(runCount == 0){
+	                        chartButton.setEnabled(true);
+	                        chartButton2.setEnabled(true);
+                        }
+                        runCount++;
                     } catch (AircraftException e1) {
                         e1.printStackTrace();
                     } catch (PassengerException e1) {

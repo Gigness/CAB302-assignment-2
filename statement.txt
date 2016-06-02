@@ -1,6 +1,6 @@
-Statement of submission
+﻿Statement of submission
 Paul Foo 9294074
-Brenton Wheeler
+Brenton Wheeler 9294601
 50% each
 Command line arguments
 None - default with gui

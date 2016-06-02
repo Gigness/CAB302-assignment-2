@@ -439,8 +439,12 @@ public class GUISimulator extends JFrame implements Runnable {
                     meanLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "Daily Mean must be a double\n";        
+                } else if(Double.parseDouble(meanInput)<0) {
+                	 meanLabel.setForeground(Color.RED);
+                     inputsInvalid = true;
+                     errorMsg += "Daily Mean must be greater than 0\n";
                 } else {
-                    meanLabel.setForeground(Color.BLACK);
+                	meanLabel.setForeground(Color.BLACK);
                 }
                 if(!isDouble(cancelInput)) {
                     cancelLabel.setForeground(Color.RED);
@@ -453,6 +457,10 @@ public class GUISimulator extends JFrame implements Runnable {
                     queueLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "Queue Size must be a integer\n";
+                } else if(Integer.parseInt(queueInput)<0) {
+                	queueLabel.setForeground(Color.RED);
+                    inputsInvalid = true;
+                    errorMsg += "Queue Size must be greater than 0\n";
                 } else {
                     queueLabel.setForeground(Color.BLACK);
                 }

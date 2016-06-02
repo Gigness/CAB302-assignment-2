@@ -15,8 +15,6 @@ import java.util.List;
 
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
-import com.sun.tools.javac.util.ArrayUtils;
-
 import javax.swing.*;
 
 /**

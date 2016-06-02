@@ -10,14 +10,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
 import javax.swing.*;
-import javax.swing.border.Border;
-
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
 import javafx.scene.chart.XYChart;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -30,7 +26,6 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-
 
 /**
  * Constructs a GUI for the operation of the AircraftSimulator project.
@@ -47,6 +42,7 @@ public class GUISimulator extends JFrame implements Runnable {
     public static final double FIELD_Y_WEIGHT = 0.2;
     public static final int TITLE_LABEL_Y_WEIGHT = 1;
 
+    // Charting variables - counters
     private int oldTotalRefused = 0;
     private int oldTotalEcon = 0;
     private int oldTotalPremium = 0;
@@ -64,7 +60,8 @@ public class GUISimulator extends JFrame implements Runnable {
     private int tempOldTotalEmpty = 0;
 
     private int runCount = 0;
-    
+
+    // Gui components
     private JScrollPane textScrollPane;
     private JTextArea textArea;
 	private JPanel settingsPanel;
@@ -83,12 +80,13 @@ public class GUISimulator extends JFrame implements Runnable {
     private JButton chartButton;
     private JButton chartButton2;
 
+    // Chart Panels
     private JFreeChart progressChart;
     ChartPanel progressChartPanel;
     JFreeChart summaryChart;
     ChartPanel summaryChartPanel;
 
-    // TODO - For progress chart
+    // Daily Chart Variables
     XYSeriesCollection dailyDataset;
     XYSeries econData;
     XYSeries premiumData;
@@ -99,7 +97,7 @@ public class GUISimulator extends JFrame implements Runnable {
     XYSeries queData;
     XYSeries refusedData;
 
-    // TODO - For summary chart
+    // Summary Chart Variables
     XYSeriesCollection summaryDataset;
     XYSeries queueSize;
     XYSeries refusedPassengers;
@@ -107,13 +105,12 @@ public class GUISimulator extends JFrame implements Runnable {
     XYPlot chart1;
     XYPlot chart2;
 
+    // simulation runner required objects
     private Simulator sim;
     private String simulatorArgs;
     private String[] args;
     private Log l;
     private GUISimulator guiSim;
-
-
 
     /**
 	 * @param arg0
@@ -179,14 +176,14 @@ public class GUISimulator extends JFrame implements Runnable {
         firstData = new XYSeries("First");
         totalData = new XYSeries("Total");
         emptySeatsData = new XYSeries("Empty");
-
         dailyDataset = new XYSeriesCollection();
-        
+
+        // Chart 2 setup
         queData = new XYSeries("Qued");
         refusedData = new XYSeries("Refused");
-        
         summaryDataset = new XYSeriesCollection();
 
+        // Create progress chart
         progressChart = ChartFactory.createXYLineChart(
                 "Simulation Results: Daily Progress",
                 "Days",
@@ -199,7 +196,7 @@ public class GUISimulator extends JFrame implements Runnable {
         c.add(progressChartPanel, BorderLayout.CENTER);
         progressChartPanel.setVisible(false);
         
-        // Chart 2 setup
+        // Create summary chart
         summaryChart = ChartFactory.createXYLineChart(
                 "Simulation Results: Summary",
                 "Days",
@@ -252,6 +249,7 @@ public class GUISimulator extends JFrame implements Runnable {
         settingsPanel.setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
 
+        // Settings panel layout
         // col 1
         gc.weighty = 1;
         gc.weightx = 1;
@@ -430,14 +428,14 @@ public class GUISimulator extends JFrame implements Runnable {
                 String errorMsg = "";
                 double probVal = 0;
                 
-                if(!isInteger(rngInput)) {
+                if (!isInteger(rngInput)) {
                     rngLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "RNG Seed must be a Integer\n";
                 } else {
                     rngLabel.setForeground(Color.BLACK);
                 }
-                if(!isDouble(meanInput)) {
+                if (!isDouble(meanInput)) {
                     meanLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "Daily Mean must be a double\n";        
@@ -448,14 +446,14 @@ public class GUISimulator extends JFrame implements Runnable {
                 } else {
                 	meanLabel.setForeground(Color.BLACK);
                 }
-                if(!isDouble(cancelInput)) {
+                if (!isDouble(cancelInput)) {
                     cancelLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "Cancellation probability  must be a double\n";
                 } else {
                     cancelLabel.setForeground(Color.BLACK);
                 }
-                if(!isInteger(queueInput)) {
+                if (!isInteger(queueInput)) {
                     queueLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "Queue Size must be a integer\n";
@@ -467,7 +465,7 @@ public class GUISimulator extends JFrame implements Runnable {
                     queueLabel.setForeground(Color.BLACK);
                 }
 
-                if(!isDouble(firstInput)) {
+                if (!isDouble(firstInput)) {
                     firstLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "First probability must be a double\n";
@@ -476,7 +474,7 @@ public class GUISimulator extends JFrame implements Runnable {
                     double firstValue = Double.parseDouble(firstInput);
                     probVal += firstValue;
                 }
-                if(!isDouble(businessInput)) {
+                if (!isDouble(businessInput)) {
                     businessLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "Business probability must be a double\n";
@@ -485,7 +483,7 @@ public class GUISimulator extends JFrame implements Runnable {
                     double businessValue = Double.parseDouble(businessInput);
                     probVal += businessValue;
                 }
-                if(!isDouble(premiumInput)) {
+                if (!isDouble(premiumInput)) {
                     premiumLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "Premium probability must be a double\n";
@@ -494,7 +492,7 @@ public class GUISimulator extends JFrame implements Runnable {
                     double premiumValue = Double.parseDouble(premiumInput);
                     probVal += premiumValue;
                 }
-                if(!isDouble(economyInput)) {
+                if (!isDouble(economyInput)) {
                     econLabel.setForeground(Color.RED);
                     inputsInvalid = true;
                     errorMsg += "Economy probability must be a double\n";
@@ -504,7 +502,8 @@ public class GUISimulator extends JFrame implements Runnable {
                     probVal += econValue;
                 }
 
-                if(probVal!=1){
+                // Sum of fare probabilities must be equal to 1
+                if (probVal !=1 ) {
                 	inputsInvalid = true;
                 	econLabel.setForeground(Color.RED);
                 	premiumLabel.setForeground(Color.RED);
@@ -512,8 +511,13 @@ public class GUISimulator extends JFrame implements Runnable {
                 	firstLabel.setForeground(Color.RED);
                 	errorMsg += "Booking probability across all seats types must be equal to 1\n";
                 }
-                if(isDouble(economyInput) && isDouble(premiumInput) && isDouble(businessInput) && isDouble(firstInput)){
-	                if(Double.parseDouble(economyInput) < 0 || Double.parseDouble(economyInput) > 1 || Double.parseDouble(premiumInput) < 0 || Double.parseDouble(premiumInput) > 1 || Double.parseDouble(businessInput) < 0 || Double.parseDouble(businessInput) > 1 || Double.parseDouble(firstInput) < 0 || Double.parseDouble(firstInput) > 1){
+                // Probabilities must be doubles and 0 <= p <= 1
+                if (isDouble(economyInput) && isDouble(premiumInput) && isDouble(businessInput) && isDouble(firstInput)) {
+	                if (Double.parseDouble(economyInput) < 0 || Double.parseDouble(economyInput) > 1 ||
+                            Double.parseDouble(premiumInput) < 0 || Double.parseDouble(premiumInput) > 1 ||
+                            Double.parseDouble(businessInput) < 0 || Double.parseDouble(businessInput) > 1 ||
+                            Double.parseDouble(firstInput) < 0 || Double.parseDouble(firstInput) > 1) {
+
 	                	inputsInvalid = true;
 	                	econLabel.setForeground(Color.RED);
 	                	premiumLabel.setForeground(Color.RED);
@@ -522,7 +526,8 @@ public class GUISimulator extends JFrame implements Runnable {
 	                	errorMsg += "Each probability must be between 0 and 1 inclusive";
 	                }
                 }
-                
+
+                // Inputs are valid, proceed with simulation
                 if (!inputsInvalid) {
                 	econLabel.setForeground(Color.BLACK);
                 	premiumLabel.setForeground(Color.BLACK);
@@ -539,6 +544,7 @@ public class GUISimulator extends JFrame implements Runnable {
                     double premiumValue = Double.parseDouble(premiumInput);
                     double econValue = Double.parseDouble(economyInput);
 
+                    // create simulator object
                     try {
                         sim = new Simulator(rngValue, queueValue, meanValue,
                                 stdDev, firstValue, businessValue, premiumValue, econValue, cancelValue);
@@ -546,13 +552,20 @@ public class GUISimulator extends JFrame implements Runnable {
                     } catch (SimulationException e1) {
                         e1.printStackTrace();
                     }
+
+                    // create log
                     try {
                         l = new Log();
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
+
+                    // create simulation runner
                     SimulationRunner sr = new SimulationRunner(sim,l);
+                    // reset text area
                     textArea.setText(null);
+
+                    // run simulation
                     try {
                         sr.runSimulation(guiSim);
                         // Ensures the buttons aren't incorrectly enabled on a subsequent run
@@ -629,7 +642,7 @@ public class GUISimulator extends JFrame implements Runnable {
         textArea.append(message);
     }
     
-    public void addDataToChart1(int day, int econ, int premium, int business, int first, int empty){
+    public void addDataToChart1(int day, int econ, int premium, int business, int first, int empty) {
     	// Storing the overall totals for the sim
     	int total;
     	oldTotalEcon = econ;
@@ -664,7 +677,7 @@ public class GUISimulator extends JFrame implements Runnable {
     	tempOldTotalEmpty = oldTotalEmpty;
     }
     
-    public void addDataToChart2(int day, int qued, int refused){
+    public void addDataToChart2(int day, int qued, int refused) {
     	// Storing the overall total for the refused
     	oldTotalRefused = refused;
     	
@@ -678,7 +691,7 @@ public class GUISimulator extends JFrame implements Runnable {
     	tempOldTotalRefused = oldTotalRefused;
     }
 
-    public void addDataToXYSeriesCollections(){
+    public void addDataToXYSeriesCollections() {
     	// This is run after the series are full of the data to then add them to the
     	dailyDataset.addSeries(econData);
     	dailyDataset.addSeries(premiumData);
@@ -692,7 +705,7 @@ public class GUISimulator extends JFrame implements Runnable {
     }
 
     public void clearGraphingData() {
-    	// Reseting variables used in the charting for the next run
+    	// Resetting variables used in the charting for the next run
         tempOldTotalRefused = 0;
         tempOldTotalEcon = 0;
         tempOldTotalPremium = 0;
@@ -722,7 +735,12 @@ public class GUISimulator extends JFrame implements Runnable {
 		createGUI();
 	}
 
-    private boolean isInteger( String input ) {
+    /**
+     * Check if string can be parsed to Integer
+     * @param input string
+     * @return boolean
+     */
+    private boolean isInteger(String input) {
         try {
             Integer.parseInt( input );
             return true;
@@ -732,9 +750,14 @@ public class GUISimulator extends JFrame implements Runnable {
         }
     }
 
+    /**
+     * Check if string can be parsed to Double
+     * @param input string
+     * @return boolean
+     */
     private boolean isDouble( String input ) {
         try {
-            Double.parseDouble( input );
+            Double.parseDouble(input);
             return true;
         }
         catch( Exception e ) {

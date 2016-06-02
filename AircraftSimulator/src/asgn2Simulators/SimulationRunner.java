@@ -8,10 +8,14 @@ package asgn2Simulators;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
+import com.sun.tools.javac.util.ArrayUtils;
 
 import javax.swing.*;
 
@@ -30,47 +34,80 @@ public class SimulationRunner {
 	 * see {@link asgn2Simulators.SimulationRunner#printErrorAndExit()}
 	 */
 	public static void main(String[] args) {
-		final int NUM_ARGS = 9;
-        final int NUM_ARGS_GUI_OPTION = 10;
-        boolean run_gui = true;
-
+		final int NUM_ARGS = 10;
+        boolean runGui = true;
+        String[] newArgs = new String[0];
 		Simulator s = null;
 		Log l = null;
         try {
-            // TODO - provide user input here
 			switch (args.length) {
-				case NUM_ARGS: {
-					s = createSimulatorUsingArgs(args);
-					break;
-				}
-                case NUM_ARGS_GUI_OPTION: {
-                    String optionGui = args[NUM_ARGS_GUI_OPTION - 1];
-                    if (optionGui.equals("0")) {
-                        run_gui = false;
-                    }
-                }
 				case 0: {
-                    // TODO, default launch GUI
+                    // default case - launch the gui with constants
 					s = new Simulator();
 					break;
 				}
+                case 1: {
+                    // 1 arguement - set gui flat and launch with constants
+                    if (args[0].equals("nogui")) {
+                        runGui = false;
+                    } else if (args[0].equals("gui")) {
+                        runGui = true;
+                    } else {
+                        printErrorAndExit();
+                    }
+                    s = new Simulator();
+                    break;
+                }
+                case NUM_ARGS: {
+                    // 10 arguments - set gui flag and launch simulator with args
+                    String optionGui = args[0];
+                    if (optionGui.equals("nogui")) {
+                        runGui = false;
+                    } else if (args[0].equals("gui")) {
+                        runGui = true;
+                    } else {
+                        printErrorAndExit();
+                    }
+
+                    // remove guiFlag from args
+                    List<String> parsedArgs = new LinkedList<>();
+                    for (String arg: args) {
+                        if(!arg.equals("gui") && !arg.equals("nogui")) {
+                            parsedArgs.add(arg);
+                        }
+
+                    }
+                    // pass newArgs to create simulator using args
+                    newArgs = parsedArgs.toArray(args);
+                    s = createSimulatorUsingArgs(newArgs);
+                    break;
+                }
 				default: {
 					printErrorAndExit();
 				}
 			}
+
+            // set up a log object
 			l = new Log();
+
 		} catch (SimulationException | IOException e1) {
 			e1.printStackTrace();
 			System.exit(-1);
 		}
 
-		//Run the simulation 
+        // Error checking, ensure a simulator is instantiated
+        if (s == null) {
+            System.out.println("simulator not instantiated");
+            System.exit(-1);
+        }
+
+		//Run the simulation
 		SimulationRunner sr = new SimulationRunner(s,l);
 		try {
-            if (run_gui) {
+            if (runGui) {
                 System.out.println("Run gui with given settings");
-                SwingUtilities.invokeLater(new GUISimulator("Aircraft Simulator", args));
-            } else if(!run_gui) {
+                SwingUtilities.invokeLater(new GUISimulator("Aircraft Simulator", newArgs));
+            } else if(!runGui) {
                 // don't run the gui
                 System.out.println("No Gui");
                 sr.runSimulation(null);
@@ -114,6 +151,7 @@ public class SimulationRunner {
 		str += "SIM Args: seed maxQueueSize meanBookings sdBookings "; 
 		str += "firstProb businessProb premiumProb economyProb cancelProb guiSelect\n";
 		str += "If no arguments, default values are used\n";
+        str += "first arguement must be gui or nogui";
 		System.err.println(str);
 		System.exit(-1);
 	}
@@ -187,11 +225,11 @@ public class SimulationRunner {
                 gui.addDataToChart2(time, this.sim.numInQueue(), this.sim.numRefused());
             }
         }
-		gui.addDataToXYSeriesCollections();
 		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION);
         // TODO stuff from here can go to gui somewhere - text area podcast4: 11.30
         // TODO -> Gui
         if (gui != null) {
+            gui.addDataToXYSeriesCollections();
             String endTime = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
             String endSimString = "\n" + endTime  + ": End of Simulation\n";
             String finalState = this.sim.finalState();

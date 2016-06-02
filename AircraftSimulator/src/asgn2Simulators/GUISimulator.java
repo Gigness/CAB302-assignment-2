@@ -387,14 +387,26 @@ public class GUISimulator extends JFrame implements Runnable {
         settingsPanel.add(chartButton2,gc);
 
         // default values for input fields
-        rngField.setText(Integer.toString(Constants.DEFAULT_SEED));
-        meanField.setText(Double.toString(Constants.DEFAULT_DAILY_BOOKING_MEAN));
-        queueField.setText(Integer.toString(Constants.DEFAULT_MAX_QUEUE_SIZE));
-        cancelField.setText(Double.toString(Constants.DEFAULT_CANCELLATION_PROB));
-        firstField.setText(Double.toString(Constants.DEFAULT_FIRST_PROB));
-        businessField.setText(Double.toString(Constants.DEFAULT_BUSINESS_PROB));
-        premiumField.setText(Double.toString(Constants.DEFAULT_PREMIUM_PROB));
-        econField.setText(Double.toString(Constants.DEFAULT_ECONOMY_PROB));
+        if (args.length > 1) {
+            rngField.setText(args[0]);
+            queueField.setText(args[1]);
+            meanField.setText(args[2]);
+            firstField.setText(args[4]);
+            businessField.setText(args[5]);
+            premiumField.setText(args[6]);
+            econField.setText(args[7]);
+            cancelField.setText(args[8]);
+
+        } else {
+            rngField.setText(Integer.toString(Constants.DEFAULT_SEED));
+            meanField.setText(Double.toString(Constants.DEFAULT_DAILY_BOOKING_MEAN));
+            queueField.setText(Integer.toString(Constants.DEFAULT_MAX_QUEUE_SIZE));
+            cancelField.setText(Double.toString(Constants.DEFAULT_CANCELLATION_PROB));
+            firstField.setText(Double.toString(Constants.DEFAULT_FIRST_PROB));
+            businessField.setText(Double.toString(Constants.DEFAULT_BUSINESS_PROB));
+            premiumField.setText(Double.toString(Constants.DEFAULT_PREMIUM_PROB));
+            econField.setText(Double.toString(Constants.DEFAULT_ECONOMY_PROB));
+        }
 
         // Add actions to buttons
         runButton.addActionListener(new ActionListener() {

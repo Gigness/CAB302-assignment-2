@@ -82,28 +82,28 @@ public class GUISimulator extends JFrame implements Runnable {
 
     // Chart Panels
     private JFreeChart progressChart;
-    ChartPanel progressChartPanel;
-    JFreeChart summaryChart;
-    ChartPanel summaryChartPanel;
+    private ChartPanel progressChartPanel;
+    private JFreeChart summaryChart;
+    private ChartPanel summaryChartPanel;
 
     // Daily Chart Variables
-    XYSeriesCollection dailyDataset;
-    XYSeries econData;
-    XYSeries premiumData;
-    XYSeries businessData;
-    XYSeries firstData;
-    XYSeries totalData;
-    XYSeries emptySeatsData;
-    XYSeries queData;
-    XYSeries refusedData;
+    private XYSeriesCollection dailyDataset;
+    private XYSeries econData;
+    private XYSeries premiumData;
+    private XYSeries businessData;
+    private XYSeries firstData;
+    private XYSeries totalData;
+    private XYSeries emptySeatsData;
+    private XYSeries queData;
+    private XYSeries refusedData;
 
     // Summary Chart Variables
-    XYSeriesCollection summaryDataset;
-    XYSeries queueSize;
-    XYSeries refusedPassengers;
+    private XYSeriesCollection summaryDataset;
+    private XYSeries queueSize;
+    private XYSeries refusedPassengers;
 
-    XYPlot chart1;
-    XYPlot chart2;
+    private XYPlot chart1;
+    private XYPlot chart2;
 
     // simulation runner required objects
     private Simulator sim;
@@ -179,7 +179,7 @@ public class GUISimulator extends JFrame implements Runnable {
         dailyDataset = new XYSeriesCollection();
 
         // Chart 2 setup
-        queData = new XYSeries("Qued");
+        queData = new XYSeries("Queued");
         refusedData = new XYSeries("Refused");
         summaryDataset = new XYSeriesCollection();
 
@@ -569,7 +569,7 @@ public class GUISimulator extends JFrame implements Runnable {
                     try {
                         sr.runSimulation(guiSim);
                         // Ensures the buttons aren't incorrectly enabled on a subsequent run
-                        if(runCount == 0){
+                        if (runCount == 0) {
 	                        chartButton.setEnabled(true);
 	                        chartButton2.setEnabled(true);
                         }

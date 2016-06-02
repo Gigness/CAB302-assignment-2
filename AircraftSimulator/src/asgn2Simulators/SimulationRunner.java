@@ -45,7 +45,7 @@ public class SimulationRunner {
 					break;
 				}
                 case 1: {
-                    // 1 arguement - set gui flat and launch with constants
+                    // 1 argument - set gui flat and launch with constants
                     if (args[0].equals("nogui")) {
                         runGui = false;
                     } else if (args[0].equals("gui")) {
@@ -77,7 +77,11 @@ public class SimulationRunner {
                     }
                     // pass newArgs to create simulator using args
                     newArgs = parsedArgs.toArray(args);
-                    s = createSimulatorUsingArgs(newArgs);
+                    try {
+                        s = createSimulatorUsingArgs(newArgs);
+                    } catch (SimulationException e1) {
+                        printErrorAndExitInvalidArgs();
+                    }
                     break;
                 }
 				default: {
@@ -153,6 +157,17 @@ public class SimulationRunner {
 		System.err.println(str);
 		System.exit(-1);
 	}
+
+    /**
+     *  Helper to generate command line usage message
+     */
+    private static void printErrorAndExitInvalidArgs() {
+        String str = "Invalid command line arguments\n" +
+                "Mean >= 0, Queue > 0, fare class probability >= 0 and <= 1" +
+                ", Sum of fareclass probabilities == 1";
+        System.err.println(str);
+        System.exit(-1);
+    }
 	
 	
 	private Simulator sim;
@@ -183,7 +198,7 @@ public class SimulationRunner {
 		this.sim.createSchedule();
 		this.log.initialEntry(this.sim);
 
-        if(gui != null) {
+        if (gui != null) {
             // initial gui setup
             gui.clearGraphingData();
             String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
@@ -208,6 +223,7 @@ public class SimulationRunner {
 			} else {
 				this.sim.processQueue(time);
 			}
+
 			//Log progress 
 			this.log.logQREntries(time, sim);
 			this.log.logEntry(time,this.sim);
@@ -222,6 +238,7 @@ public class SimulationRunner {
             }
         }
 		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION);
+
         if (gui != null) {
             // add data series to data collection
             gui.addDataToXYSeriesCollections();

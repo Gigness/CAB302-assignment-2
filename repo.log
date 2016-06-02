@@ -1,0 +1,162 @@
+* 60c7cb3 : command line args for simulationRunner fixed
+* ec11ec0 : extra tests done
+* 7bfb590 : code clean up
+* 99d857b : fixed another bug
+* 02f1eaa : fixxed bug
+* 02c3573 : dealing with probs being less than 0 or greater than 1
+* 18fe9d5 : changed the way probVal is checked
+* 123b54e : changed color to red for booking probabilitys not equal to 1
+* d7edcaa : bug fix
+* aea9420 : checking inputs and giving messages
+*   ba09b11 : gui fixed
+|\  
+| *   36fed23 : Merge branch 'master' of https://github.com/Gigness/CAB302-assignment-2
+| |\  
+| * | 7e4fce3 : testing
+* | | 3d82aaf : fixed gui
+| |/  
+|/|   
+* | 3f147a4 : graph rerendering issues
+|/  
+* 62397e9 : updating git ignore
+* de48c93 : deleting log files
+* 649b821 : added text button and made others disable when not selected
+* a8fe743 : made graphs work
+* 624b2d6 : swag
+* 53b21f9 : cleaned up gui code
+* 09c2507 : basic line graph completed
+* a05da6c : Text Simulator completed
+* 817383f : gui scroll pane, needs to scroll..
+* 6b07ee7 : Gui simulator get variables to write to textFrame complete, need to add scroll pane
+* 574dedd : SimulationRunner gui option select
+* 48b137c : GUI structure complete, begin text validation
+* 1e92855 : ChartPanel < chart stuff goes in here
+* 2511468 : finalState test fixed in aircrafts
+* 78d8245 : AircraftTests completed
+* 42690f6 : cancelBooking tests added
+* bc38fe8 : aircraft test
+* b93d923 : A380 Tests getStatus complete
+* 128102a : Fixed Aircraft.getStatus, simulatorRunner output matches given output
+*   d808f3c : Merge branch 'paul-dev'
+|\  
+| * 27f3d2a : returned Flights back to normal, removed prints from passenger method
+* | f69afb8 : adding to GUIsim
+* | 3e0b462 : whitespace
+|/  
+*   7f2bcef : bugs
+|\  
+| * fbce5f1 : working on gui
+* | 7724735 : bugs
+* |   721b485 : Merge branch 'master' of https://github.com/Gigness/CAB302-assignment-2
+|\ \  
+| |/  
+|/|   
+| * bbde92a : fixed passenger confirmSeat:
+| * 12718c8 : Additional Passenger Test, Debug simulator in progress
+* |   b89efbe : Merge branch 'master' of https://github.com/Gigness/CAB302-assignment-2
+|\ \  
+| |/  
+| * f3f9e6f : Changes from Upstream J. Hogan
+* |   0651f7c : Merge branch 'master' of https://github.com/Gigness/CAB302-assignment-2
+|\ \  
+| |/  
+| * daadb9c : Aircraft test and upgradeBookings
+| *   d983294 : Merge branch 'master' of github.com:Gigness/CAB302-assignment-2
+| |\  
+| * | b6ffc87 : aircraft minor change
+* | | ad5ecc5 : started GUI
+| |/  
+|/|   
+* | 40ae06a : fixed bug
+|/  
+* 4090940 : aricraft minor update
+* e346525 : added passID upgrading code
+* 681be39 : fixing up passenger class
+* f642ea4 : Aircraft upgradeBooking fixed, Aircraft Test upgradingBooking in progress, Passenger upgrade method is incorrect needs fixing
+* ef4bdf9 : Aircraft Tests, fix upgradeBookings
+* af6bf5d : Economy, Premium, Business Tests
+* 2991d63 : Passenger Tests completed in FirstTests
+* eb8ee5e : Fixed refusePassenger()
+* 1d3abf8 : folder changes
+*   d187c7d : Merge branch 'paul-dev'
+|\  
+| * 8cc3440 : passenger tests complete
+* | 5471cea : bug fix
+* |   dc46df5 : Merge branch 'brenton-dev'
+|\ \  
+| * | 4ee8d32 : added a bunch more aircraft tests
+* | |   d54e444 : Merge branch 'master' of https://github.com/Gigness/CAB302-assignment-2
+|\ \ \  
+| |/ /  
+|/| |   
+| * |   85980dc : Merge branch 'paul-dev'
+| |\ \  
+| | |/  
+| | * d53c747 : simulator updates
+| * |   75657d3 : Merge pull request #1 from Gigness/paul-dev
+| |\ \  
+| | |/  
+| | * e2f8f20 : Economy Tests
+| |/  
+* | d8f79b7 : added a few aircraft tests and added seats initing in aircraft
+|/  
+* 0f72ac7 : EconomyTests: ConfirmSeat and FlyPassenger
+* 623b8e7 : Fixed build errors: EconomyTests runnable
+*   a76218a : Merge branch 'paul-dev': Passenger/Economy Tests: Constructor and cancelSeats
+|\  
+| * e2895e4 : Passenger tests via Economy: constructor and cancelseat complete
+| *   ba2de45 : Merge branch 'master' into paul-dev
+| |\  
+| * | 03cda13 : Concrete classes: A380 / B747 complete
+* | | 3a76aa1 : altered how exceptions are handled and fix some other issues
+* | | 0bf64ac : implimented business, first, premium and fixed economy
+| |/  
+|/|   
+* | 35232a7 : setup testing packages
+* |   e2f4acc : Merge branch 'paul-dev'
+|\ \  
+| |/  
+| * f2a6b5b : upgradeBooking, private upgradePassenger, private availableSeats for each airfare class
+| * e271192 : cancelBooking
+| * ceddd28 : gitignore
+| * b273ff3 : pulled brenton-dev
+* | 578484a : gitignore updated
+|/  
+*   3227ab6 : Merge branch 'brenton-dev'
+|\  
+| * 76f3f27 : gitignore fixing
+| * f5bef85 : added to economy class
+| * 9e00d1f : implimented passenger abstract class ish
+| * f5a11c9 : added some passenger code
+| * f53882a : test
+| * d26583b : test
+| *   29d6348 : Merge branch 'master' into brenton-dev
+| |\  
+| * \   d197f29 : Merge branch 'brenton-dev' of github.com:Gigness/CAB302-Assignment-2 into brenton-dev
+| |\ \  
+| | * | 18b16cc : testing commit
+* | | |   7b0e1d0 : Merge branch 'paul-dev'
+|\ \ \ \  
+| * | | | 5f56b59 : aircraft getters, setters, constructor, seatsAvail
+| | |_|/  
+| |/| |   
+* | | | a876b41 : gitignore
+|/ / /  
+* | | b26a382 : refresh repo after merge clusterfoook
+* | |   d7410a7 : Merge branch 'master' of https://github.com/Gigness/CAB302-Assignment-2
+|\ \ \  
+| |/ /  
+| * |   0d40be6 : Merge branch 'brenton-dev'
+| |\ \  
+| | |/  
+| | * 4bc5622 : testing brenton-dev branch
+* | | 18dd343 : test commit
+|/ /  
+* | 03aa4da : testing merging
+* |   e6e3931 : Merge branch 'paul-dev'
+|\ \  
+| * | 4a64bee : testing branch
+| |/  
+* | 57724f6 : branches
+|/  
+* 59b0a1b : swag

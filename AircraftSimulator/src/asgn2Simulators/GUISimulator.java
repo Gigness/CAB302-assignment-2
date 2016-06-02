@@ -386,7 +386,7 @@ public class GUISimulator extends JFrame implements Runnable {
         gc.gridy = 4;
         settingsPanel.add(chartButton2,gc);
 
-        // default values for input fields
+        // Set arg values to fields if necessary
         if (args.length > 1) {
             rngField.setText(args[0]);
             queueField.setText(args[1]);

@@ -1,0 +1,8 @@
+Statement of submission
+Paul Foo 9294074
+Brenton Wheeler
+50% each
+Command line arguments
+None - default with gui
+1 - can either be ‘gui’ or ‘nogui’
+10 - first is gui flag + 9 params
